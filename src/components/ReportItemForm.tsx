@@ -1,13 +1,14 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { format } from 'date-fns';
-import { Calendar as CalendarIcon, Loader2, Sparkles } from 'lucide-react';
+import { Calendar as CalendarIcon, Loader2, Sparkles, Upload, X } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -36,6 +37,7 @@ import { CATEGORIES } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import type { Category } from '@/lib/types';
 import { generateItemTitle } from '@/ai/flows/generate-item-title';
+import { describeImage } from '@/ai/flows/describe-image';
 
 const formSchema = z.object({
   type: z.enum(['lost', 'found']),
@@ -44,7 +46,7 @@ const formSchema = z.object({
   category: z.string().nonempty('Please select a category.'),
   location: z.string().min(3, 'Location must be at least 3 characters.'),
   date: z.date({ required_error: 'A date is required.' }),
-  imageUrl: z.string().url('Please enter a valid URL.').optional().or(z.literal('')),
+  imageDataUri: z.string().optional(),
 });
 
 type ReportFormValues = z.infer<typeof formSchema>;
@@ -59,6 +61,8 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
   const { addItem } = useAppContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGeneratingTitle, setIsGeneratingTitle] = useState(false);
+  const [isGeneratingDescription, setIsGeneratingDescription] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<ReportFormValues>({
     resolver: zodResolver(formSchema),
@@ -68,9 +72,10 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
       description: '',
       category: '',
       location: '',
-      imageUrl: '',
     },
   });
+
+  const imageDataUri = form.watch('imageDataUri');
   
   const handleGenerateTitle = async () => {
     const description = form.getValues('description');
@@ -95,6 +100,33 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
       });
     } finally {
       setIsGeneratingTitle(false);
+    }
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        const dataUri = reader.result as string;
+        form.setValue('imageDataUri', dataUri);
+        
+        setIsGeneratingDescription(true);
+        try {
+          const result = await describeImage({ photoDataUri: dataUri });
+          form.setValue('description', result.description, { shouldValidate: true });
+        } catch (error) {
+            console.error(error);
+            toast({
+                variant: 'destructive',
+                title: 'Error Analyzing Image',
+                description: 'Could not generate a description. Please enter one manually.',
+            });
+        } finally {
+            setIsGeneratingDescription(false);
+        }
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -137,6 +169,54 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        
+        <FormField
+            control={form.control}
+            name="imageDataUri"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>Image</FormLabel>
+                <FormControl>
+                    <>
+                    <input 
+                        type="file" 
+                        accept="image/*" 
+                        ref={fileInputRef} 
+                        onChange={handleFileChange}
+                        className="hidden"
+                    />
+                    {imageDataUri ? (
+                        <div className="relative w-full aspect-video rounded-md overflow-hidden">
+                            <Image src={imageDataUri} alt="Uploaded item" layout="fill" objectFit="cover" />
+                            <Button 
+                                type="button" 
+                                variant="destructive" 
+                                size="icon"
+                                className="absolute top-2 right-2 h-8 w-8"
+                                onClick={() => form.setValue('imageDataUri', undefined)}
+                            >
+                                <X className="h-4 w-4" />
+                            </Button>
+                        </div>
+                    ) : (
+                        <Button 
+                            type="button" 
+                            variant="outline"
+                            className="w-full"
+                            onClick={() => fileInputRef.current?.click()}
+                        >
+                            <Upload className="mr-2 h-4 w-4" />
+                            Upload an Image
+                        </Button>
+                    )}
+                    </>
+                </FormControl>
+                <FormMessage />
+                </FormItem>
+            )}
+        />
+
+
         <FormField
           control={form.control}
           name="description"
@@ -150,6 +230,9 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
                   {...field}
                 />
               </FormControl>
+              <FormDescription>
+                {isGeneratingDescription ? 'AI is generating a description from your image...' : 'Provide details, or upload an image for an AI-generated description.'}
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -270,25 +353,8 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="imageUrl"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Image URL (Optional)</FormLabel>
-              <FormControl>
-                <Input placeholder="https://example.com/image.png" {...field} />
-              </FormControl>
-              <FormDescription>
-                A direct link to an image of the item.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Button type="submit" className="w-full" disabled={isSubmitting}>
-          {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        <Button type="submit" className="w-full" disabled={isSubmitting || isGeneratingDescription}>
+          {(isSubmitting || isGeneratingDescription) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Submit Report
         </Button>
       </form>

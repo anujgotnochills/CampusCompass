@@ -88,7 +88,7 @@ export default function ItemDetailPage() {
             <div className="grid md:grid-cols-2 gap-6">
                 <div className="p-6">
                 <Image
-                    src={item.imageUrl || "https://placehold.co/600x400.png"}
+                    src={item.imageDataUri || "https://placehold.co/600x400.png"}
                     alt={item.title}
                     data-ai-hint="lost item"
                     width={600}

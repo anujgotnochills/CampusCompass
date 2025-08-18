@@ -22,7 +22,7 @@ export function ItemCard({ item }: ItemCardProps) {
         <CardHeader className="p-0">
           <div className="relative">
             <Image
-              src={item.imageUrl || "https://placehold.co/400x300.png"}
+              src={item.imageDataUri || "https://placehold.co/400x300.png"}
               alt={item.title}
               data-ai-hint="lost item"
               width={400}

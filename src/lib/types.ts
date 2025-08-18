@@ -8,7 +8,7 @@ export interface Item {
   category: Category;
   location: string;
   date: string;
-  imageUrl?: string;
+  imageDataUri?: string;
   isRecovered: boolean;
   postedAt: number;
   lockerNumber?: number;
