@@ -53,6 +53,8 @@ export default function MatchesPage() {
             matchLostAndFound({
               lostItemDescription: lostItem.description,
               foundItemDescription: foundItem.description,
+              lostItemImageDataUri: lostItem.imageDataUri,
+              foundItemImageDataUri: foundItem.imageDataUri,
             }).then(result => ({ ...result, lostItem, foundItem, 'foundItem': {...foundItem, lockerNumber: foundItem.lockerNumber || lostItem.lockerNumber} }))
           )
         );
