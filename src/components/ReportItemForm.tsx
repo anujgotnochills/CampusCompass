@@ -177,7 +177,7 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
                 <FormItem>
                 <FormLabel>Image</FormLabel>
                 <FormControl>
-                    <>
+                    <div>
                     <input 
                         type="file" 
                         accept="image/*" 
@@ -209,7 +209,7 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
                             Upload an Image
                         </Button>
                     )}
-                    </>
+                    </div>
                 </FormControl>
                 <FormMessage />
                 </FormItem>
