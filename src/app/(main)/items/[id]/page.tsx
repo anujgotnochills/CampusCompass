@@ -11,7 +11,8 @@ import {
   Tag,
   CheckCircle,
   XCircle,
-  Award
+  Award,
+  Lock
 } from "lucide-react";
 
 import { useAppContext } from "@/contexts/AppContext";
@@ -56,10 +57,17 @@ export default function ItemDetailPage() {
 
   const handleRecovery = () => {
     markAsRecovered(item);
+    
+    let toastDescription = `The item "${item.title}" has been marked as recovered.`;
+    if (item.type === 'lost' && item.lockerNumber) {
+        toastDescription += ` You can pick it up from Locker #${item.lockerNumber}.`;
+    }
+
     toast({
       title: "Item Recovered!",
-      description: `The item "${item.title}" has been marked as recovered.`,
+      description: toastDescription,
     });
+
     if (item.type === 'found') {
         toast({
             title: "Points Awarded!",
@@ -118,6 +126,13 @@ export default function ItemDetailPage() {
                         <span className="font-medium">{item.type === 'lost' ? 'Date Lost:' : 'Date Found:'}</span>
                         <span>{format(parseISO(item.date), 'MMMM d, yyyy')}</span>
                         </div>
+                         {item.type === 'found' && item.lockerNumber && (
+                           <div className="flex items-center gap-3 p-3 bg-secondary rounded-md">
+                                <Lock className="h-5 w-5 text-secondary-foreground" />
+                                <span className="font-medium">Stored in:</span>
+                                <span className="font-bold text-lg">Locker #{item.lockerNumber}</span>
+                           </div>
+                        )}
                     </div>
 
                     {!item.isRecovered && (
@@ -129,7 +144,10 @@ export default function ItemDetailPage() {
                         <AlertDialogHeader>
                             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                             <AlertDialogDescription>
-                            This action will mark the item as recovered. If this was a found item, you will be awarded 10 points. This cannot be undone.
+                                This action will mark the item as recovered. 
+                                {item.type === 'found' && " You will be awarded 10 points."}
+                                {item.type === 'lost' && item.lockerNumber && ` The item is in Locker #${item.lockerNumber}.`}
+                                This cannot be undone.
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>

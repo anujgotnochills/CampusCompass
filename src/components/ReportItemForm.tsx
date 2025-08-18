@@ -107,11 +107,21 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
         category: values.category as Category,
         date: values.date.toISOString(),
       };
-      addItem(itemData);
-      toast({
-        title: 'Item Reported!',
-        description: 'Your item has been successfully listed.',
-      });
+      const newItem = addItem(itemData);
+
+      if (newItem.type === 'found') {
+        toast({
+            title: 'Item Reported!',
+            description: `Please drop the item off at Locker #${newItem.lockerNumber}. Thank you!`,
+            duration: 10000,
+        });
+      } else {
+         toast({
+            title: 'Item Reported!',
+            description: 'Your item has been successfully listed.',
+        });
+      }
+      
       router.push('/dashboard');
     } catch (error) {
       toast({

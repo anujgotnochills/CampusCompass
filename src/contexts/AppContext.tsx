@@ -8,7 +8,7 @@ import { useLocalStorage } from '@/hooks/use-local-storage';
 interface AppContextType {
   items: Item[];
   profile: Profile;
-  addItem: (item: Omit<Item, 'id' | 'postedAt' | 'isRecovered'>) => void;
+  addItem: (item: Omit<Item, 'id' | 'postedAt' | 'isRecovered'>) => Item;
   updateItem: (id: string, updates: Partial<Item>) => void;
   markAsRecovered: (item: Item) => void;
   isLoading: boolean;
@@ -31,8 +31,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
       id: uuidv4(),
       postedAt: Date.now(),
       isRecovered: false,
+      lockerNumber: itemData.type === 'found' ? Math.floor(Math.random() * 100) + 1 : undefined,
     };
     setItems([...items, newItem].sort((a, b) => b.postedAt - a.postedAt));
+    return newItem;
   };
 
   const updateItem = (id: string, updates: Partial<Item>) => {

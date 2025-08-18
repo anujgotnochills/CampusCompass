@@ -12,6 +12,9 @@ import { EmptyState } from '@/components/EmptyState';
 import { HeartHandshake, Search } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Terminal } from "lucide-react"
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { PlusCircle } from 'lucide-react';
 
 interface MatchResult extends MatchLostAndFoundOutput {
   lostItem: Item;
@@ -50,7 +53,7 @@ export default function MatchesPage() {
             matchLostAndFound({
               lostItemDescription: lostItem.description,
               foundItemDescription: foundItem.description,
-            }).then(result => ({ ...result, lostItem, foundItem }))
+            }).then(result => ({ ...result, lostItem, foundItem, 'foundItem': {...foundItem, lockerNumber: foundItem.lockerNumber || lostItem.lockerNumber} }))
           )
         );
 
@@ -102,7 +105,20 @@ export default function MatchesPage() {
     }
 
     if (lostItems.length === 0) {
-      return <EmptyState icon={Search} title="No Lost Items to Match" description="You haven't reported any lost items yet. Report a lost item to see potential matches." />;
+        return (
+            <EmptyState 
+                icon={Search} 
+                title="No Lost Items to Match" 
+                description="You haven't reported any lost items yet. Report a lost item to see potential matches."
+            >
+                <Link href="/report?type=lost">
+                    <Button>
+                        <PlusCircle className="mr-2 h-4 w-4" />
+                        Report a Lost Item
+                    </Button>
+                </Link>
+            </EmptyState>
+        );
     }
     
     if (foundItems.length === 0) {

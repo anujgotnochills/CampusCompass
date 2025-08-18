@@ -11,6 +11,7 @@ export interface Item {
   imageUrl?: string;
   isRecovered: boolean;
   postedAt: number;
+  lockerNumber?: number;
 }
 
 export interface Profile {
