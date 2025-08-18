@@ -187,7 +187,7 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
                     />
                     {imageDataUri ? (
                         <div className="relative w-full aspect-video rounded-md overflow-hidden">
-                            <Image src={imageDataUri} alt="Uploaded item" layout="fill" objectFit="cover" />
+                            <Image src={imageDataUri} alt="Uploaded item" fill objectFit="cover" />
                             <Button 
                                 type="button" 
                                 variant="destructive" 
