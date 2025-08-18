@@ -24,6 +24,8 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { useAppContext } from "@/contexts/AppContext"
+import { useToast } from "@/hooks/use-toast"
+import { useRouter } from "next/navigation"
 
 const formSchema = z.object({
   email: z.string().email({
@@ -35,7 +37,10 @@ const formSchema = z.object({
 })
 
 export default function SignupPage() {
-    const { login } = useAppContext();
+    const { signup } = useAppContext();
+    const { toast } = useToast();
+    const router = useRouter();
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -45,10 +50,20 @@ export default function SignupPage() {
     })
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        // In a real app, you would have a separate signup function
-        // that creates a new user account.
-        // For this mock, we'll just log them in.
-        login(values.email)
+        const success = signup(values.email, values.password);
+        if (success) {
+            toast({
+                title: "Account Created!",
+                description: "You have been successfully signed up. Please log in.",
+            });
+            router.push('/login');
+        } else {
+            toast({
+                variant: 'destructive',
+                title: 'Sign Up Failed',
+                description: 'An account with this email already exists.',
+            });
+        }
     }
 
   return (

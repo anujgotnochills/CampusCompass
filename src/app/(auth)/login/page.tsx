@@ -24,6 +24,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { useAppContext } from "@/contexts/AppContext"
+import { useToast } from "@/hooks/use-toast"
 
 const formSchema = z.object({
   email: z.string().email({
@@ -36,6 +37,7 @@ const formSchema = z.object({
 
 export default function LoginPage() {
     const { login } = useAppContext();
+    const { toast } = useToast();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -45,7 +47,15 @@ export default function LoginPage() {
     })
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        login(values.email)
+        const success = login(values.email, values.password);
+        if (!success) {
+            toast({
+                variant: 'destructive',
+                title: 'Login Failed',
+                description: 'Invalid email or password. Please try again.',
+            })
+            form.setValue('password', '');
+        }
     }
 
   return (

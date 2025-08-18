@@ -3,14 +3,9 @@
 
 import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import type { Item, Profile } from '@/lib/types';
+import type { Item, Profile, User, StoredUser } from '@/lib/types';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { useRouter } from 'next/navigation';
-
-interface User {
-  email: string;
-  name: string;
-}
 
 interface AppContextType {
   items: Item[];
@@ -21,7 +16,8 @@ interface AppContextType {
   isLoading: boolean;
   isAuthenticated: boolean;
   user: User | null;
-  login: (email: string) => void;
+  login: (email: string, password: string) => boolean;
+  signup: (email: string, password: string) => boolean;
   logout: () => void;
 }
 
@@ -32,17 +28,34 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useLocalStorage<Item[]>('campus-compass-items', []);
   const [profile, setProfile] = useLocalStorage<Profile>('campus-compass-profile', { rewardPoints: 0 });
   const [user, setUser] = useLocalStorage<User | null>('campus-compass-user', null);
+  const [storedUsers, setStoredUsers] = useLocalStorage<StoredUser[]>('campus-compass-users', []);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setIsLoading(false);
   }, []);
 
-  const login = (email: string) => {
-    // This is a mock login. In a real app, you'd verify credentials.
-    const name = email.split('@')[0];
-    setUser({ email, name: name.charAt(0).toUpperCase() + name.slice(1) });
-    router.push('/dashboard');
+  const signup = (email: string, password: string): boolean => {
+    const existingUser = storedUsers.find(u => u.email === email);
+    if (existingUser) {
+        return false; // User already exists
+    }
+    const newUser: StoredUser = { email, password };
+    setStoredUsers([...storedUsers, newUser]);
+    return true;
+  };
+
+
+  const login = (email: string, password: string): boolean => {
+    const storedUser = storedUsers.find(u => u.email === email && u.password === password);
+
+    if (storedUser) {
+        const name = email.split('@')[0];
+        setUser({ email, name: name.charAt(0).toUpperCase() + name.slice(1) });
+        router.push('/dashboard');
+        return true;
+    }
+    return false;
   };
 
   const logout = () => {
@@ -89,6 +102,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     isAuthenticated: !!user,
     user,
     login,
+    signup,
     logout,
   };
 
