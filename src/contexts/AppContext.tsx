@@ -16,6 +16,7 @@ interface AppContextType {
   isLoading: boolean;
   isAuthenticated: boolean;
   user: User | null;
+  updateUser: (updates: Partial<User>) => void;
   login: (email: string, password: string) => boolean;
   signup: (email: string, password: string) => boolean;
   logout: () => void;
@@ -78,6 +79,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const updateItem = (id: string, updates: Partial<Item>) => {
     setItems(items.map(item => (item.id === id ? { ...item, ...updates } : item)));
   };
+  
+  const updateUser = (updates: Partial<User>) => {
+    if (user) {
+      setUser({ ...user, ...updates });
+    }
+  };
 
   const markAsRecovered = (itemToRecover: Item) => {
     if (itemToRecover.isRecovered) return;
@@ -97,6 +104,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     profile,
     addItem,
     updateItem,
+    updateUser,
     markAsRecovered,
     isLoading,
     isAuthenticated: !!user,
