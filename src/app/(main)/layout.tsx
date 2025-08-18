@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -19,6 +20,9 @@ import {
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { UserNav } from "@/components/UserNav";
+import { useAppContext } from "@/contexts/AppContext";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const navItems = [
   { href: "/dashboard", icon: LayoutGrid, label: "Dashboard" },
@@ -33,6 +37,22 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const { isAuthenticated, isLoading } = useAppContext();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.push('/login');
+    }
+  }, [isLoading, isAuthenticated, router]);
+
+  if (isLoading || !isAuthenticated) {
+    return (
+        <div className="flex items-center justify-center min-h-screen">
+            <div>Loading...</div>
+        </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">

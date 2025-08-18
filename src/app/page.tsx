@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Compass, Search, Award } from 'lucide-react';
@@ -13,7 +14,7 @@ export default function LandingPage() {
           <span className="text-xl font-bold text-foreground">Campus Compass</span>
         </Link>
         <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Link href="/dashboard" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
+          <Link href="/login" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
             <Button>Enter App</Button>
           </Link>
         </nav>
@@ -32,7 +33,7 @@ export default function LandingPage() {
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                  <Link href="/dashboard" prefetch={false}>
+                  <Link href="/login" prefetch={false}>
                     <Button size="lg" className="w-full min-[400px]:w-auto">Get Started</Button>
                   </Link>
                 </div>

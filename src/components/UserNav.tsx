@@ -1,6 +1,7 @@
+
 "use client";
 
-import { Award, User } from "lucide-react";
+import { Award, User, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,7 +17,7 @@ import { useAppContext } from "@/contexts/AppContext";
 import Link from "next/link";
 
 export function UserNav() {
-  const { profile } = useAppContext();
+  const { profile, logout } = useAppContext();
 
   return (
     <DropdownMenu>
@@ -52,6 +53,11 @@ export function UserNav() {
             <span>Rewards: {profile.rewardPoints} points</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={logout}>
+          <LogOut className="mr-2 h-4 w-4" />
+          <span>Log out</span>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
