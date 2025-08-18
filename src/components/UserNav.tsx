@@ -1,7 +1,7 @@
 
 "use client";
 
-import { Award, User, LogOut } from "lucide-react";
+import { Award, User, LogOut, Settings, HelpCircle } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,13 +17,13 @@ import { useAppContext } from "@/contexts/AppContext";
 import Link from "next/link";
 
 export function UserNav() {
-  const { profile, logout } = useAppContext();
+  const { profile, logout, user } = useAppContext();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-          <Avatar className="h-8 w-8">
+        <Button variant="ghost" className="relative h-9 w-9 rounded-full">
+          <Avatar className="h-9 w-9">
             <AvatarImage src="/avatars/01.png" alt="@student" />
             <AvatarFallback>
               <User />
@@ -34,9 +34,9 @@ export function UserNav() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">Student</p>
+            <p className="text-sm font-medium leading-none">{user?.name || "User"}</p>
             <p className="text-xs leading-none text-muted-foreground">
-              student@university.edu
+              {user?.email}
             </p>
           </div>
         </DropdownMenuLabel>
@@ -49,8 +49,12 @@ export function UserNav() {
             </DropdownMenuItem>
           </Link>
           <DropdownMenuItem>
-            <Award className="mr-2 h-4 w-4" />
-            <span>Rewards: {profile.rewardPoints} points</span>
+            <Settings className="mr-2 h-4 w-4" />
+            <span>Settings</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <HelpCircle className="mr-2 h-4 w-4" />
+            <span>Help Center</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

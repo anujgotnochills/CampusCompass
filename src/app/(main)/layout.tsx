@@ -1,34 +1,22 @@
 
 "use client";
 
+import { Compass, LayoutGrid, List, HeartHandshake, User, PlusCircle, Search, Home, ShoppingBag, User as UserIcon } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
 import Link from "next/link";
-import {
-  Compass,
-  LayoutGrid,
-  List,
-  HeartHandshake,
-  User,
-  PlusCircle
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { UserNav } from "@/components/UserNav";
 import { useAppContext } from "@/contexts/AppContext";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
+import MobileNav from "@/components/MobileNav";
 
 const navItems = [
-  { href: "/dashboard", icon: LayoutGrid, label: "Dashboard" },
-  { href: "/items", icon: List, label: "All Items" },
-  { href: "/matches", icon: HeartHandshake, label: "Matches" },
-  { href: "/profile", icon: User, label: "Profile" },
+  { href: "/dashboard", icon: Home, label: "Home" },
+  { href: "/items", icon: Search, label: "Search" },
+  { href: "/matches", icon: ShoppingBag, label: "Bag" },
+  { href: "/profile", icon: UserIcon, label: "Profile" },
 ];
 
 export default function MainLayout({
@@ -39,6 +27,7 @@ export default function MainLayout({
   const pathname = usePathname();
   const { isAuthenticated, isLoading } = useAppContext();
   const router = useRouter();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -53,67 +42,63 @@ export default function MainLayout({
         </div>
     );
   }
+  
+  if (isMobile === undefined) {
+    return null;
+  }
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
-        <TooltipProvider>
-          <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
-            <Link
-              href="/dashboard"
-              className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
-            >
-              <Compass className="h-4 w-4 transition-all group-hover:scale-110" />
-              <span className="sr-only">Campus Compass</span>
-            </Link>
-            {navItems.map((item) => (
-              <Tooltip key={item.href}>
-                <TooltipTrigger asChild>
-                  <Link
-                    href={item.href}
-                    className={cn(
-                      "flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8",
-                      pathname === item.href && "bg-accent text-accent-foreground"
-                    )}
-                  >
-                    <item.icon className="h-5 w-5" />
-                    <span className="sr-only">{item.label}</span>
-                  </Link>
-                </TooltipTrigger>
-                <TooltipContent side="right">{item.label}</TooltipContent>
-              </Tooltip>
-            ))}
-          </nav>
-        </TooltipProvider>
-      </aside>
-      <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-          <div className="flex items-center gap-2">
-            <Link href="/dashboard" className="sm:hidden flex items-center gap-2 text-lg font-semibold">
-              <Compass className="h-6 w-6" />
-              <span>Campus Compass</span>
+    <div className="flex min-h-screen w-full flex-col bg-background">
+      {!isMobile && (
+        <aside className="fixed inset-y-0 left-0 z-10 hidden w-64 flex-col border-r bg-card sm:flex">
+          <div className="flex h-16 items-center border-b px-6">
+            <Link href="/dashboard" className="flex items-center gap-2 font-semibold text-primary">
+              <Leaf className="h-6 w-6" />
+              <span>Dipstore</span>
             </Link>
           </div>
-          
+          <nav className="flex flex-col gap-2 p-4">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary hover:bg-primary/10",
+                  pathname === item.href && "bg-primary/10 text-primary"
+                )}
+              >
+                <item.icon className="h-4 w-4" />
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+        </aside>
+      )}
+
+      <div className={cn("flex flex-col", !isMobile && "sm:pl-64")}>
+        <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 md:px-6">
+          {isMobile && (
+             <Link href="/dashboard" className="flex items-center gap-2 font-semibold text-primary sm:hidden">
+              <Leaf className="h-6 w-6" />
+              <span className="sr-only">Dipstore</span>
+            </Link>
+          )}
+          <div className="flex-1">
+            {/* Can add a search bar here in the future */}
+          </div>
           <div className="ml-auto flex items-center gap-4">
-              <Link href="/report?type=lost">
-                <Button size="sm" variant="outline" className="gap-1">
-                  Report Lost
-                </Button>
-              </Link>
-              <Link href="/report?type=found">
-                <Button size="sm" className="gap-1">
-                  <PlusCircle className="h-4 w-4" />
-                  Report Found
-                </Button>
-              </Link>
             <UserNav />
           </div>
         </header>
-        <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+        <main className="flex-1 p-4 md:p-8 lg:p-10">
           {children}
         </main>
       </div>
+      
+      {isMobile && <MobileNav navItems={navItems} />}
     </div>
   );
 }
+
+// Rename Compass to Leaf to avoid conflicts
+import { Leaf } from 'lucide-react';

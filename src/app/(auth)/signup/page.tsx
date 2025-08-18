@@ -18,18 +18,12 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 import { useAppContext } from "@/contexts/AppContext"
 import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
 
 const formSchema = z.object({
+  username: z.string().min(3, { message: "Username must be at least 3 characters."}),
   email: z.string().email({
     message: "Please enter a valid email address.",
   }),
@@ -47,6 +41,7 @@ export default function SignupPage() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
+            username: "",
             email: "",
             password: "",
         },
@@ -70,14 +65,26 @@ export default function SignupPage() {
     }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Create an Account</CardTitle>
-        <CardDescription>Enter your email and password to get started.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+    <div className="space-y-6 rounded-lg bg-card p-6 shadow-lg">
+      <div className="space-y-2 text-center">
+        <h1 className="text-2xl font-bold">Let's Get Started</h1>
+        <p className="text-muted-foreground">Create an account to continue.</p>
+      </div>
+      <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input placeholder="marion_angela" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="email"
@@ -85,7 +92,7 @@ export default function SignupPage() {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="student@university.edu" {...field} />
+                    <Input placeholder="marion.angela@email.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -101,7 +108,7 @@ export default function SignupPage() {
                     <FormControl>
                       <Input 
                         type={showPassword ? "text" : "password"} 
-                        placeholder="********" 
+                        placeholder="at least 8 characters" 
                         {...field} 
                         className="pr-10"
                       />
@@ -121,16 +128,16 @@ export default function SignupPage() {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">Create Account</Button>
+            <Button type="submit" className="w-full !mt-6" size="lg">Continue</Button>
           </form>
         </Form>
+        
         <div className="mt-4 text-center text-sm">
             Already have an account?{" "}
-            <Link href="/login" className="underline">
+            <Link href="/login" className="font-medium text-primary hover:underline">
                 Sign in
             </Link>
         </div>
-      </CardContent>
-    </Card>
+    </div>
   )
 }
