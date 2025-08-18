@@ -9,7 +9,7 @@ import type { MatchLostAndFoundOutput } from '@/ai/flows/match-lost-and-found';
 import { MatchCard } from '@/components/MatchCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/EmptyState';
-import { HeartHandshake } from 'lucide-react';
+import { HeartHandshake, Search } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Terminal } from "lucide-react"
 
@@ -102,11 +102,11 @@ export default function MatchesPage() {
     }
 
     if (lostItems.length === 0) {
-      return <EmptyState title="No Lost Items to Match" description="You haven't reported any lost items yet. Report a lost item to see potential matches." />;
+      return <EmptyState icon={Search} title="No Lost Items to Match" description="You haven't reported any lost items yet. Report a lost item to see potential matches." />;
     }
     
     if (foundItems.length === 0) {
-      return <EmptyState title="No Found Items to Match" description="There are currently no found items in the system to match against your lost items." />;
+      return <EmptyState icon={Search} title="No Found Items to Match" description="There are currently no found items in the system to match against your lost items." />;
     }
 
     if (matches.length === 0) {
