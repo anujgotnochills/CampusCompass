@@ -30,12 +30,13 @@ export default function MainLayout({
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      router.push('/login');
-    }
+    // We can remove the redirection logic for now
+    // if (!isLoading && !isAuthenticated) {
+    //   router.push('/login');
+    // }
   }, [isLoading, isAuthenticated, router]);
 
-  if (isLoading || !isAuthenticated) {
+  if (isLoading) {
     return (
         <div className="flex items-center justify-center min-h-screen">
             <div>Loading...</div>

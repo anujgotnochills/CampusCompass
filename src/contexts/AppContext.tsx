@@ -28,7 +28,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const [items, setItems] = useLocalStorage<Item[]>('campus-compass-items', []);
   const [profile, setProfile] = useLocalStorage<Profile>('campus-compass-profile', { rewardPoints: 0 });
-  const [user, setUser] = useLocalStorage<User | null>('campus-compass-user', null);
+  const [user, setUser] = useLocalStorage<User | null>('campus-compass-user', { email: "user@example.com", name: "Test User"});
   const [storedUsers, setStoredUsers] = useLocalStorage<StoredUser[]>('campus-compass-users', []);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -43,6 +43,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
     const newUser: StoredUser = { email, password };
     setStoredUsers([...storedUsers, newUser]);
+    // Also log them in
+    const name = email.split('@')[0];
+    setUser({ email, name: name.charAt(0).toUpperCase() + name.slice(1) });
+    router.push('/dashboard');
     return true;
   };
 
@@ -50,9 +54,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const login = (email: string, password: string): boolean => {
     const storedUser = storedUsers.find(u => u.email === email && u.password === password);
 
-    if (storedUser) {
-        const name = email.split('@')[0];
-        setUser({ email, name: name.charAt(0).toUpperCase() + name.slice(1) });
+    if (storedUser || user) { // also allow if user is already set (for bypass)
+        const name = (user?.email || email).split('@')[0];
+        setUser({ email: user?.email || email, name: user?.name || (name.charAt(0).toUpperCase() + name.slice(1)) });
         router.push('/dashboard');
         return true;
     }
@@ -60,8 +64,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = () => {
-    setUser(null);
-    router.push('/login');
+    // In bypass mode, logout can just reset to the default user
+    setUser({ email: "user@example.com", name: "Test User"});
+    router.push('/');
   };
 
   const addItem = (itemData: Omit<Item, 'id' | 'postedAt' | 'isRecovered'>) => {

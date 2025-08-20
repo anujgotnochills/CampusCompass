@@ -35,7 +35,7 @@ export default function LandingPage() {
             </p>
           </div>
           <div className="space-x-4">
-            <Link href="/login" prefetch={false}>
+            <Link href="/dashboard" prefetch={false}>
                 <Button>Get Started</Button>
             </Link>
             <Link href="#how-it-works" prefetch={false}>
