@@ -30,7 +30,7 @@ export default function ProfilePage() {
     <div className="space-y-8 max-w-3xl mx-auto">
       <div className="flex items-center gap-6">
         <Avatar className="h-24 w-24">
-          <AvatarImage src="/avatars/01.png" alt="@student" />
+          
           <AvatarFallback>
               <UserIcon className="h-10 w-10"/>
             </AvatarFallback>
