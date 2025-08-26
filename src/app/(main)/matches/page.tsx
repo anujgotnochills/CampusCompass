@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect, useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useAppContext } from '@/contexts/AppContext';
 import { matchLostAndFound } from '@/ai/flows/match-lost-and-found';
 import type { Item } from '@/lib/types';
@@ -9,7 +9,7 @@ import type { MatchLostAndFoundOutput } from '@/ai/flows/match-lost-and-found';
 import { MatchCard } from '@/components/MatchCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/EmptyState';
-import { HeartHandshake, Search } from 'lucide-react';
+import { HeartHandshake, Search, Bot } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Terminal } from "lucide-react"
 import Link from 'next/link';
@@ -26,8 +26,9 @@ const MATCH_CONFIDENCE_THRESHOLD = 0.5;
 export default function MatchesPage() {
   const { items } = useAppContext();
   const [matches, setMatches] = useState<MatchResult[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [hasSearched, setHasSearched] = useState(false);
 
   const { lostItems, foundItems } = useMemo(() => {
     const activeItems = items.filter(item => !item.isRecovered);
@@ -36,45 +37,45 @@ export default function MatchesPage() {
       foundItems: activeItems.filter(item => item.type === 'found'),
     };
   }, [items]);
+  
+  const findMatches = async () => {
+    if (lostItems.length === 0 || foundItems.length === 0) {
+      setIsLoading(false);
+      setHasSearched(true);
+      return;
+    }
 
-  useEffect(() => {
-    const findMatches = async () => {
-      if (lostItems.length === 0 || foundItems.length === 0) {
-        setIsLoading(false);
-        return;
-      }
+    setIsLoading(true);
+    setHasSearched(true);
+    setError(null);
+    setMatches([]);
 
-      setIsLoading(true);
-      setError(null);
+    try {
+      const matchPromises = lostItems.flatMap(lostItem =>
+        foundItems.map(foundItem =>
+          matchLostAndFound({
+            lostItemDescription: lostItem.description,
+            foundItemDescription: foundItem.description,
+            lostItemImageDataUri: lostItem.imageDataUri,
+            foundItemImageDataUri: foundItem.imageDataUri,
+          }).then(result => ({ ...result, lostItem, foundItem, 'foundItem': {...foundItem, lockerNumber: foundItem.lockerNumber || lostItem.lockerNumber} }))
+        )
+      );
 
-      try {
-        const matchPromises = lostItems.flatMap(lostItem =>
-          foundItems.map(foundItem =>
-            matchLostAndFound({
-              lostItemDescription: lostItem.description,
-              foundItemDescription: foundItem.description,
-              lostItemImageDataUri: lostItem.imageDataUri,
-              foundItemImageDataUri: foundItem.imageDataUri,
-            }).then(result => ({ ...result, lostItem, foundItem, 'foundItem': {...foundItem, lockerNumber: foundItem.lockerNumber || lostItem.lockerNumber} }))
-          )
-        );
+      const results = await Promise.all(matchPromises);
+      const highConfidenceMatches = results
+        .filter(result => result.matchConfidence >= MATCH_CONFIDENCE_THRESHOLD)
+        .sort((a, b) => b.matchConfidence - a.matchConfidence);
+      
+      setMatches(highConfidenceMatches);
+    } catch (e) {
+      console.error("Failed to find matches:", e);
+      setError("Could not load matches due to an error. Please try again later.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-        const results = await Promise.all(matchPromises);
-        const highConfidenceMatches = results
-          .filter(result => result.matchConfidence >= MATCH_CONFIDENCE_THRESHOLD)
-          .sort((a, b) => b.matchConfidence - a.matchConfidence);
-        
-        setMatches(highConfidenceMatches);
-      } catch (e) {
-        console.error("Failed to find matches:", e);
-        setError("Could not load matches due to an error. Please try again later.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    findMatches();
-  }, [lostItems, foundItems]);
 
   const renderContent = () => {
     if (isLoading) {
@@ -106,6 +107,21 @@ export default function MatchesPage() {
        )
     }
 
+    if (!hasSearched) {
+      return (
+        <EmptyState
+          icon={Bot}
+          title="Ready to Find Matches?"
+          description="Click the button to let our AI search for potential matches between lost and found items."
+        >
+          <Button onClick={findMatches} size="lg">
+            <Search className="mr-2 h-5 w-5" />
+            Find Matches Now
+          </Button>
+        </EmptyState>
+      );
+    }
+
     if (lostItems.length === 0) {
         return (
             <EmptyState 
@@ -128,11 +144,28 @@ export default function MatchesPage() {
     }
 
     if (matches.length === 0) {
-      return <EmptyState icon={HeartHandshake} title="No Matches Found" description="We didn't find any high-confidence matches for your items right now. We'll keep checking as new items are reported." />;
+      return (
+        <EmptyState 
+            icon={HeartHandshake} 
+            title="No Matches Found" 
+            description="We didn't find any high-confidence matches. We'll keep checking as new items are reported."
+        >
+             <Button onClick={findMatches} variant="outline">
+                <Search className="mr-2 h-4 w-4" />
+                Search Again
+            </Button>
+        </EmptyState>
+      )
     }
 
     return (
       <div className="space-y-6">
+        <div className="flex justify-end">
+             <Button onClick={findMatches} variant="outline">
+                <Search className="mr-2 h-4 w-4" />
+                Refresh Matches
+            </Button>
+        </div>
         {matches.map((match, index) => (
           <MatchCard key={`${match.lostItem.id}-${match.foundItem.id}-${index}`} match={match} />
         ))}
