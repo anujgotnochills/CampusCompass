@@ -1,11 +1,12 @@
 
 import { Button } from '@/components/ui/button';
-import { Leaf } from 'lucide-react';
+import { Leaf, Search, Bot, Bell } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function LandingPage() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-background">
       <header className="flex h-16 items-center justify-between px-4 md:px-6">
         <Link href="/" className="flex items-center gap-2 font-semibold" prefetch={false}>
           <Leaf className="h-6 w-6 text-primary" />
@@ -18,44 +19,96 @@ export default function LandingPage() {
           <Link href="#how-it-works" className="hover:text-primary" prefetch={false}>
             How It Works
           </Link>
-          <Link href="#testimonials" className="hover:text-primary" prefetch={false}>
-            Testimonials
-          </Link>
+           <Link href="/dashboard" prefetch={false}>
+                <Button>Get Started</Button>
+            </Link>
         </nav>
       </header>
       <main className="flex-1">
-        <section className="flex flex-col items-center justify-center space-y-4 py-12 text-center md:py-24 lg:py-32">
-          <div className="space-y-2">
-            <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-              Reuniting Lost Items with their Owners
-            </h1>
-            <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-              Our smart, AI-powered platform makes it easy to report lost items and get notified when a potential match is
-              found on campus.
-            </p>
-          </div>
-          <div className="space-x-4">
-            <Link href="/dashboard" prefetch={false}>
-                <Button>Get Started</Button>
-            </Link>
-            <Link href="#how-it-works" prefetch={false}>
-                <Button variant="outline">Learn More</Button>
-            </Link>
+        <section className="relative w-full py-20 md:py-32 lg:py-40">
+          <div className="container px-4 md:px-6 grid md:grid-cols-2 gap-10 items-center">
+            <div className="space-y-4">
+              <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl text-foreground">
+                The Smartest Way to Find Lost Items on Campus
+              </h1>
+              <p className="max-w-[600px] text-muted-foreground md:text-xl">
+                Our AI-powered platform makes reporting lost items effortless and intelligently matches them with found ones. Never lose anything again.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                 <Link href="/dashboard" prefetch={false}>
+                    <Button size="lg">Report an Item</Button>
+                </Link>
+                <Link href="#how-it-works" prefetch={false}>
+                    <Button size="lg" variant="outline">Learn More</Button>
+                </Link>
+              </div>
+            </div>
+            <div className="relative">
+                <div className="absolute -top-10 -right-10 w-72 h-72 bg-primary/10 rounded-full filter blur-3xl opacity-50"></div>
+                <div className="absolute -bottom-10 -left-10 w-72 h-72 bg-secondary/10 rounded-full filter blur-3xl opacity-50"></div>
+                <Image 
+                    src="https://picsum.photos/800/600"
+                    alt="Happy students on campus"
+                    data-ai-hint="happy students campus"
+                    width={800}
+                    height={600}
+                    className="rounded-xl shadow-2xl object-cover aspect-video z-10 relative"
+                />
+            </div>
           </div>
         </section>
         
+        <section id="features" className="w-full py-12 md:py-24 lg:py-32">
+            <div className="container px-4 md:px-6">
+                <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
+                    <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">Key Features</div>
+                    <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Why You'll Love Campus Compass</h2>
+                    <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                        We've packed our app with features to make finding lost items a breeze.
+                    </p>
+                </div>
+                 <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-2 md:gap-12 lg:grid-cols-3">
+                    <div className="grid gap-2">
+                        <div className="flex items-center gap-3">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+                                <Search className="h-5 w-5 text-primary"/>
+                            </div>
+                            <h3 className="text-lg font-bold">AI-Powered Search</h3>
+                        </div>
+                        <p className="text-sm text-muted-foreground">Our smart system analyzes descriptions and images to find matches with high accuracy, saving you time and effort.</p>
+                    </div>
+                     <div className="grid gap-2">
+                        <div className="flex items-center gap-3">
+                             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+                                <Bot className="h-5 w-5 text-primary"/>
+                            </div>
+                            <h3 className="text-lg font-bold">Smart Suggestions</h3>
+                        </div>
+                        <p className="text-sm text-muted-foreground">When you report an item, our AI helps you write a clear, detailed description and suggests a title automatically.</p>
+                    </div>
+                     <div className="grid gap-2">
+                        <div className="flex items-center gap-3">
+                             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+                                <Bell className="h-5 w-5 text-primary"/>
+                            </div>
+                            <h3 className="text-lg font-bold">Instant Notifications</h3>
+                        </div>
+                        <p className="text-sm text-muted-foreground">Get notified the moment a potential match for your lost item is found, so you can recover it quickly.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="how-it-works" className="w-full py-12 md:py-24 lg:py-32 bg-muted">
             <div className="container px-4 md:px-6">
                 <div className="flex flex-col items-center justify-center space-y-4 text-center">
-                    <div className="space-y-2">
-                        <div className="inline-block rounded-lg bg-secondary px-3 py-1 text-sm">How It Works</div>
-                        <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">A Simple, 3-Step Process</h2>
-                        <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                    <div className="inline-block rounded-lg bg-secondary px-3 py-1 text-sm">How It Works</div>
+                    <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">A Simple, 3-Step Process</h2>
+                    <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                         We've streamlined the lost and found process to be as simple and stress-free as possible.
                         </p>
-                    </div>
                 </div>
-                <div className="mx-auto grid max-w-5xl items-start gap-12 sm:grid-cols-2 md:gap-16 lg:grid-cols-3 lg:max-w-none">
+                <div className="mx-auto grid max-w-5xl items-start gap-12 sm:grid-cols-2 md:gap-16 lg:grid-cols-3 lg:max-w-none mt-12">
                     <div className="grid gap-1 text-center">
                         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground mb-4">
                             <span className="text-2xl font-bold">1</span>
