@@ -5,6 +5,7 @@ import { Compass, LayoutGrid, List, HeartHandshake, User, PlusCircle } from "luc
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { UserNav } from "@/components/UserNav";
 import { useAppContext } from "@/contexts/AppContext";
@@ -127,7 +128,14 @@ export default function MainLayout({
           <UserNav />
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
-          {children}
+           <motion.div
+              key={pathname}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+            >
+              {children}
+            </motion.div>
         </main>
       </div>
     </div>
