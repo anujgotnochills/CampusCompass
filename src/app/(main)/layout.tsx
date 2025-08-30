@@ -5,7 +5,7 @@ import { Compass, LayoutGrid, List, HeartHandshake, User, PlusCircle } from "luc
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { UserNav } from "@/components/UserNav";
 import { useAppContext } from "@/contexts/AppContext";
@@ -13,6 +13,8 @@ import { Button } from "@/components/ui/button";
 import MobileNav from "@/components/MobileNav";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
+
 
 const navItems = [
   { href: "/dashboard", icon: LayoutGrid, label: "Dashboard" },
@@ -20,6 +22,28 @@ const navItems = [
   { href: "/matches", icon: HeartHandshake, label: "Matches" },
   { href: "/profile", icon: User, label: "Profile" },
 ];
+
+const pageVariants = {
+  initial: {
+    opacity: 0,
+    y: 20,
+  },
+  in: {
+    opacity: 1,
+    y: 0,
+  },
+  out: {
+    opacity: 0,
+    y: -20,
+  },
+};
+
+const pageTransition = {
+  type: "tween",
+  ease: "anticipate",
+  duration: 0.5,
+};
+
 
 export default function MainLayout({
   children,
@@ -40,7 +64,7 @@ export default function MainLayout({
   if (isLoading) {
     return (
         <div className="flex items-center justify-center min-h-screen">
-            <div>Loading...</div>
+            <LoadingSpinner />
         </div>
     );
   }
@@ -114,28 +138,36 @@ export default function MainLayout({
           </Sheet>
           <div className="w-full flex-1">
             <Link href="/report?type=lost" className="mr-4">
-                <Button size="sm" variant="outline">
-                    Report Lost
-                </Button>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Button size="sm" variant="outline">
+                        Report Lost
+                    </Button>
+                </motion.div>
             </Link>
             <Link href="/report?type=found">
-                <Button size="sm">
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Report Found
-                </Button>
+                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Button size="sm">
+                        <PlusCircle className="mr-2 h-4 w-4" />
+                        Report Found
+                    </Button>
+                </motion.div>
             </Link>
           </div>
           <UserNav />
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
-           <motion.div
-              key={pathname}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-            >
-              {children}
-            </motion.div>
+           <AnimatePresence mode="wait">
+              <motion.div
+                key={pathname}
+                initial="initial"
+                animate="in"
+                exit="out"
+                variants={pageVariants}
+                transition={pageTransition}
+              >
+                {children}
+              </motion.div>
+            </AnimatePresence>
         </main>
       </div>
     </div>

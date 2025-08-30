@@ -34,7 +34,9 @@ export default function LandingPage() {
             How It Works
           </Link>
            <Link href="/dashboard" prefetch={false}>
-                <Button>Get Started</Button>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button>Get Started</Button>
+                </motion.div>
             </Link>
         </nav>
       </header>
@@ -50,10 +52,14 @@ export default function LandingPage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                  <Link href="/dashboard" prefetch={false}>
-                    <Button size="lg">Report an Item</Button>
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                      <Button size="lg">Report an Item</Button>
+                    </motion.div>
                 </Link>
                 <Link href="#how-it-works" prefetch={false}>
+                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <Button size="lg" variant="outline">Learn More</Button>
+                   </motion.div>
                 </Link>
               </div>
             </div>
