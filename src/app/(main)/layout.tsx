@@ -51,16 +51,8 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const { isAuthenticated, isLoading } = useAppContext();
-  const router = useRouter();
-
-  useEffect(() => {
-    // We can remove the redirection logic for now
-    // if (!isLoading && !isAuthenticated) {
-    //   router.push('/login');
-    // }
-  }, [isLoading, isAuthenticated, router]);
-
+  const { isLoading } = useAppContext();
+  
   if (isLoading) {
     return (
         <div className="flex items-center justify-center min-h-screen">
@@ -70,36 +62,8 @@ export default function MainLayout({
   }
 
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-      <div className="hidden border-r bg-muted/40 md:block">
-        <div className="flex h-full max-h-screen flex-col gap-2">
-          <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-            <Link href="/" className="flex items-center gap-2 font-semibold text-primary">
-              <Compass className="h-6 w-6" />
-              <span className="">Campus Compass</span>
-            </Link>
-          </div>
-          <div className="flex-1">
-            <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
-              {navItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={cn(
-                    "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
-                    pathname === item.href && "bg-muted text-primary"
-                  )}
-                >
-                  <item.icon className="h-4 w-4" />
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-col">
-        <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+    <div className="flex flex-col min-h-screen w-full">
+      <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur-sm md:px-6">
           <Sheet>
             <SheetTrigger asChild>
               <Button
@@ -114,8 +78,8 @@ export default function MainLayout({
             <SheetContent side="left" className="flex flex-col">
               <nav className="grid gap-2 text-lg font-medium">
                 <Link
-                  href="#"
-                  className="flex items-center gap-2 text-lg font-semibold mb-4"
+                  href="/dashboard"
+                  className="flex items-center gap-2 text-lg font-semibold mb-4 text-primary"
                 >
                   <Compass className="h-6 w-6" />
                   <span>Campus Compass</span>
@@ -136,8 +100,31 @@ export default function MainLayout({
               </nav>
             </SheetContent>
           </Sheet>
-          <div className="w-full flex-1">
-            <Link href="/report?type=lost" className="mr-4">
+          
+          <div className="flex items-center gap-2 font-semibold text-primary">
+            <Link href="/dashboard" className="flex items-center gap-2">
+              <Compass className="h-6 w-6" />
+              <span className="hidden md:inline-block">Campus Compass</span>
+            </Link>
+          </div>
+          
+          <nav className="hidden md:flex md:items-center md:gap-5 lg:gap-6 text-sm font-medium ml-10">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    "text-muted-foreground transition-colors hover:text-foreground",
+                    pathname === item.href && "text-foreground"
+                  )}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+
+          <div className="flex items-center gap-4 ml-auto">
+            <Link href="/report?type=lost" className="hidden sm:inline-flex">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <Button size="sm" variant="outline">
                         Report Lost
@@ -152,8 +139,8 @@ export default function MainLayout({
                     </Button>
                 </motion.div>
             </Link>
+            <UserNav />
           </div>
-          <UserNav />
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
            <AnimatePresence mode="wait">
@@ -169,7 +156,6 @@ export default function MainLayout({
               </motion.div>
             </AnimatePresence>
         </main>
-      </div>
     </div>
   );
 }
