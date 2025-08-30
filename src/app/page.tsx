@@ -24,7 +24,7 @@ export default function LandingPage() {
       <header className="flex h-16 items-center justify-between px-4 md:px-6">
         <Link href="/" className="flex items-center gap-2 font-semibold" prefetch={false}>
           <Leaf className="h-6 w-6 text-primary" />
-          <span className="text-xl font-bold">Campus Compass</span>
+          <span className="text-xl font-bold font-headline">Campus Compass</span>
         </Link>
         <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
           <Link href="#features" className="hover:text-primary" prefetch={false}>
@@ -44,7 +44,7 @@ export default function LandingPage() {
         <section className="relative w-full py-20 md:py-32 lg:py-40">
           <div className="container px-4 md:px-6 grid md:grid-cols-2 gap-10 items-center">
             <div className="space-y-4">
-              <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl text-foreground">
+              <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl text-foreground font-headline">
                 The <span className="hover-headline">Smartest</span> Way to Find Lost Items on Campus
               </h1>
               <p className="max-w-[600px] text-muted-foreground md:text-xl">
@@ -82,7 +82,7 @@ export default function LandingPage() {
             <div className="container px-4 md:px-6">
                 <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
                     <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">Key Features</div>
-                    <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Why You'll <span className="hover-headline">Love</span> Campus Compass</h2>
+                    <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl font-headline">Why You'll <span className="hover-headline">Love</span> Campus Compass</h2>
                     <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                         We've packed our app with features to make finding lost items a breeze.
                     </p>
@@ -93,7 +93,7 @@ export default function LandingPage() {
                             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
                                 <Search className="h-5 w-5 text-primary"/>
                             </div>
-                            <h3 className="text-lg font-bold">AI-Powered Search</h3>
+                            <h3 className="text-lg font-bold font-headline">AI-Powered Search</h3>
                         </div>
                         <p className="text-sm text-muted-foreground">Our smart system analyzes descriptions and images to find matches with high accuracy, saving you time and effort.</p>
                     </motion.div>
@@ -102,7 +102,7 @@ export default function LandingPage() {
                              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
                                 <Bot className="h-5 w-5 text-primary"/>
                             </div>
-                            <h3 className="text-lg font-bold">Smart Suggestions</h3>
+                            <h3 className="text-lg font-bold font-headline">Smart Suggestions</h3>
                         </div>
                         <p className="text-sm text-muted-foreground">When you report an item, our AI helps you write a clear, detailed description and suggests a title automatically.</p>
                     </motion.div>
@@ -111,7 +111,7 @@ export default function LandingPage() {
                              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
                                 <Bell className="h-5 w-5 text-primary"/>
                             </div>
-                            <h3 className="text-lg font-bold">Instant Notifications</h3>
+                            <h3 className="text-lg font-bold font-headline">Instant Notifications</h3>
                         </div>
                         <p className="text-sm text-muted-foreground">Get notified the moment a potential match for your lost item is found, so you can recover it quickly.</p>
                     </motion.div>
@@ -123,7 +123,7 @@ export default function LandingPage() {
             <div className="container px-4 md:px-6">
                 <div className="flex flex-col items-center justify-center space-y-4 text-center">
                     <div className="inline-block rounded-lg bg-secondary px-3 py-1 text-sm">How It Works</div>
-                    <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">A Simple, <span className="hover-headline">3-Step</span> Process</h2>
+                    <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl font-headline">A Simple, <span className="hover-headline">3-Step</span> Process</h2>
                     <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                         We've streamlined the lost and found process to be as simple and stress-free as possible.
                         </p>
@@ -133,7 +133,7 @@ export default function LandingPage() {
                         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground mb-4">
                             <span className="text-2xl font-bold">1</span>
                         </div>
-                        <h3 className="text-lg font-bold">Report Your Item</h3>
+                        <h3 className="text-lg font-bold font-headline">Report Your Item</h3>
                         <p className="text-sm text-muted-foreground">
                         Lost something? Found something? Quickly submit a report with a description and photo. Our AI will even help you write a clear description.
                         </p>
@@ -142,7 +142,7 @@ export default function LandingPage() {
                         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground mb-4">
                             <span className="text-2xl font-bold">2</span>
                         </div>
-                        <h3 className="text-lg font-bold">AI Finds a Match</h3>
+                        <h3 className="text-lg font-bold font-headline">AI Finds a Match</h3>
                         <p className="text-sm text-muted-foreground">
                         Our smart system analyzes new reports in real-time, comparing text descriptions and images to find potential matches for your item.
                         </p>
@@ -151,7 +151,7 @@ export default function LandingPage() {
                         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground mb-4">
                             <span className="text-2xl font-bold">3</span>
                         </div>
-                        <h3 className="text-lg font-bold">Get Notified & Recover</h3>
+                        <h3 className="text-lg font-bold font-headline">Get Notified & Recover</h3>
                         <p className="text-sm text-muted-foreground">
                         When a high-confidence match is found, you'll be notified immediately. Found items are secured in a campus locker for easy pickup.
                         </p>
