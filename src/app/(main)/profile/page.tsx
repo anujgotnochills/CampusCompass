@@ -70,7 +70,7 @@ export default function ProfilePage() {
           <CardTitle>My Account</CardTitle>
           <CardDescription>Manage your account settings and preferences.</CardDescription>
         </CardHeader>
-        <CardContent className="divide-y">
+        <CardContent className="divide-y divide-border">
             <EditProfileDialog profile={profile}>
                 <ListItem icon={UserIcon} label="Personal Information" description="Update your name and contact details." />
             </EditProfileDialog>

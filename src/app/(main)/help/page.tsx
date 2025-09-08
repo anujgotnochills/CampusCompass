@@ -8,9 +8,13 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mail, MessageCircle } from "lucide-react";
+import { Mail, MessageCircle, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 export default function HelpPage() {
+  const router = useRouter();
+
   const faqs = [
     {
       question: "How do I report a lost item?",
@@ -40,6 +44,10 @@ export default function HelpPage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
+       <Button variant="ghost" onClick={() => router.back()} className="mb-4">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back
+        </Button>
       <div className="text-center">
         <h1 className="text-4xl font-bold">Help Center</h1>
         <p className="text-muted-foreground mt-2">
