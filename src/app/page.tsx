@@ -21,16 +21,16 @@ const featureVariants = {
 export default function LandingPage() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <header className="flex h-16 items-center justify-between px-4 md:px-6">
+      <header className="flex h-20 items-center justify-between px-4 md:px-8 border-b border-border/50">
         <Link href="/" className="flex items-center gap-2 font-semibold text-primary" prefetch={false}>
-          <Compass className="h-6 w-6" />
-          <span className="text-xl font-bold font-poppins">Campus Compass</span>
+          <Compass className="h-7 w-7" />
+          <span className="text-xl font-bold">Campus Compass</span>
         </Link>
-        <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
-          <Link href="#features" className="hover:text-primary" prefetch={false}>
+        <nav className="hidden items-center gap-8 text-sm font-medium md:flex">
+          <Link href="#features" className="text-muted-foreground hover:text-primary transition-colors" prefetch={false}>
             Features
           </Link>
-          <Link href="#how-it-works" className="hover:text-primary" prefetch={false}>
+          <Link href="#how-it-works" className="text-muted-foreground hover:text-primary transition-colors" prefetch={false}>
             How It Works
           </Link>
            <Link href="/dashboard" prefetch={false}>
@@ -41,11 +41,15 @@ export default function LandingPage() {
         </nav>
       </header>
       <main className="flex-1">
-        <section className="relative w-full py-20 md:py-32 lg:py-40">
-          <div className="container px-4 md:px-6 grid md:grid-cols-2 gap-10 items-center">
-            <div className="space-y-4">
-              <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl text-foreground font-poppins">
-                The <span className="hover-headline">Smartest</span> Way to Find Lost Items on Campus
+        <section className="relative w-full py-24 md:py-32 lg:py-48 overflow-hidden">
+          <div className="absolute inset-0 z-0 opacity-10">
+            <div className="absolute -top-40 -left-40 w-96 h-96 bg-primary/50 rounded-full filter blur-3xl"></div>
+            <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-secondary rounded-full filter blur-3xl"></div>
+          </div>
+          <div className="container px-4 md:px-6 grid md:grid-cols-2 gap-10 items-center relative z-10">
+            <div className="space-y-6">
+              <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl text-foreground">
+                The <span className="hover-headline text-primary">Smartest</span> Way to Find Lost Items on Campus
               </h1>
               <p className="max-w-[600px] text-muted-foreground md:text-xl">
                 Our AI-powered platform makes reporting lost items effortless and intelligently matches them with found ones. Never lose anything again.
@@ -64,15 +68,13 @@ export default function LandingPage() {
               </div>
             </div>
             <div className="relative">
-                <div className="absolute -top-10 -right-10 w-72 h-72 bg-primary/10 rounded-full filter blur-3xl opacity-50"></div>
-                <div className="absolute -bottom-10 -left-10 w-72 h-72 bg-secondary/10 rounded-full filter blur-3xl opacity-50"></div>
                 <Image 
                     src="https://picsum.photos/800/600"
                     alt="Happy students on campus"
                     data-ai-hint="happy students campus"
                     width={800}
                     height={600}
-                    className="rounded-xl shadow-2xl object-cover aspect-video z-10 relative"
+                    className="rounded-xl shadow-2xl object-cover aspect-video z-10 relative shadow-primary/10"
                 />
             </div>
           </div>
@@ -80,9 +82,9 @@ export default function LandingPage() {
         
         <section id="features" className="w-full py-12 md:py-24 lg:py-32">
             <div className="container px-4 md:px-6">
-                <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
-                    <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">Key Features</div>
-                    <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl font-poppins">Why You'll <span className="hover-headline">Love</span> Campus Compass</h2>
+                <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
+                    <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm font-semibold text-primary">Key Features</div>
+                    <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Why You'll <span className="hover-headline text-primary">Love</span> Campus Compass</h2>
                     <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                         We've packed our app with features to make finding lost items a breeze.
                     </p>
@@ -90,28 +92,28 @@ export default function LandingPage() {
                  <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-2 md:gap-12 lg:grid-cols-3">
                     <motion.div className="grid gap-2" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} variants={featureVariants}>
                         <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-                                <Search className="h-5 w-5 text-primary"/>
+                            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                                <Search className="h-6 w-6 text-primary"/>
                             </div>
-                            <h3 className="text-lg font-bold font-poppins">AI-Powered Search</h3>
+                            <h3 className="text-lg font-bold">AI-Powered Search</h3>
                         </div>
                         <p className="text-sm text-muted-foreground">Our smart system analyzes descriptions and images to find matches with high accuracy, saving you time and effort.</p>
                     </motion.div>
                      <motion.div className="grid gap-2" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} variants={{...featureVariants, visible: {...featureVariants.visible, transition: {...featureVariants.visible.transition, delay: 0.2}}}}>
                         <div className="flex items-center gap-3">
-                             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-                                <Bot className="h-5 w-5 text-primary"/>
+                             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                                <Bot className="h-6 w-6 text-primary"/>
                             </div>
-                            <h3 className="text-lg font-bold font-poppins">Smart Suggestions</h3>
+                            <h3 className="text-lg font-bold">Smart Suggestions</h3>
                         </div>
                         <p className="text-sm text-muted-foreground">When you report an item, our AI helps you write a clear, detailed description and suggests a title automatically.</p>
                     </motion.div>
                      <motion.div className="grid gap-2" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} variants={{...featureVariants, visible: {...featureVariants.visible, transition: {...featureVariants.visible.transition, delay: 0.4}}}}>
                         <div className="flex items-center gap-3">
-                             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-                                <Bell className="h-5 w-5 text-primary"/>
+                             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                                <Bell className="h-6 w-6 text-primary"/>
                             </div>
-                            <h3 className="text-lg font-bold font-poppins">Instant Notifications</h3>
+                            <h3 className="text-lg font-bold">Instant Notifications</h3>
                         </div>
                         <p className="text-sm text-muted-foreground">Get notified the moment a potential match for your lost item is found, so you can recover it quickly.</p>
                     </motion.div>
@@ -119,39 +121,39 @@ export default function LandingPage() {
             </div>
         </section>
 
-        <section id="how-it-works" className="w-full py-12 md:py-24 lg:py-32 bg-muted">
+        <section id="how-it-works" className="w-full py-12 md:py-24 lg:py-32 bg-card/50">
             <div className="container px-4 md:px-6">
                 <div className="flex flex-col items-center justify-center space-y-4 text-center">
-                    <div className="inline-block rounded-lg bg-secondary px-3 py-1 text-sm text-secondary-foreground">How It Works</div>
-                    <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl font-poppins">A Simple, <span className="hover-headline">3-Step</span> Process</h2>
+                    <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm font-semibold text-primary">How It Works</div>
+                    <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">A Simple, <span className="hover-headline text-primary">3-Step</span> Process</h2>
                     <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                         We've streamlined the lost and found process to be as simple and stress-free as possible.
                         </p>
                 </div>
-                <div className="mx-auto grid max-w-5xl items-start gap-12 sm:grid-cols-2 md:gap-16 lg:grid-cols-3 lg:max-w-none mt-12">
+                <div className="mx-auto grid max-w-5xl items-start gap-12 sm:grid-cols-2 md:gap-16 lg:grid-cols-3 lg:max-w-none mt-16">
                     <motion.div className="grid gap-1 text-center" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} variants={featureVariants}>
-                        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground mb-4">
+                        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground mb-4 border-4 border-primary/20">
                             <span className="text-2xl font-bold">1</span>
                         </div>
-                        <h3 className="text-lg font-bold font-poppins">Report Your Item</h3>
+                        <h3 className="text-lg font-bold">Report Your Item</h3>
                         <p className="text-sm text-muted-foreground">
                         Lost something? Found something? Quickly submit a report with a description and photo. Our AI will even help you write a clear description.
                         </p>
                     </motion.div>
                     <motion.div className="grid gap-1 text-center" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} variants={{...featureVariants, visible: {...featureVariants.visible, transition: {...featureVariants.visible.transition, delay: 0.2}}}}>
-                        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground mb-4">
+                        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground mb-4 border-4 border-primary/20">
                             <span className="text-2xl font-bold">2</span>
                         </div>
-                        <h3 className="text-lg font-bold font-poppins">AI Finds a Match</h3>
+                        <h3 className="text-lg font-bold">AI Finds a Match</h3>
                         <p className="text-sm text-muted-foreground">
                         Our smart system analyzes new reports in real-time, comparing text descriptions and images to find potential matches for your item.
                         </p>
                     </motion.div>
                     <motion.div className="grid gap-1 text-center" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} variants={{...featureVariants, visible: {...featureVariants.visible, transition: {...featureVariants.visible.transition, delay: 0.4}}}}>
-                        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground mb-4">
+                        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground mb-4 border-4 border-primary/20">
                             <span className="text-2xl font-bold">3</span>
                         </div>
-                        <h3 className="text-lg font-bold font-poppins">Get Notified & Recover</h3>
+                        <h3 className="text-lg font-bold">Get Notified & Recover</h3>
                         <p className="text-sm text-muted-foreground">
                         When a high-confidence match is found, you'll be notified immediately. Found items are secured in a campus locker for easy pickup.
                         </p>

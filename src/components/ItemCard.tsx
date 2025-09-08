@@ -18,7 +18,7 @@ export function ItemCard({ item }: ItemCardProps) {
 
   return (
     <Link href={`/items/${item.id}`} className="group">
-      <Card className="h-full flex flex-col overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-105">
+      <Card className="h-full flex flex-col overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1 bg-card/50">
         <CardHeader className="p-0">
           <div className="relative">
             <Image
@@ -29,14 +29,15 @@ export function ItemCard({ item }: ItemCardProps) {
               height={300}
               className="object-cover aspect-[4/3] w-full"
             />
+             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
             <Badge 
               variant={item.type === 'lost' ? 'destructive' : 'secondary'}
-              className="absolute top-2 left-2"
+              className="absolute top-3 left-3"
             >
               {item.type === 'lost' ? 'Lost' : 'Found'}
             </Badge>
             {item.isRecovered && (
-                <Badge className="absolute top-2 right-2 flex items-center gap-1">
+                <Badge className="absolute top-3 right-3 flex items-center gap-1 bg-green-600 text-white">
                     <CheckCircle className="h-3 w-3"/>
                     Recovered
                 </Badge>
@@ -44,7 +45,7 @@ export function ItemCard({ item }: ItemCardProps) {
           </div>
         </CardHeader>
         <CardContent className="flex-grow p-4">
-          <h3 className="font-bold text-lg leading-tight truncate group-hover:text-primary">{item.title}</h3>
+          <h3 className="font-bold text-lg leading-tight truncate group-hover:text-primary transition-colors">{item.title}</h3>
           <div className="flex items-center text-sm text-muted-foreground mt-2">
             <CategoryIcon className="h-4 w-4 mr-2" />
             <span>{item.category}</span>
