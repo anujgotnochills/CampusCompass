@@ -3,28 +3,22 @@ export type Category = 'Wallet' | 'ID' | 'Phone' | 'Bag' | 'Keys' | 'Clothing' |
 
 export interface Item {
   id: string;
+  user_id: string;
   type: 'lost' | 'found';
   title: string;
   description: string;
   category: Category;
   location: string;
-  date: string;
-  imageDataUri?: string;
-  isRecovered: boolean;
-  postedAt: number;
-  lockerNumber?: number;
+  date: string; // ISO String
+  image_data_uri?: string;
+  is_recovered: boolean;
+  locker_number?: number;
+  created_at: string; // ISO String
 }
 
 export interface Profile {
-  rewardPoints: number;
-}
-
-export interface User {
-    email: string;
-    name: string;
-}
-
-export interface StoredUser {
-    email: string;
-    password: string; // In a real app, this would be a hash
+  id: string;
+  name: string;
+  reward_points: number;
+  updated_at: string; // ISO string
 }

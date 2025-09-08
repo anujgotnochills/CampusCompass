@@ -1,125 +1,171 @@
 
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
-import { v4 as uuidv4 } from 'uuid';
-import type { Item, Profile, User, StoredUser } from '@/lib/types';
-import { useLocalStorage } from '@/hooks/use-local-storage';
+import React, { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { createClient } from '@/lib/supabase/client';
+import type { SupabaseClient, Session } from '@supabase/supabase-js';
+import type { Item, Profile } from '@/lib/types';
+import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 
-interface AppContextType {
+type SupabaseContextType = {
+  supabase: SupabaseClient;
+  session: Session | null;
+  profile: Profile | null;
   items: Item[];
-  profile: Profile;
-  addItem: (item: Omit<Item, 'id' | 'postedAt' | 'isRecovered'>) => Item;
-  updateItem: (id: string, updates: Partial<Item>) => void;
-  markAsRecovered: (item: Item) => void;
   isLoading: boolean;
-  isAuthenticated: boolean;
-  user: User | null;
-  updateUser: (updates: Partial<User>) => void;
-  login: (email: string, password: string) => boolean;
-  signup: (email: string, password: string) => boolean;
-  logout: () => void;
-}
+  addItem: (itemData: Omit<Item, 'id' | 'created_at' | 'is_recovered' | 'user_id' | 'locker_number'> & {date: Date}) => Promise<Item | null>;
+  markAsRecovered: (item: Item) => Promise<void>;
+};
 
-const AppContext = createContext<AppContextType | undefined>(undefined);
+const AppContext = createContext<SupabaseContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: ReactNode }) {
+  const supabase = createClient();
   const router = useRouter();
-  const [items, setItems] = useLocalStorage<Item[]>('campus-compass-items', []);
-  const [profile, setProfile] = useLocalStorage<Profile>('campus-compass-profile', { rewardPoints: 0 });
-  const [user, setUser] = useLocalStorage<User | null>('campus-compass-user', { email: "user@example.com", name: "Test User"});
-  const [storedUsers, setStoredUsers] = useLocalStorage<StoredUser[]>('campus-compass-users', []);
+  const { toast } = useToast();
+  const [session, setSession] = useState<Session | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [items, setItems] = useState<Item[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // This effect runs once on mount to confirm the initial state is loaded
-  // from localStorage. This helps prevent flashes of un-styled or incorrect content.
   useEffect(() => {
-    setIsLoading(false);
-  }, []);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      if (!session) {
+        setProfile(null);
+        setItems([]);
+        router.push('/login');
+      } else {
+        router.refresh();
+      }
+    });
 
+    const getInitialData = async () => {
+        setIsLoading(true);
+        const { data: { session } } = await supabase.auth.getSession();
+        setSession(session);
 
-  const signup = (email: string, password: string): boolean => {
-    const existingUser = storedUsers.find(u => u.email === email);
-    if (existingUser) {
-        return false; // User already exists
+        if (session) {
+            // Fetch profile
+            const { data: profileData, error: profileError } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', session.user.id)
+                .single();
+            
+            if (profileError) console.error("Error fetching profile:", profileError);
+            setProfile(profileData);
+
+            // Fetch items
+            const { data: itemsData, error: itemsError } = await supabase
+                .from('items')
+                .select('*')
+                .order('created_at', { ascending: false });
+            
+            if (itemsError) console.error("Error fetching items:", itemsError);
+            setItems(itemsData || []);
+        }
+        setIsLoading(false);
     }
-    const newUser: StoredUser = { email, password };
-    setStoredUsers([...storedUsers, newUser]);
-    // Also log them in
-    const name = email.split('@')[0];
-    setUser({ email, name: name.charAt(0).toUpperCase() + name.slice(1) });
-    router.push('/dashboard');
-    return true;
-  };
+    
+    getInitialData();
 
+    return () => subscription.unsubscribe();
+  }, [supabase, supabase.auth, router]);
 
-  const login = (email: string, password: string): boolean => {
-    const storedUser = storedUsers.find(u => u.email === email && u.password === password);
+  useEffect(() => {
+    if (!session) return;
 
-    if (storedUser || user) { // also allow if user is already set (for bypass)
-        const name = (user?.email || email).split('@')[0];
-        setUser({ email: user?.email || email, name: user?.name || (name.charAt(0).toUpperCase() + name.slice(1)) });
-        router.push('/dashboard');
-        return true;
+    const channel = supabase
+      .channel('realtime-updates')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'items' }, (payload) => {
+        console.log('Change received on items!', payload)
+        // Refetch items to keep the list up to date
+        supabase.from('items').select('*').order('created_at', { ascending: false }).then(({ data }) => {
+            setItems(data || []);
+        });
+      })
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'profiles', filter: `id=eq.${session.user.id}` }, (payload) => {
+         console.log('Change received on profile!', payload);
+         setProfile(payload.new as Profile);
+      })
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
     }
-    return false;
-  };
+  }, [supabase, session]);
 
-  const logout = () => {
-    // In bypass mode, logout can just reset to the default user
-    setUser({ email: "user@example.com", name: "Test User"});
-    router.push('/');
-  };
 
-  const addItem = (itemData: Omit<Item, 'id' | 'postedAt' | 'isRecovered'>) => {
-    const newItem: Item = {
-      ...itemData,
-      id: uuidv4(),
-      postedAt: Date.now(),
-      isRecovered: false,
-      lockerNumber: itemData.type === 'found' ? Math.floor(Math.random() * 100) + 1 : undefined,
+  const addItem = async (itemData: Omit<Item, 'id' | 'created_at' | 'is_recovered' | 'user_id' | 'locker_number'> & {date: Date}) => {
+    if (!session) {
+        toast({ variant: 'destructive', title: 'Not authenticated' });
+        return null;
+    }
+
+    const newItemData = {
+        ...itemData,
+        date: new Date(itemData.date).toISOString(),
+        user_id: session.user.id,
+        locker_number: itemData.type === 'found' ? Math.floor(Math.random() * 100) + 1 : undefined,
     };
-    setItems([...items, newItem].sort((a, b) => b.postedAt - a.postedAt));
-    return newItem;
-  };
-
-  const updateItem = (id: string, updates: Partial<Item>) => {
-    setItems(items.map(item => (item.id === id ? { ...item, ...updates } : item)));
-  };
-  
-  const updateUser = (updates: Partial<User>) => {
-    if (user) {
-      setUser({ ...user, ...updates });
+    
+    const { data: newItem, error } = await supabase
+        .from('items')
+        .insert(newItemData)
+        .select()
+        .single();
+    
+    if (error) {
+        console.error("Error adding item:", error);
+        toast({ variant: "destructive", title: "Error", description: "Could not report the item." });
+        return null;
     }
+    
+    return newItem as Item;
+  }
+
+  const markAsRecovered = async (itemToRecover: Item) => {
+      if (!session || !profile) {
+        toast({ variant: 'destructive', title: 'Not authenticated' });
+        return;
+      }
+      if (itemToRecover.is_recovered) return;
+
+      const { error: updateError } = await supabase
+        .from('items')
+        .update({ is_recovered: true })
+        .eq('id', itemToRecover.id);
+    
+      if (updateError) {
+         toast({ variant: "destructive", title: "Error", description: "Could not mark item as recovered." });
+         return;
+      }
+
+      // If a 'found' item is marked as recovered by its finder, the finder gets points.
+      if (itemToRecover.type === 'found' && itemToRecover.user_id === session.user.id) {
+          const newPoints = (profile.reward_points || 0) + 10;
+          const { error: profileError } = await supabase
+            .from('profiles')
+            .update({ reward_points: newPoints })
+            .eq('id', profile.id);
+          
+          if(profileError) {
+              toast({ variant: "destructive", title: "Error", description: "Could not award points." });
+          }
+      }
   };
 
-  const markAsRecovered = (itemToRecover: Item) => {
-    if (itemToRecover.isRecovered) return;
-
-    updateItem(itemToRecover.id, { isRecovered: true });
-
-    if (itemToRecover.type === 'found') {
-      setProfile(prevProfile => ({
-        ...prevProfile,
-        rewardPoints: prevProfile.rewardPoints + 10,
-      }));
-    }
-  };
 
   const value = {
-    items,
+    supabase,
+    session,
     profile,
-    addItem,
-    updateItem,
-    updateUser,
-    markAsRecovered,
+    items,
     isLoading,
-    isAuthenticated: !!user,
-    user,
-    login,
-    signup,
-    logout,
+    addItem,
+    markAsRecovered
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

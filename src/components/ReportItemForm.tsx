@@ -46,7 +46,7 @@ const formSchema = z.object({
   category: z.string().nonempty('Please select a category.'),
   location: z.string().min(3, 'Location must be at least 3 characters.'),
   date: z.date({ required_error: 'A date is required.' }),
-  imageDataUri: z.string().optional(),
+  image_data_uri: z.string().optional(),
 });
 
 type ReportFormValues = z.infer<typeof formSchema>;
@@ -75,7 +75,7 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
     },
   });
 
-  const imageDataUri = form.watch('imageDataUri');
+  const imageDataUri = form.watch('image_data_uri');
   
   const handleGenerateTitle = async () => {
     const description = form.getValues('description');
@@ -109,7 +109,7 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
       const reader = new FileReader();
       reader.onloadend = async () => {
         const dataUri = reader.result as string;
-        form.setValue('imageDataUri', dataUri);
+        form.setValue('image_data_uri', dataUri);
         
         setIsGeneratingDescription(true);
         try {
@@ -131,30 +131,30 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
   };
 
 
-  function onSubmit(values: ReportFormValues) {
+  async function onSubmit(values: ReportFormValues) {
     setIsSubmitting(true);
     try {
-      const itemData = {
+      const newItem = await addItem({
         ...values,
         category: values.category as Category,
-        date: values.date.toISOString(),
-      };
-      const newItem = addItem(itemData);
+      });
 
-      if (newItem.type === 'found') {
-        toast({
-            title: 'Item Reported!',
-            description: `Please drop the item off at Locker #${newItem.lockerNumber}. Thank you!`,
-            duration: 10000,
-        });
-      } else {
-         toast({
-            title: 'Item Reported!',
-            description: 'Your item has been successfully listed.',
-        });
+      if (newItem) {
+         if (newItem.type === 'found') {
+            toast({
+                title: 'Item Reported!',
+                description: `Please drop the item off at Locker #${newItem.locker_number}. Thank you!`,
+                duration: 10000,
+            });
+          } else {
+            toast({
+                title: 'Item Reported!',
+                description: 'Your item has been successfully listed.',
+            });
+          }
+          router.push('/dashboard');
       }
       
-      router.push('/dashboard');
     } catch (error) {
       toast({
         variant: 'destructive',
@@ -172,7 +172,7 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
         
         <FormField
             control={form.control}
-            name="imageDataUri"
+            name="image_data_uri"
             render={({ field }) => (
                 <FormItem>
                 <FormLabel>Image</FormLabel>
@@ -193,7 +193,7 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
                                 variant="destructive" 
                                 size="icon"
                                 className="absolute top-2 right-2 h-8 w-8"
-                                onClick={() => form.setValue('imageDataUri', undefined)}
+                                onClick={() => form.setValue('image_data_uri', undefined)}
                             >
                                 <X className="h-4 w-4" />
                             </Button>

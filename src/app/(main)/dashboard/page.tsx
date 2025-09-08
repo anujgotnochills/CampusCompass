@@ -11,11 +11,11 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 export default function DashboardPage() {
-  const { items, profile, isLoading } = useAppContext();
+  const { items, profile } = useAppContext();
 
-  const openCases = items.filter((item) => !item.isRecovered).length;
-  const recentLostItems = items.filter((item) => item.type === 'lost' && !item.isRecovered).slice(0, 4);
-  const recentFoundItems = items.filter((item) => item.type === 'found' && !item.isRecovered).slice(0, 4);
+  const openCases = items.filter((item) => !item.is_recovered).length;
+  const recentLostItems = items.filter((item) => item.type === 'lost' && !item.is_recovered).slice(0, 4);
+  const recentFoundItems = items.filter((item) => item.type === 'found' && !item.is_recovered).slice(0, 4);
 
   return (
     <div className="flex flex-col gap-8">
@@ -46,66 +46,67 @@ export default function DashboardPage() {
             <Award className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-primary">{profile.rewardPoints}</div>
+            <div className="text-2xl font-bold text-primary">{profile?.reward_points || 0}</div>
             <p className="text-xs text-muted-foreground">Earn points by helping others</p>
           </CardContent>
         </Card>
       </div>
       
-      <Tabs defaultValue="lost">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+       <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <h2 className="text-2xl font-bold tracking-tight">Recent Items</h2>
-          <TabsList>
-            <TabsTrigger value="lost">Lost</TabsTrigger>
-            <TabsTrigger value="found">Found</TabsTrigger>
-          </TabsList>
-        </div>
-        
-        <TabsContent value="lost">
-          {recentLostItems.length > 0 ? (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-              {recentLostItems.map((item) => (
-                <ItemCard key={item.id} item={item} />
-              ))}
-            </div>
-          ) : (
-            <EmptyState
-              icon={Search}
-              title="No Recent Lost Items"
-              description="No one has reported a lost item recently."
-            >
-               <Link href="/report?type=lost">
-                  <Button>
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Report a Lost Item
-                  </Button>
-                </Link>
-            </EmptyState>
-          )}
-        </TabsContent>
-        <TabsContent value="found">
-          {recentFoundItems.length > 0 ? (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-              {recentFoundItems.map((item) => (
-                <ItemCard key={item.id} item={item} />
-              ))}
-            </div>
-          ) : (
-              <EmptyState
+           <Tabs defaultValue="lost" className="w-full sm:w-auto">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="lost">Lost</TabsTrigger>
+              <TabsTrigger value="found">Found</TabsTrigger>
+            </TabsList>
+             <TabsContent value="lost" className="mt-6">
+              {recentLostItems.length > 0 ? (
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                  {recentLostItems.map((item) => (
+                    <ItemCard key={item.id} item={item} />
+                  ))}
+                </div>
+              ) : (
+                <EmptyState
                   icon={Search}
-                  title="No Recent Found Items"
-                  description="No one has reported a found item recently."
-              >
-                  <Link href="/report?type=found">
+                  title="No Recent Lost Items"
+                  description="No one has reported a lost item recently."
+                >
+                  <Link href="/report?type=lost">
                       <Button>
-                      <PlusCircle className="mr-2 h-4 w-4" />
-                      Report a Found Item
+                        <PlusCircle className="mr-2 h-4 w-4" />
+                        Report a Lost Item
                       </Button>
-                  </Link>
-              </EmptyState>
-          )}
-        </TabsContent>
-      </Tabs>
+                    </Link>
+                </EmptyState>
+              )}
+            </TabsContent>
+            <TabsContent value="found" className="mt-6">
+              {recentFoundItems.length > 0 ? (
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                  {recentFoundItems.map((item) => (
+                    <ItemCard key={item.id} item={item} />
+                  ))}
+                </div>
+              ) : (
+                  <EmptyState
+                      icon={Search}
+                      title="No Recent Found Items"
+                      description="No one has reported a found item recently."
+                  >
+                      <Link href="/report?type=found">
+                          <Button>
+                          <PlusCircle className="mr-2 h-4 w-4" />
+                          Report a Found Item
+                          </Button>
+                      </Link>
+                  </EmptyState>
+              )}
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
     </div>
   );
 }

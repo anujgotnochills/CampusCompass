@@ -25,8 +25,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import type { User } from "@/lib/types";
+import type { Profile } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
+import { useAppContext } from "@/contexts/AppContext";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -35,29 +37,46 @@ const formSchema = z.object({
 });
 
 interface EditProfileDialogProps {
-  user: User | null;
-  onSave: (updates: Partial<User>) => void;
+  profile: Profile | null;
   children: React.ReactNode;
 }
 
-export function EditProfileDialog({ user, onSave, children }: EditProfileDialogProps) {
+export function EditProfileDialog({ profile, children }: EditProfileDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
+  const { supabase, session } = useAppContext();
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: user?.name || "",
+      name: profile?.name || "",
     },
   });
   
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    onSave(values);
-    toast({
-      title: "Profile Updated",
-      description: "Your information has been successfully saved.",
-    });
-    setIsOpen(false);
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (!session) return;
+    setIsLoading(true);
+
+    const { error } = await supabase
+      .from('profiles')
+      .update({ name: values.name, updated_at: new Date().toISOString() })
+      .eq('id', session.user.id)
+
+    if (error) {
+       toast({
+        variant: 'destructive',
+        title: "Error updating profile",
+        description: error.message,
+      });
+    } else {
+        toast({
+        title: "Profile Updated",
+        description: "Your information has been successfully saved.",
+      });
+      setIsOpen(false);
+    }
+    setIsLoading(false);
   };
 
   return (
@@ -86,7 +105,10 @@ export function EditProfileDialog({ user, onSave, children }: EditProfileDialogP
               )}
             />
              <DialogFooter>
-                <Button type="submit">Save changes</Button>
+                <Button type="submit" disabled={isLoading}>
+                    {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Save changes
+                </Button>
             </DialogFooter>
           </form>
         </Form>

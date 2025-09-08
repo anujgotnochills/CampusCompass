@@ -31,7 +31,7 @@ export default function MatchesPage() {
   const [hasSearched, setHasSearched] = useState(false);
 
   const { lostItems, foundItems } = useMemo(() => {
-    const activeItems = items.filter(item => !item.isRecovered);
+    const activeItems = items.filter(item => !item.is_recovered);
     return {
       lostItems: activeItems.filter(item => item.type === 'lost'),
       foundItems: activeItems.filter(item => item.type === 'found'),
@@ -56,8 +56,8 @@ export default function MatchesPage() {
           matchLostAndFound({
             lostItemDescription: lostItem.description,
             foundItemDescription: foundItem.description,
-            lostItemImageDataUri: lostItem.imageDataUri,
-            foundItemImageDataUri: foundItem.imageDataUri,
+            lostItemImageDataUri: lostItem.image_data_uri,
+            foundItemImageDataUri: foundItem.image_data_uri,
           }).then(result => ({ ...result, lostItem, foundItem }))
         )
       );

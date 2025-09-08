@@ -22,7 +22,7 @@ export function ItemCard({ item }: ItemCardProps) {
         <CardHeader className="p-0">
           <div className="relative">
             <Image
-              src={item.imageDataUri || "https://placehold.co/400x300.png"}
+              src={item.image_data_uri || "https://placehold.co/400x300.png"}
               alt={item.title}
               data-ai-hint="lost item"
               width={400}
@@ -36,7 +36,7 @@ export function ItemCard({ item }: ItemCardProps) {
             >
               {item.type === 'lost' ? 'Lost' : 'Found'}
             </Badge>
-            {item.isRecovered && (
+            {item.is_recovered && (
                 <Badge className="absolute top-3 right-3 flex items-center gap-1 bg-green-600 text-white">
                     <CheckCircle className="h-3 w-3"/>
                     Recovered

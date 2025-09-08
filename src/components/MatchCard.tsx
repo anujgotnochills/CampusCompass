@@ -24,7 +24,7 @@ function MiniItemCard({ item, type }: { item: Item; type: 'Lost' | 'Found' }) {
     <div className="flex flex-col gap-2">
       <Badge variant={type === 'Lost' ? 'destructive' : 'secondary'} className="w-fit">{type} Item</Badge>
       <Image
-        src={item.imageDataUri || "https://placehold.co/400x300.png"}
+        src={item.image_data_uri || "https://placehold.co/400x300.png"}
         alt={item.title}
         width={400}
         height={300}

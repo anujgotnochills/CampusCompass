@@ -20,25 +20,38 @@ const featureVariants = {
 
 export default function LandingPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-background">
-      <header className="flex h-20 items-center justify-between px-4 md:px-8 border-b border-border/50">
-        <Link href="/" className="flex items-center gap-2 font-semibold text-primary" prefetch={false}>
-          <Compass className="h-7 w-7" />
-          <span className="text-xl font-bold">Campus Compass</span>
-        </Link>
-        <nav className="hidden items-center gap-8 text-sm font-medium md:flex">
-          <Link href="#features" className="text-muted-foreground hover:text-primary transition-colors" prefetch={false}>
-            Features
+    <div className="flex flex-col min-h-screen bg-background text-foreground">
+       <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur-sm">
+        <div className="container flex h-16 items-center justify-between">
+          <Link href="/" className="flex items-center gap-2 font-bold text-lg text-primary" prefetch={false}>
+            <Compass className="h-6 w-6" />
+            <span>Campus Compass</span>
           </Link>
-          <Link href="#how-it-works" className="text-muted-foreground hover:text-primary transition-colors" prefetch={false}>
-            How It Works
-          </Link>
-           <Link href="/dashboard" prefetch={false}>
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button>Get Started</Button>
-                </motion.div>
+          <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
+             <Link
+              href="#features"
+              className="transition-colors hover:text-foreground/80 text-foreground/60"
+              prefetch={false}
+            >
+              Features
             </Link>
-        </nav>
+            <Link
+              href="#how-it-works"
+              className="transition-colors hover:text-foreground/80 text-foreground/60"
+              prefetch={false}
+            >
+              How It Works
+            </Link>
+          </nav>
+           <div className="flex items-center gap-4">
+             <Link href="/login" prefetch={false}>
+                <Button variant="ghost">Log In</Button>
+            </Link>
+             <Link href="/signup" prefetch={false}>
+                <Button>Sign Up</Button>
+            </Link>
+          </div>
+        </div>
       </header>
       <main className="flex-1">
         <section className="relative w-full py-24 md:py-32 lg:py-48 overflow-hidden">
@@ -49,15 +62,15 @@ export default function LandingPage() {
           <div className="container px-4 md:px-6 grid md:grid-cols-2 gap-10 items-center relative z-10">
             <div className="space-y-6">
               <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl text-foreground">
-                The <span className="hover-headline text-primary">Smartest</span> Way to Find Lost Items on Campus
+                The <span className="text-primary">Smartest</span> Way to Find Lost Items on Campus
               </h1>
               <p className="max-w-[600px] text-muted-foreground md:text-xl">
                 Our AI-powered platform makes reporting lost items effortless and intelligently matches them with found ones. Never lose anything again.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                 <Link href="/dashboard" prefetch={false}>
+                 <Link href="/signup" prefetch={false}>
                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <Button size="lg">Report an Item</Button>
+                      <Button size="lg">Get Started</Button>
                     </motion.div>
                 </Link>
                 <Link href="#how-it-works" prefetch={false}>
@@ -80,11 +93,11 @@ export default function LandingPage() {
           </div>
         </section>
         
-        <section id="features" className="w-full py-12 md:py-24 lg:py-32">
+        <section id="features" className="w-full py-12 md:py-24 lg:py-32 bg-card/50">
             <div className="container px-4 md:px-6">
                 <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
                     <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm font-semibold text-primary">Key Features</div>
-                    <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Why You'll <span className="hover-headline text-primary">Love</span> Campus Compass</h2>
+                    <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Why You'll Love Campus Compass</h2>
                     <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                         We've packed our app with features to make finding lost items a breeze.
                     </p>
@@ -113,7 +126,7 @@ export default function LandingPage() {
                              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
                                 <Bell className="h-6 w-6 text-primary"/>
                             </div>
-                            <h3 className="text-lg font-bold">Instant Notifications</h3>
+                            <h3 className="text-lg font-bold">Real-time Updates</h3>
                         </div>
                         <p className="text-sm text-muted-foreground">Get notified the moment a potential match for your lost item is found, so you can recover it quickly.</p>
                     </motion.div>
@@ -121,11 +134,11 @@ export default function LandingPage() {
             </div>
         </section>
 
-        <section id="how-it-works" className="w-full py-12 md:py-24 lg:py-32 bg-card/50">
+        <section id="how-it-works" className="w-full py-12 md:py-24 lg:py-32">
             <div className="container px-4 md:px-6">
                 <div className="flex flex-col items-center justify-center space-y-4 text-center">
                     <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm font-semibold text-primary">How It Works</div>
-                    <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">A Simple, <span className="hover-headline text-primary">3-Step</span> Process</h2>
+                    <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">A Simple, 3-Step Process</h2>
                     <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                         We've streamlined the lost and found process to be as simple and stress-free as possible.
                         </p>

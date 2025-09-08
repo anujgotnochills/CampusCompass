@@ -11,13 +11,12 @@ import {
   Tag,
   CheckCircle,
   XCircle,
-  Award,
   Lock
 } from "lucide-react";
 
 import { useAppContext } from "@/contexts/AppContext";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CATEGORIES } from "@/lib/constants";
 import {
@@ -32,21 +31,42 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { useToast } from "@/hooks/use-toast";
-import Link from "next/link";
 import { EmptyState } from "@/components/EmptyState";
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 export default function ItemDetailPage() {
   const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
-  const { items, markAsRecovered, isLoading } = useAppContext();
+  const { items, markAsRecovered, isLoading, profile } = useAppContext();
 
   const id = typeof params.id === 'string' ? params.id : '';
   const item = items.find((i) => i.id === id);
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return (
+        <div className="max-w-4xl mx-auto space-y-4">
+             <Skeleton className="h-10 w-32" />
+             <Card>
+                <CardContent className="p-0">
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <div className="p-6">
+                             <Skeleton className="rounded-lg aspect-square w-full" />
+                        </div>
+                         <div className="p-6 flex flex-col justify-center space-y-4">
+                              <Skeleton className="h-8 w-3/4" />
+                              <Skeleton className="h-20 w-full" />
+                              <Skeleton className="h-6 w-1/2" />
+                              <Skeleton className="h-6 w-1/2" />
+                              <Skeleton className="h-6 w-1/2" />
+                              <Skeleton className="h-12 w-full mt-4" />
+                         </div>
+                    </div>
+                </CardContent>
+             </Card>
+        </div>
+    )
   }
 
   if (!item) {
@@ -54,13 +74,14 @@ export default function ItemDetailPage() {
   }
 
   const CategoryIcon = CATEGORIES.find(c => c.name === item.category)?.icon || Tag;
+  const isOwner = profile?.id === item.user_id;
 
-  const handleRecovery = () => {
-    markAsRecovered(item);
+  const handleRecovery = async () => {
+    await markAsRecovered(item);
     
     let toastDescription = `The item "${item.title}" has been marked as recovered.`;
-    if (item.type === 'lost' && item.lockerNumber) {
-        toastDescription += ` You can pick it up from Locker #${item.lockerNumber}.`;
+    if (item.type === 'lost' && item.locker_number) {
+        toastDescription += ` You can pick it up from Locker #${item.locker_number}.`;
     }
 
     toast({
@@ -88,7 +109,7 @@ export default function ItemDetailPage() {
             <div className="grid md:grid-cols-2 gap-6">
                 <div className="p-6">
                 <Image
-                    src={item.imageDataUri || "https://placehold.co/600x400.png"}
+                    src={item.image_data_uri || "https://placehold.co/600x400.png"}
                     alt={item.title}
                     data-ai-hint="lost item"
                     width={600}
@@ -102,9 +123,9 @@ export default function ItemDetailPage() {
                             <Badge variant={item.type === 'lost' ? 'destructive' : 'secondary'} className="mb-2">{item.type === 'lost' ? 'Lost Item' : 'Found Item'}</Badge>
                             <h1 className="text-3xl font-bold">{item.title}</h1>
                         </div>
-                        <Badge variant={item.isRecovered ? 'default' : 'outline'} className="capitalize flex items-center gap-1">
-                            {item.isRecovered ? <CheckCircle className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
-                            {item.isRecovered ? 'Recovered' : 'Not Recovered'}
+                        <Badge variant={item.is_recovered ? 'default' : 'outline'} className="capitalize flex items-center gap-1">
+                            {item.is_recovered ? <CheckCircle className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
+                            {item.is_recovered ? 'Recovered' : 'Not Recovered'}
                         </Badge>
                     </div>
 
@@ -126,16 +147,16 @@ export default function ItemDetailPage() {
                         <span className="font-medium">{item.type === 'lost' ? 'Date Lost:' : 'Date Found:'}</span>
                         <span>{format(parseISO(item.date), 'MMMM d, yyyy')}</span>
                         </div>
-                         {item.type === 'found' && item.lockerNumber && (
+                         {item.type === 'found' && item.locker_number && (
                            <div className="flex items-center gap-3 p-3 bg-secondary rounded-md">
                                 <Lock className="h-5 w-5 text-secondary-foreground" />
                                 <span className="font-medium">Stored in:</span>
-                                <span className="font-bold text-lg">Locker #{item.lockerNumber}</span>
+                                <span className="font-bold text-lg">Locker #{item.locker_number}</span>
                            </div>
                         )}
                     </div>
 
-                    {!item.isRecovered && (
+                    {!item.is_recovered && isOwner && (
                     <AlertDialog>
                         <AlertDialogTrigger asChild>
                             <Button size="lg" className="mt-8 w-full">Mark as Recovered</Button>
@@ -146,7 +167,7 @@ export default function ItemDetailPage() {
                             <AlertDialogDescription>
                                 This action will mark the item as recovered. 
                                 {item.type === 'found' && " You will be awarded 10 points."}
-                                {item.type === 'lost' && item.lockerNumber && ` The item is in Locker #${item.lockerNumber}.`}
+                                {item.type === 'lost' && item.locker_number && ` The item is in Locker #${item.locker_number}.`}
                                 This cannot be undone.
                             </AlertDialogDescription>
                         </AlertDialogHeader>
