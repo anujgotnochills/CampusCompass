@@ -1,19 +1,11 @@
 
-"use client";
-
-import { Compass, LayoutGrid, List, HeartHandshake, User, PlusCircle } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { Compass, LayoutGrid, List, HeartHandshake, User, PlusCircle, Menu } from "lucide-react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { UserNav } from "@/components/UserNav";
-import { useAppContext } from "@/contexts/AppContext";
 import { Button } from "@/components/ui/button";
-import MobileNav from "@/components/MobileNav";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
-import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { MainContent } from "@/components/MainContent";
 
 
 const navItems = [
@@ -23,44 +15,11 @@ const navItems = [
   { href: "/profile", icon: User, label: "Profile" },
 ];
 
-const pageVariants = {
-  initial: {
-    opacity: 0,
-    y: 20,
-  },
-  in: {
-    opacity: 1,
-    y: 0,
-  },
-  out: {
-    opacity: 0,
-    y: -20,
-  },
-};
-
-const pageTransition = {
-  type: "tween",
-  ease: "anticipate",
-  duration: 0.5,
-};
-
-
 export default function MainLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
-  const { isLoading } = useAppContext();
-  
-  if (isLoading) {
-    return (
-        <div className="flex items-center justify-center min-h-screen">
-            <LoadingSpinner />
-        </div>
-    );
-  }
-
   return (
     <div className="flex flex-col min-h-screen w-full">
       <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur-sm md:px-6">
@@ -89,8 +48,7 @@ export default function MainLayout({
                     key={item.href}
                     href={item.href}
                     className={cn(
-                      "mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground",
-                       pathname === item.href && "bg-muted text-foreground"
+                      "mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
                     )}
                   >
                     <item.icon className="h-5 w-5" />
@@ -113,10 +71,7 @@ export default function MainLayout({
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={cn(
-                    "text-muted-foreground transition-colors hover:text-foreground",
-                    pathname === item.href && "text-foreground"
-                  )}
+                  className="text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {item.label}
                 </Link>
@@ -125,37 +80,22 @@ export default function MainLayout({
 
           <div className="flex items-center gap-4 ml-auto">
             <Link href="/report?type=lost" className="hidden sm:inline-flex">
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Button size="sm" variant="outline">
-                        Report Lost
-                    </Button>
-                </motion.div>
+                <Button size="sm" variant="outline">
+                    Report Lost
+                </Button>
             </Link>
             <Link href="/report?type=found">
-                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Button size="sm">
-                        <PlusCircle className="mr-2 h-4 w-4" />
-                        Report Found
-                    </Button>
-                </motion.div>
+                <Button size="sm">
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Report Found
+                </Button>
             </Link>
             <UserNav />
           </div>
         </header>
-        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
-           <AnimatePresence mode="wait">
-              <motion.div
-                key={pathname}
-                initial="initial"
-                animate="in"
-                exit="out"
-                variants={pageVariants}
-                transition={pageTransition}
-              >
-                {children}
-              </motion.div>
-            </AnimatePresence>
-        </main>
+        <MainContent>
+          {children}
+        </MainContent>
     </div>
   );
 }
