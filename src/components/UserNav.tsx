@@ -22,9 +22,11 @@ export function UserNav() {
   const router = useRouter();
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    router.push('/');
-    router.refresh();
+    if (supabase) {
+      await supabase.auth.signOut();
+      router.push('/');
+      router.refresh();
+    }
   };
   
   const getInitials = (name: string | undefined) => {

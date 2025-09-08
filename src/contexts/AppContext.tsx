@@ -9,7 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 
 type SupabaseContextType = {
-  supabase: SupabaseClient;
+  supabase: SupabaseClient | null;
   session: Session | null;
   profile: Profile | null;
   items: Item[];
@@ -21,7 +21,7 @@ type SupabaseContextType = {
 const AppContext = createContext<SupabaseContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [supabase] = useState(() => createClient());
+  const [supabase, setSupabase] = useState<SupabaseClient | null>(null);
   const router = useRouter();
   const { toast } = useToast();
   const [session, setSession] = useState<Session | null>(null);
@@ -30,12 +30,18 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    // This ensures the client is created only in the browser.
+    const supabaseClient = createClient();
+    setSupabase(supabaseClient);
+
+    const { data: { subscription } } = supabaseClient.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       if (!session) {
         setProfile(null);
         setItems([]);
-        router.push('/login');
+        if (window.location.pathname !== '/login' && window.location.pathname !== '/signup' && window.location.pathname !== '/') {
+            router.push('/login');
+        }
       } else {
         router.refresh();
       }
@@ -43,12 +49,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     const getInitialData = async () => {
         setIsLoading(true);
-        const { data: { session } } = await supabase.auth.getSession();
+        const { data: { session } } = await supabaseClient.auth.getSession();
         setSession(session);
 
         if (session) {
             // Fetch profile
-            const { data: profileData, error: profileError } = await supabase
+            const { data: profileData, error: profileError } = await supabaseClient
                 .from('profiles')
                 .select('*')
                 .eq('id', session.user.id)
@@ -58,7 +64,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
             setProfile(profileData);
 
             // Fetch items
-            const { data: itemsData, error: itemsError } = await supabase
+            const { data: itemsData, error: itemsError } = await supabaseClient
                 .from('items')
                 .select('*')
                 .order('created_at', { ascending: false });
@@ -72,10 +78,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     getInitialData();
 
     return () => subscription.unsubscribe();
-  }, [supabase, supabase.auth, router]);
+  }, [router]);
 
   useEffect(() => {
-    if (!session) return;
+    if (!session || !supabase) return;
 
     const channel = supabase
       .channel('realtime-updates')
@@ -99,7 +105,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
 
   const addItem = async (itemData: Omit<Item, 'id' | 'created_at' | 'is_recovered' | 'user_id' | 'locker_number' | 'postedAt'> & {date: Date}) => {
-    if (!session) {
+    if (!session || !supabase) {
         toast({ variant: 'destructive', title: 'Not authenticated' });
         return null;
     }
@@ -128,7 +134,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }
 
   const markAsRecovered = async (itemToRecover: Item) => {
-      if (!session || !profile) {
+      if (!session || !profile || !supabase) {
         toast({ variant: 'destructive', title: 'Not authenticated' });
         return;
       }
@@ -164,7 +170,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     session,
     profile,
     items,
-    isLoading,
+    isLoading: isLoading || !supabase,
     addItem,
     markAsRecovered
   };

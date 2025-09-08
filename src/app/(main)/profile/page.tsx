@@ -26,7 +26,9 @@ export default function ProfilePage() {
   const { profile, supabase } = useAppContext();
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    if (supabase) {
+      await supabase.auth.signOut();
+    }
   }
   
   const getInitials = (name: string | undefined) => {
