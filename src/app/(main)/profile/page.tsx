@@ -60,17 +60,27 @@ export default function ProfilePage() {
           <CardDescription>Manage your account settings and preferences.</CardDescription>
         </CardHeader>
         <CardContent className="divide-y divide-border">
-          <EditProfileDialog profile={profile}>
+          <Dialog>
             <DialogTrigger asChild>
-              <ProfileRow icon={UserIcon} label="Personal Information" description="Update your name and contact details." action={<ChevronRight className="h-5 w-5 text-muted-foreground" />} />
+              <div>
+                <ProfileRow icon={UserIcon} label="Personal Information" description="Update your name and contact details." action={<ChevronRight className="h-5 w-5 text-muted-foreground" />} />
+              </div>
             </DialogTrigger>
-          </EditProfileDialog>
+            <EditProfileDialog profile={profile}>
+              {/* This is a placeholder, the content is inside EditProfileDialog */}
+            </EditProfileDialog>
+          </Dialog>
           
-          <PreferencesDialog profile={profile}>
-             <DialogTrigger asChild>
+          <Dialog>
+            <DialogTrigger asChild>
+              <div>
                 <ProfileRow icon={Settings} label="Preferences" description="Customize your notification settings." action={<ChevronRight className="h-5 w-5 text-muted-foreground" />} />
+              </div>
             </DialogTrigger>
-          </PreferencesDialog>
+            <PreferencesDialog profile={profile}>
+               {/* This is a placeholder, the content is inside PreferencesDialog */}
+            </PreferencesDialog>
+          </Dialog>
 
           <Link href="/help">
              <ProfileRow icon={HelpCircle} label="Help Center" description="Get support or read our FAQs." action={<ChevronRight className="h-5 w-5 text-muted-foreground" />} />

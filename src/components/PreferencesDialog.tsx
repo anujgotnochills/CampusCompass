@@ -4,13 +4,11 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -24,7 +22,7 @@ interface PreferencesDialogProps {
 }
 
 export function PreferencesDialog({ profile, children }: PreferencesDialogProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const { updatePreferences } = useAppContext();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -48,9 +46,9 @@ export function PreferencesDialog({ profile, children }: PreferencesDialogProps)
     setIsOpen(false);
   }
 
+  if (!isOpen) return null;
+
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Preferences</DialogTitle>
@@ -99,6 +97,5 @@ export function PreferencesDialog({ profile, children }: PreferencesDialogProps)
           </Button>
         </DialogFooter>
       </DialogContent>
-    </Dialog>
   );
 }

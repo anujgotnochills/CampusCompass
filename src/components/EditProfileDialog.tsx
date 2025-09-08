@@ -8,13 +8,11 @@ import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -42,7 +40,7 @@ interface EditProfileDialogProps {
 }
 
 export function EditProfileDialog({ profile, children }: EditProfileDialogProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const { toast } = useToast();
   const { supabase, session } = useAppContext();
   const [isLoading, setIsLoading] = useState(false);
@@ -78,10 +76,10 @@ export function EditProfileDialog({ profile, children }: EditProfileDialogProps)
     }
     setIsLoading(false);
   };
+  
+  if (!isOpen) return null;
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Edit Profile</DialogTitle>
@@ -113,6 +111,5 @@ export function EditProfileDialog({ profile, children }: EditProfileDialogProps)
           </form>
         </Form>
       </DialogContent>
-    </Dialog>
   );
 }
