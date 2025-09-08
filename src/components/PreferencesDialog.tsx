@@ -1,14 +1,15 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
+  Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
@@ -19,13 +20,15 @@ import { Loader2 } from "lucide-react";
 
 interface PreferencesDialogProps {
   profile: Profile | null;
+  children: React.ReactNode;
 }
 
-export function PreferencesDialog({ profile }: PreferencesDialogProps) {
+export function PreferencesDialog({ profile, children }: PreferencesDialogProps) {
   const { updatePreferences } = useAppContext();
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const [matchNotifications, setMatchNotifications] = useState(profile?.match_notifications_enabled ?? false);
+  const [matchNotifications, setMatchNotifications] = useState(profile?.match_notifications_enabled ?? true);
   const [weeklySummary, setWeeklySummary] = useState(profile?.weekly_summary_enabled ?? false);
 
   useEffect(() => {
@@ -33,7 +36,7 @@ export function PreferencesDialog({ profile }: PreferencesDialogProps) {
       setMatchNotifications(profile.match_notifications_enabled);
       setWeeklySummary(profile.weekly_summary_enabled);
     }
-  }, [profile]);
+  }, [profile, isOpen]);
 
   const handleSaveChanges = async () => {
     setIsLoading(true);
@@ -42,10 +45,12 @@ export function PreferencesDialog({ profile }: PreferencesDialogProps) {
         weekly_summary_enabled: weeklySummary,
     });
     setIsLoading(false);
-    document.getElementById('preferences-close')?.click();
+    setIsOpen(false);
   }
 
   return (
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Preferences</DialogTitle>
@@ -89,7 +94,7 @@ export function PreferencesDialog({ profile }: PreferencesDialogProps) {
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button type="button" variant="secondary" id="preferences-close">Cancel</Button>
+            <Button type="button" variant="secondary">Cancel</Button>
           </DialogClose>
           <Button onClick={handleSaveChanges} disabled={isLoading}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -97,5 +102,6 @@ export function PreferencesDialog({ profile }: PreferencesDialogProps) {
           </Button>
         </DialogFooter>
       </DialogContent>
+    </Dialog>
   );
 }

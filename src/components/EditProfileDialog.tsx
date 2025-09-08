@@ -1,20 +1,20 @@
-
 "use client";
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-
-import { Button } from "@/components/ui/button";
 import {
+  Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -37,12 +37,14 @@ const formSchema = z.object({
 
 interface EditProfileDialogProps {
   profile: Profile | null;
+  children: React.ReactNode;
 }
 
-export function EditProfileDialog({ profile }: EditProfileDialogProps) {
+export function EditProfileDialog({ profile, children }: EditProfileDialogProps) {
   const { toast } = useToast();
   const { supabase, session } = useAppContext();
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -51,6 +53,11 @@ export function EditProfileDialog({ profile }: EditProfileDialogProps) {
     },
   });
   
+  // Reset form when dialog opens
+  if (isOpen && form.getValues("name") !== (profile?.name || "")) {
+    form.reset({ name: profile?.name || "" });
+  }
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (!session) return;
     setIsLoading(true);
@@ -71,13 +78,14 @@ export function EditProfileDialog({ profile }: EditProfileDialogProps) {
         title: "Profile Updated",
         description: "Your information has been successfully saved.",
       });
-      // The dialog will close automatically if we can find the DialogClose button
-      document.getElementById('edit-profile-close')?.click();
+      setIsOpen(false);
     }
     setIsLoading(false);
   };
 
   return (
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Edit Profile</DialogTitle>
@@ -112,5 +120,6 @@ export function EditProfileDialog({ profile }: EditProfileDialogProps) {
           </form>
         </Form>
       </DialogContent>
+    </Dialog>
   );
 }
