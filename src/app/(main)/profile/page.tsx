@@ -12,7 +12,7 @@ import Link from 'next/link';
 import { DialogTrigger } from '@/components/ui/dialog';
 
 const ProfileRow = ({ icon: Icon, label, description, action }: { icon: React.ElementType, label: string, description: string, action: React.ReactNode }) => (
-    <div className="flex items-center p-3 -mx-3 rounded-lg hover:bg-muted">
+    <div className="flex items-center p-3 -mx-3 rounded-lg hover:bg-muted cursor-pointer">
         <Icon className="h-5 w-5 text-muted-foreground mr-4" />
         <div className="flex-grow">
             <p className="font-medium">{label}</p>
@@ -62,17 +62,13 @@ export default function ProfilePage() {
         <CardContent className="divide-y divide-border">
           <EditProfileDialog profile={profile}>
             <DialogTrigger asChild>
-                <div className="cursor-pointer">
-                    <ProfileRow icon={UserIcon} label="Personal Information" description="Update your name and contact details." action={<ChevronRight className="h-5 w-5 text-muted-foreground" />} />
-                </div>
+              <ProfileRow icon={UserIcon} label="Personal Information" description="Update your name and contact details." action={<ChevronRight className="h-5 w-5 text-muted-foreground" />} />
             </DialogTrigger>
           </EditProfileDialog>
           
           <PreferencesDialog profile={profile}>
              <DialogTrigger asChild>
-                <div className="cursor-pointer">
-                    <ProfileRow icon={Settings} label="Preferences" description="Customize your notification settings." action={<ChevronRight className="h-5 w-5 text-muted-foreground" />} />
-                </div>
+                <ProfileRow icon={Settings} label="Preferences" description="Customize your notification settings." action={<ChevronRight className="h-5 w-5 text-muted-foreground" />} />
             </DialogTrigger>
           </PreferencesDialog>
 
