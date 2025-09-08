@@ -35,13 +35,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
   // This effect runs once on mount to confirm the initial state is loaded
   // from localStorage. This helps prevent flashes of un-styled or incorrect content.
   useEffect(() => {
-    // A small timeout ensures that the browser has had time to paint the initial UI
-    // before we declare that loading is finished.
-    const timer = setTimeout(() => {
-        setIsLoading(false);
-    }, 50); // A very short delay is usually sufficient.
-    return () => clearTimeout(timer);
-}, []);
+    setIsLoading(false);
+  }, []);
 
 
   const signup = (email: string, password: string): boolean => {
