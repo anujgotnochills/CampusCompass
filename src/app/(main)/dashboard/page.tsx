@@ -60,7 +60,7 @@ export default function DashboardPage() {
               <TabsTrigger value="lost">Lost</TabsTrigger>
               <TabsTrigger value="found">Found</TabsTrigger>
             </TabsList>
-             <TabsContent value="lost" className="mt-6">
+            <TabsContent value="lost" className="mt-6">
               {recentLostItems.length > 0 ? (
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                   {recentLostItems.map((item) => (

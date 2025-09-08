@@ -34,19 +34,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const supabaseClient = createClient();
     setSupabase(supabaseClient);
 
-    const { data: { subscription } } = supabaseClient.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      if (!session) {
-        setProfile(null);
-        setItems([]);
-        if (window.location.pathname !== '/login' && window.location.pathname !== '/signup' && window.location.pathname !== '/') {
-            router.push('/login');
-        }
-      } else {
-        router.refresh();
-      }
-    });
-
     const getInitialData = async () => {
         setIsLoading(true);
         const { data: { session } } = await supabaseClient.auth.getSession();
@@ -61,7 +48,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
                 .single();
             
             if (profileError) console.error("Error fetching profile:", profileError);
-            setProfile(profileData);
+            else setProfile(profileData);
 
             // Fetch items
             const { data: itemsData, error: itemsError } = await supabaseClient
@@ -70,21 +57,46 @@ export function AppProvider({ children }: { children: ReactNode }) {
                 .order('created_at', { ascending: false });
             
             if (itemsError) console.error("Error fetching items:", itemsError);
-            setItems(itemsData || []);
+            else setItems(itemsData || []);
         }
         setIsLoading(false);
-    }
+    };
     
     getInitialData();
 
-    return () => subscription.unsubscribe();
+    const { data: { subscription } } = supabaseClient.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      if (!session) {
+        setProfile(null);
+        setItems([]);
+        if (window.location.pathname !== '/login' && window.location.pathname !== '/signup' && window.location.pathname !== '/') {
+            router.push('/login');
+        }
+      } else {
+        // If user logs in, fetch their data
+        getInitialData();
+        router.refresh();
+      }
+    });
+
+    return () => {
+        subscription.unsubscribe();
+    };
   }, [router]);
 
   useEffect(() => {
     if (!session || !supabase) return;
 
-    const channel = supabase
-      .channel('realtime-updates')
+    const profileChannel = supabase
+      .channel('profile-updates')
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'profiles', filter: `id=eq.${session.user.id}` }, (payload) => {
+         console.log('Change received on profile!', payload);
+         setProfile(payload.new as Profile);
+      })
+      .subscribe();
+      
+    const itemsChannel = supabase
+      .channel('items-updates')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'items' }, (payload) => {
         console.log('Change received on items!', payload)
         // Refetch items to keep the list up to date
@@ -92,14 +104,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
             setItems(data || []);
         });
       })
-      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'profiles', filter: `id=eq.${session.user.id}` }, (payload) => {
-         console.log('Change received on profile!', payload);
-         setProfile(payload.new as Profile);
-      })
       .subscribe()
 
     return () => {
-      supabase.removeChannel(channel)
+      supabase.removeChannel(profileChannel);
+      supabase.removeChannel(itemsChannel);
     }
   }, [supabase, session]);
 
@@ -185,5 +194,3 @@ export function useAppContext() {
   }
   return context;
 }
-
-    
