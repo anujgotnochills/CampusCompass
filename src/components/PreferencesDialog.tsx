@@ -9,6 +9,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -18,16 +19,14 @@ import { Loader2 } from "lucide-react";
 
 interface PreferencesDialogProps {
   profile: Profile | null;
-  children: React.ReactNode;
 }
 
-export function PreferencesDialog({ profile, children }: PreferencesDialogProps) {
-  const [isOpen, setIsOpen] = useState(true);
+export function PreferencesDialog({ profile }: PreferencesDialogProps) {
   const { updatePreferences } = useAppContext();
   const [isLoading, setIsLoading] = useState(false);
 
-  const [matchNotifications, setMatchNotifications] = useState(profile?.match_notifications_enabled || false);
-  const [weeklySummary, setWeeklySummary] = useState(profile?.weekly_summary_enabled || false);
+  const [matchNotifications, setMatchNotifications] = useState(profile?.match_notifications_enabled ?? false);
+  const [weeklySummary, setWeeklySummary] = useState(profile?.weekly_summary_enabled ?? false);
 
   useEffect(() => {
     if (profile) {
@@ -43,10 +42,8 @@ export function PreferencesDialog({ profile, children }: PreferencesDialogProps)
         weekly_summary_enabled: weeklySummary,
     });
     setIsLoading(false);
-    setIsOpen(false);
+    document.getElementById('preferences-close')?.click();
   }
-
-  if (!isOpen) return null;
 
   return (
       <DialogContent className="sm:max-w-[425px]">
@@ -59,7 +56,7 @@ export function PreferencesDialog({ profile, children }: PreferencesDialogProps)
         <div className="py-4 space-y-6">
             <div className="flex items-center justify-between space-x-4 rounded-lg border p-4">
                 <div className="space-y-0.5">
-                    <Label htmlFor="match-notifications" className="text-base">
+                    <Label htmlFor="match-notifications" className="text-base font-normal">
                         New Match Notifications
                     </Label>
                     <p className="text-sm text-muted-foreground">
@@ -75,7 +72,7 @@ export function PreferencesDialog({ profile, children }: PreferencesDialogProps)
             </div>
              <div className="flex items-center justify-between space-x-4 rounded-lg border p-4">
                 <div className="space-y-0.5">
-                    <Label htmlFor="weekly-summary" className="text-base">
+                    <Label htmlFor="weekly-summary" className="text-base font-normal">
                         Weekly Summary
                     </Label>
                     <p className="text-sm text-muted-foreground">
@@ -91,6 +88,9 @@ export function PreferencesDialog({ profile, children }: PreferencesDialogProps)
             </div>
         </div>
         <DialogFooter>
+          <DialogClose asChild>
+            <Button type="button" variant="secondary" id="preferences-close">Cancel</Button>
+          </DialogClose>
           <Button onClick={handleSaveChanges} disabled={isLoading}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Save changes

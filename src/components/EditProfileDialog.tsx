@@ -13,6 +13,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogClose,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -36,11 +37,9 @@ const formSchema = z.object({
 
 interface EditProfileDialogProps {
   profile: Profile | null;
-  children: React.ReactNode;
 }
 
-export function EditProfileDialog({ profile, children }: EditProfileDialogProps) {
-  const [isOpen, setIsOpen] = useState(true);
+export function EditProfileDialog({ profile }: EditProfileDialogProps) {
   const { toast } = useToast();
   const { supabase, session } = useAppContext();
   const [isLoading, setIsLoading] = useState(false);
@@ -72,12 +71,11 @@ export function EditProfileDialog({ profile, children }: EditProfileDialogProps)
         title: "Profile Updated",
         description: "Your information has been successfully saved.",
       });
-      setIsOpen(false);
+      // The dialog will close automatically if we can find the DialogClose button
+      document.getElementById('edit-profile-close')?.click();
     }
     setIsLoading(false);
   };
-  
-  if (!isOpen) return null;
 
   return (
       <DialogContent className="sm:max-w-[425px]">
@@ -103,6 +101,9 @@ export function EditProfileDialog({ profile, children }: EditProfileDialogProps)
               )}
             />
              <DialogFooter>
+                <DialogClose asChild>
+                    <Button type="button" variant="secondary">Cancel</Button>
+                </DialogClose>
                 <Button type="submit" disabled={isLoading}>
                     {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Save changes

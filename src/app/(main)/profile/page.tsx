@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { EditProfileDialog } from '@/components/EditProfileDialog';
 import { PreferencesDialog } from '@/components/PreferencesDialog';
 import Link from 'next/link';
-import { Dialog, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogTrigger, DialogContent } from '@/components/ui/dialog';
 
 export default function ProfilePage() {
   const { profile, supabase, session } = useAppContext();
@@ -48,6 +48,7 @@ export default function ProfilePage() {
           <CardDescription>Manage your account settings and preferences.</CardDescription>
         </CardHeader>
         <CardContent className="divide-y divide-border">
+          
           <Dialog>
             <DialogTrigger asChild>
               <div className="flex items-center p-3 -mx-3 rounded-lg hover:bg-muted cursor-pointer">
@@ -59,9 +60,7 @@ export default function ProfilePage() {
                   <ChevronRight className="h-5 w-5 text-muted-foreground" />
               </div>
             </DialogTrigger>
-            <EditProfileDialog profile={profile}>
-              {/* This is a placeholder, the content is inside EditProfileDialog */}
-            </EditProfileDialog>
+            <EditProfileDialog profile={profile} />
           </Dialog>
           
           <Dialog>
@@ -75,9 +74,7 @@ export default function ProfilePage() {
                   <ChevronRight className="h-5 w-5 text-muted-foreground" />
               </div>
             </DialogTrigger>
-            <PreferencesDialog profile={profile}>
-               {/* This is a placeholder, the content is inside PreferencesDialog */}
-            </PreferencesDialog>
+            <PreferencesDialog profile={profile} />
           </Dialog>
 
           <Link href="/help" className="block">
