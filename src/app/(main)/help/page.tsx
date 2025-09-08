@@ -78,7 +78,7 @@ export default function HelpPage() {
         <CardHeader>
           <CardTitle>Contact Us</CardTitle>
            <CardDescription>Can't find the answer you're looking for? We're here to help.</CardDescription>
-        </Header>
+        </CardHeader>
         <CardContent className="grid md:grid-cols-2 gap-6">
             <div className="flex items-start gap-4 p-4 rounded-lg border bg-card hover:bg-muted/50">
                 <Mail className="h-8 w-8 text-primary mt-1"/>
