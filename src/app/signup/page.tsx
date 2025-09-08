@@ -68,7 +68,7 @@ export default function SignupPage() {
     } else {
       toast({
         title: 'Signup Successful',
-        description: 'Please check your email to verify your account.',
+        description: 'Welcome to Campus Compass!',
       });
       router.push('/dashboard');
       router.refresh();
