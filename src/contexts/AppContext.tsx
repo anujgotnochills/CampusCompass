@@ -2,7 +2,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import type { SupabaseClient, Session } from '@supabase/supabase-js';
 import type { Item, Profile } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
@@ -31,7 +31,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // This ensures the client is created only in the browser.
-    const supabaseClient = createClient();
+    const supabaseClient = createClientComponentClient();
     setSupabase(supabaseClient);
 
     const getInitialData = async () => {
