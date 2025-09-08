@@ -53,59 +53,59 @@ export default function DashboardPage() {
       </div>
       
        <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <h2 className="text-2xl font-bold tracking-tight">Recent Items</h2>
-           <Tabs defaultValue="lost" className="w-full sm:w-auto">
-            <TabsList className="grid w-full grid-cols-2">
+        <Tabs defaultValue="lost">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+            <h2 className="text-2xl font-bold tracking-tight">Recent Items</h2>
+            <TabsList className="grid w-full sm:w-auto grid-cols-2">
               <TabsTrigger value="lost">Lost</TabsTrigger>
               <TabsTrigger value="found">Found</TabsTrigger>
             </TabsList>
-            <TabsContent value="lost" className="mt-6">
-              {recentLostItems.length > 0 ? (
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-                  {recentLostItems.map((item) => (
-                    <ItemCard key={item.id} item={item} />
-                  ))}
-                </div>
-              ) : (
+          </div>
+          <TabsContent value="lost">
+            {recentLostItems.length > 0 ? (
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                {recentLostItems.map((item) => (
+                  <ItemCard key={item.id} item={item} />
+                ))}
+              </div>
+            ) : (
+              <EmptyState
+                icon={Search}
+                title="No Recent Lost Items"
+                description="No one has reported a lost item recently."
+              >
+                <Link href="/report?type=lost">
+                    <Button>
+                      <PlusCircle className="mr-2 h-4 w-4" />
+                      Report a Lost Item
+                    </Button>
+                  </Link>
+              </EmptyState>
+            )}
+          </TabsContent>
+          <TabsContent value="found">
+            {recentFoundItems.length > 0 ? (
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                {recentFoundItems.map((item) => (
+                  <ItemCard key={item.id} item={item} />
+                ))}
+              </div>
+            ) : (
                 <EmptyState
-                  icon={Search}
-                  title="No Recent Lost Items"
-                  description="No one has reported a lost item recently."
+                    icon={Search}
+                    title="No Recent Found Items"
+                    description="No one has reported a found item recently."
                 >
-                  <Link href="/report?type=lost">
-                      <Button>
+                    <Link href="/report?type=found">
+                        <Button>
                         <PlusCircle className="mr-2 h-4 w-4" />
-                        Report a Lost Item
-                      </Button>
+                        Report a Found Item
+                        </Button>
                     </Link>
                 </EmptyState>
-              )}
-            </TabsContent>
-            <TabsContent value="found" className="mt-6">
-              {recentFoundItems.length > 0 ? (
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-                  {recentFoundItems.map((item) => (
-                    <ItemCard key={item.id} item={item} />
-                  ))}
-                </div>
-              ) : (
-                  <EmptyState
-                      icon={Search}
-                      title="No Recent Found Items"
-                      description="No one has reported a found item recently."
-                  >
-                      <Link href="/report?type=found">
-                          <Button>
-                          <PlusCircle className="mr-2 h-4 w-4" />
-                          Report a Found Item
-                          </Button>
-                      </Link>
-                  </EmptyState>
-              )}
-            </TabsContent>
-          </Tabs>
-        </div>
+            )}
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
