@@ -38,7 +38,7 @@ export function MainContent({
   
   if (isLoading) {
     return (
-        <div className="flex flex-1 items-center justify-center min-h-screen">
+        <div className="flex flex-1 items-center justify-center min-h-[calc(100vh-4rem)]">
             <LoadingSpinner />
         </div>
     );
