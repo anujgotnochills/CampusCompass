@@ -7,11 +7,15 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAppContext } from "@/contexts/AppContext";
 import { Button } from '@/components/ui/button';
 import { EditProfileDialog } from '@/components/EditProfileDialog';
+import { PreferencesDialog } from '@/components/PreferencesDialog';
+import Link from 'next/link';
 
-const ListItem = ({ icon: Icon, label, description, children, action }: { icon: any, label: string, description: string, children?: React.ReactNode, action?: () => void }) => (
+const ListItem = ({ icon: Icon, label, description, children, action, href }: { icon: any, label: string, description: string, children?: React.ReactNode, action?: () => void, href?: string }) => {
+  const content = (
     <div 
       className="flex items-center p-3 -mx-3 rounded-lg hover:bg-muted cursor-pointer"
       onClick={action}
+      aria-label={`Open ${label}`}
     >
         <Icon className="h-5 w-5 text-muted-foreground mr-4" />
         <div className="flex-grow">
@@ -20,7 +24,14 @@ const ListItem = ({ icon: Icon, label, description, children, action }: { icon: 
         </div>
         {children || <ChevronRight className="h-5 w-5 text-muted-foreground" />}
     </div>
-)
+  );
+  
+  if (href) {
+    return <Link href={href}>{content}</Link>;
+  }
+
+  return content;
+}
 
 export default function ProfilePage() {
   const { profile, supabase } = useAppContext();
@@ -63,8 +74,10 @@ export default function ProfilePage() {
             <EditProfileDialog profile={profile}>
                 <ListItem icon={UserIcon} label="Personal Information" description="Update your name and contact details." />
             </EditProfileDialog>
-            <ListItem icon={Settings} label="Preferences" description="Customize your notification settings." action={() => {}} />
-            <ListItem icon={HelpCircle} label="Help Center" description="Get support or read our FAQs." action={() => {}}/>
+             <PreferencesDialog>
+                <ListItem icon={Settings} label="Preferences" description="Customize your notification settings." />
+            </PreferencesDialog>
+            <ListItem icon={HelpCircle} label="Help Center" description="Get support or read our FAQs." href="/help" />
         </CardContent>
       </Card>
       
