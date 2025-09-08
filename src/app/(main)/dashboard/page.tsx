@@ -20,38 +20,43 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Total Items Reported</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{items.length}</div>
-            <p className="text-xs text-muted-foreground">All lost and found items</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Open Cases</CardTitle>
-            <Search className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{openCases}</div>
-            <p className="text-xs text-muted-foreground">Items yet to be recovered</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Reward Points</CardTitle>
-            <Award className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-primary">{profile?.reward_points || 0}</div>
-            <p className="text-xs text-muted-foreground">Earn points by helping others</p>
-          </CardContent>
-        </Card>
-        <Card className="md:col-span-2 lg:col-span-3">
+      <div className="grid gap-6 lg:grid-cols-3">
+        {/* Left column for summary cards */}
+        <div className="lg:col-span-1 flex flex-col gap-6">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Total Items Reported</CardTitle>
+                <FileText className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{items.length}</div>
+                <p className="text-xs text-muted-foreground">All lost and found items</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Open Cases</CardTitle>
+                <Search className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{openCases}</div>
+                <p className="text-xs text-muted-foreground">Items yet to be recovered</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Reward Points</CardTitle>
+                <Award className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-primary">{profile?.reward_points || 0}</div>
+                <p className="text-xs text-muted-foreground">Earn points by helping others</p>
+              </CardContent>
+            </Card>
+        </div>
+
+        {/* Right column for the chart */}
+        <Card className="lg:col-span-2 flex flex-col">
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                     <TrendingUp className="h-5 w-5 text-muted-foreground" />
@@ -59,7 +64,7 @@ export default function DashboardPage() {
                 </CardTitle>
                 <CardDescription>Lost and found items reported in the last 7 days.</CardDescription>
             </CardHeader>
-            <CardContent className="pl-2">
+            <CardContent className="pl-2 flex-grow">
               <ItemsChart items={items} />
             </CardContent>
         </Card>
