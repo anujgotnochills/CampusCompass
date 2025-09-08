@@ -11,18 +11,6 @@ import { PreferencesDialog } from '@/components/PreferencesDialog';
 import Link from 'next/link';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 
-const ProfileRow = ({ icon: Icon, label, description, action }: { icon: React.ElementType, label: string, description: string, action: React.ReactNode }) => (
-    <div className="flex items-center p-3 -mx-3 rounded-lg hover:bg-muted cursor-pointer">
-        <Icon className="h-5 w-5 text-muted-foreground mr-4" />
-        <div className="flex-grow">
-            <p className="font-medium">{label}</p>
-            <p className="text-sm text-muted-foreground">{description}</p>
-        </div>
-        {action}
-    </div>
-);
-
-
 export default function ProfilePage() {
   const { profile, supabase, session } = useAppContext();
 
@@ -62,8 +50,13 @@ export default function ProfilePage() {
         <CardContent className="divide-y divide-border">
           <Dialog>
             <DialogTrigger asChild>
-              <div>
-                <ProfileRow icon={UserIcon} label="Personal Information" description="Update your name and contact details." action={<ChevronRight className="h-5 w-5 text-muted-foreground" />} />
+              <div className="flex items-center p-3 -mx-3 rounded-lg hover:bg-muted cursor-pointer">
+                  <UserIcon className="h-5 w-5 text-muted-foreground mr-4" />
+                  <div className="flex-grow">
+                      <p className="font-medium">Personal Information</p>
+                      <p className="text-sm text-muted-foreground">Update your name and contact details.</p>
+                  </div>
+                  <ChevronRight className="h-5 w-5 text-muted-foreground" />
               </div>
             </DialogTrigger>
             <EditProfileDialog profile={profile}>
@@ -73,8 +66,13 @@ export default function ProfilePage() {
           
           <Dialog>
             <DialogTrigger asChild>
-              <div>
-                <ProfileRow icon={Settings} label="Preferences" description="Customize your notification settings." action={<ChevronRight className="h-5 w-5 text-muted-foreground" />} />
+              <div className="flex items-center p-3 -mx-3 rounded-lg hover:bg-muted cursor-pointer">
+                  <Settings className="h-5 w-5 text-muted-foreground mr-4" />
+                  <div className="flex-grow">
+                      <p className="font-medium">Preferences</p>
+                      <p className="text-sm text-muted-foreground">Customize your notification settings.</p>
+                  </div>
+                  <ChevronRight className="h-5 w-5 text-muted-foreground" />
               </div>
             </DialogTrigger>
             <PreferencesDialog profile={profile}>
@@ -82,8 +80,15 @@ export default function ProfilePage() {
             </PreferencesDialog>
           </Dialog>
 
-          <Link href="/help">
-             <ProfileRow icon={HelpCircle} label="Help Center" description="Get support or read our FAQs." action={<ChevronRight className="h-5 w-5 text-muted-foreground" />} />
+          <Link href="/help" className="block">
+             <div className="flex items-center p-3 -mx-3 rounded-lg hover:bg-muted cursor-pointer">
+                <HelpCircle className="h-5 w-5 text-muted-foreground mr-4" />
+                <div className="flex-grow">
+                    <p className="font-medium">Help Center</p>
+                    <p className="text-sm text-muted-foreground">Get support or read our FAQs.</p>
+                </div>
+                <ChevronRight className="h-5 w-5 text-muted-foreground" />
+            </div>
           </Link>
         </CardContent>
       </Card>
