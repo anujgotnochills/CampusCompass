@@ -14,14 +14,14 @@ type SupabaseContextType = {
   profile: Profile | null;
   items: Item[];
   isLoading: boolean;
-  addItem: (itemData: Omit<Item, 'id' | 'created_at' | 'is_recovered' | 'user_id' | 'locker_number'> & {date: Date}) => Promise<Item | null>;
+  addItem: (itemData: Omit<Item, 'id' | 'created_at' | 'is_recovered' | 'user_id' | 'locker_number' | 'postedAt'> & {date: Date}) => Promise<Item | null>;
   markAsRecovered: (item: Item) => Promise<void>;
 };
 
 const AppContext = createContext<SupabaseContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const supabase = createClient();
+  const [supabase] = useState(() => createClient());
   const router = useRouter();
   const { toast } = useToast();
   const [session, setSession] = useState<Session | null>(null);
@@ -98,7 +98,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [supabase, session]);
 
 
-  const addItem = async (itemData: Omit<Item, 'id' | 'created_at' | 'is_recovered' | 'user_id' | 'locker_number'> & {date: Date}) => {
+  const addItem = async (itemData: Omit<Item, 'id' | 'created_at' | 'is_recovered' | 'user_id' | 'locker_number' | 'postedAt'> & {date: Date}) => {
     if (!session) {
         toast({ variant: 'destructive', title: 'Not authenticated' });
         return null;
@@ -108,6 +108,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         ...itemData,
         date: new Date(itemData.date).toISOString(),
         user_id: session.user.id,
+        postedAt: new Date().getTime(),
         locker_number: itemData.type === 'found' ? Math.floor(Math.random() * 100) + 1 : undefined,
     };
     
