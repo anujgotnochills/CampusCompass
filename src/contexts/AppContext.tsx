@@ -30,17 +30,19 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // This ensures the client is created only in the browser.
+    // This creates the Supabase client instance, which is our main connection to the backend.
+    // It's created in useEffect to ensure it only runs in the browser.
     const supabaseClient = createClientComponentClient();
     setSupabase(supabaseClient);
 
     const getInitialData = async () => {
         setIsLoading(true);
+        // Check if a user session exists
         const { data: { session } } = await supabaseClient.auth.getSession();
         setSession(session);
 
         if (session) {
-            // Fetch profile
+            // If the user is logged in, fetch their profile from the 'profiles' table.
             const { data: profileData, error: profileError } = await supabaseClient
                 .from('profiles')
                 .select('*')
@@ -50,7 +52,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
             if (profileError) console.error("Error fetching profile:", profileError);
             else setProfile(profileData);
 
-            // Fetch items
+            // Fetch all lost/found reports from the 'items' table.
             const { data: itemsData, error: itemsError } = await supabaseClient
                 .from('items')
                 .select('*')
@@ -64,6 +66,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     
     getInitialData();
 
+    // This listener handles authentication changes (login/logout).
     const { data: { subscription } } = supabaseClient.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       if (!session) {
@@ -73,7 +76,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
             router.push('/login');
         }
       } else {
-        // If user logs in, fetch their data
+        // If a new user logs in, fetch their data.
         getInitialData();
         router.refresh();
       }
@@ -87,6 +90,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!session || !supabase) return;
 
+    // This is the REAL-TIME connection. It listens for any updates to the user's profile.
     const profileChannel = supabase
       .channel('profile-updates')
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'profiles', filter: `id=eq.${session.user.id}` }, (payload) => {
@@ -95,11 +99,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
       })
       .subscribe();
       
+    // This listens for any new items being added, updated, or deleted in real-time.
     const itemsChannel = supabase
       .channel('items-updates')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'items' }, (payload) => {
         console.log('Change received on items!', payload)
-        // Refetch items to keep the list up to date
+        // Refetch all items to keep the UI perfectly in sync with the database.
         supabase.from('items').select('*').order('created_at', { ascending: false }).then(({ data }) => {
             setItems(data || []);
         });
@@ -113,12 +118,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [supabase, session]);
 
 
+  // This function handles creating a new lost or found item report.
   const addItem = async (itemData: Omit<Item, 'id' | 'created_at' | 'is_recovered' | 'user_id' | 'locker_number' | 'postedAt'> & {date: Date}) => {
     if (!session || !supabase) {
         toast({ variant: 'destructive', title: 'Not authenticated' });
         return null;
     }
 
+    // The image is part of 'itemData' as a 'image_data_uri' string.
     const newItemData = {
         ...itemData,
         date: new Date(itemData.date).toISOString(),
@@ -127,6 +134,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         locker_number: itemData.type === 'found' ? Math.floor(Math.random() * 100) + 1 : undefined,
     };
     
+    // Here, we send the new item data (including the image string) to the 'items' table in Supabase.
     const { data: newItem, error } = await supabase
         .from('items')
         .insert(newItemData)
@@ -142,6 +150,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     return newItem as Item;
   }
 
+  // This function updates an item in the Supabase 'items' table to mark it as recovered.
   const markAsRecovered = async (itemToRecover: Item) => {
       if (!session || !profile || !supabase) {
         toast({ variant: 'destructive', title: 'Not authenticated' });
@@ -149,6 +158,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }
       if (itemToRecover.is_recovered) return;
 
+      // Update the 'is_recovered' field for the specific item.
       const { error: updateError } = await supabase
         .from('items')
         .update({ is_recovered: true })
@@ -159,9 +169,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
          return;
       }
 
-      // If a 'found' item is marked as recovered by its finder, the finder gets points.
+      // If a 'found' item is marked as recovered, award points to the user who found it.
       if (itemToRecover.type === 'found' && itemToRecover.user_id === session.user.id) {
           const newPoints = (profile.reward_points || 0) + 10;
+          // Update the 'reward_points' in the 'profiles' table.
           const { error: profileError } = await supabase
             .from('profiles')
             .update({ reward_points: newPoints })
