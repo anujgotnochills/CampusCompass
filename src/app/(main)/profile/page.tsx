@@ -10,11 +10,10 @@ import { EditProfileDialog } from '@/components/EditProfileDialog';
 import { PreferencesDialog } from '@/components/PreferencesDialog';
 import Link from 'next/link';
 
-const ListItem = ({ icon: Icon, label, description, children, action, href }: { icon: any, label: string, description: string, children?: React.ReactNode, action?: () => void, href?: string }) => {
+const ListItem = ({ icon: Icon, label, description, children, href }: { icon: any, label: string, description: string, children?: React.ReactNode, href?: string }) => {
   const content = (
     <div 
       className="flex items-center p-3 -mx-3 rounded-lg hover:bg-muted cursor-pointer"
-      onClick={action}
       aria-label={`Open ${label}`}
     >
         <Icon className="h-5 w-5 text-muted-foreground mr-4" />
@@ -34,7 +33,7 @@ const ListItem = ({ icon: Icon, label, description, children, action, href }: { 
 }
 
 export default function ProfilePage() {
-  const { profile, supabase } = useAppContext();
+  const { profile, supabase, session } = useAppContext();
 
   const handleLogout = async () => {
     if (supabase) {
@@ -58,10 +57,7 @@ export default function ProfilePage() {
         </Avatar>
         <div>
           <h1 className="text-3xl font-bold">{profile?.name}</h1>
-          <p className="text-muted-foreground">{profile?.id}</p>
-          <EditProfileDialog profile={profile}>
-            <Button variant="outline" size="sm" className="mt-2">Edit Profile</Button>
-          </EditProfileDialog>
+          <p className="text-muted-foreground">{session?.user?.email}</p>
         </div>
       </div>
       
@@ -85,7 +81,7 @@ export default function ProfilePage() {
          <CardHeader>
           <CardTitle>Danger Zone</CardTitle>
            <CardDescription>Be careful with these actions.</CardDescription>
-        </CardHeader>
+        </Header>
         <CardContent>
             <Button variant="destructive" onClick={handleLogout}>
                 <LogOut className="mr-2 h-4 w-4" />
