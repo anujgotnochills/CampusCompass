@@ -65,7 +65,6 @@ export default function LoginPage() {
         description: "Welcome back!",
       });
       router.push('/dashboard');
-      router.refresh(); // Important to refresh and get new session on the server
     }
     setIsLoading(false);
   };

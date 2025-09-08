@@ -71,7 +71,6 @@ export default function SignupPage() {
         description: 'Welcome to Campus Compass!',
       });
       router.push('/dashboard');
-      router.refresh();
     }
     setIsLoading(false);
   };
