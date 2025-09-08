@@ -41,18 +41,20 @@ export default function ProfilePage() {
     }
   }
   
-  const getInitials = (name: string | undefined) => {
-    if (!name) return <UserIcon />;
+  const getInitials = (name: string | undefined): string => {
+    if (!name) return '';
     const initials = name.split(' ').map(n => n[0]).join('');
     return initials.slice(0, 2).toUpperCase();
   }
+
+  const userInitials = getInitials(profile?.name);
 
   return (
     <div className="space-y-8 max-w-3xl mx-auto">
       <div className="flex items-center gap-6">
         <Avatar className="h-24 w-24">
           <AvatarFallback className="text-3xl">
-              {getInitials(profile?.name)}
+              {userInitials ? userInitials : <UserIcon />}
           </AvatarFallback>
         </Avatar>
         <div>
