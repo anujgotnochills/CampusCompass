@@ -1,3 +1,4 @@
+
 "use client";
 
 import { ChevronRight, HelpCircle, LogOut, Settings, User as UserIcon } from 'lucide-react';
@@ -5,12 +6,19 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAppContext } from "@/contexts/AppContext";
 import { Button } from '@/components/ui/button';
-import { EditProfileDialog } from '@/components/EditProfileDialog';
-import { PreferencesDialog } from '@/components/PreferencesDialog';
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
+import { Skeleton } from '@/components/ui/skeleton';
 
-const ProfileRow = ({ icon: Icon, label, description, children }: { icon: React.ElementType, label: string, description: string, children?: React.ReactNode }) => (
-  <div className="flex items-center p-3 -mx-3 rounded-lg hover:bg-muted cursor-pointer">
+const EditProfileDialog = dynamic(() => import('@/components/EditProfileDialog').then(mod => mod.EditProfileDialog), {
+  loading: () => <ProfileRowSkeleton />,
+});
+const PreferencesDialog = dynamic(() => import('@/components/PreferencesDialog').then(mod => mod.PreferencesDialog), {
+  loading: () => <ProfileRowSkeleton />,
+});
+
+const ProfileRow = ({ icon: Icon, label, description, children, onClick }: { icon: React.ElementType, label: string, description: string, children?: React.ReactNode, onClick?: () => void }) => (
+  <div className="flex items-center p-3 -mx-3 rounded-lg hover:bg-muted cursor-pointer" onClick={onClick}>
     <Icon className="h-5 w-5 text-muted-foreground mr-4" />
     <div className="flex-grow">
       <p className="font-medium">{label}</p>
@@ -19,6 +27,17 @@ const ProfileRow = ({ icon: Icon, label, description, children }: { icon: React.
     {children || <ChevronRight className="h-5 w-5 text-muted-foreground" />}
   </div>
 );
+
+const ProfileRowSkeleton = () => (
+    <div className="flex items-center p-3 -mx-3">
+        <Skeleton className="h-5 w-5 mr-4 rounded-full" />
+        <div className="flex-grow space-y-2">
+            <Skeleton className="h-4 w-1/3" />
+            <Skeleton className="h-3 w-2/3" />
+        </div>
+        <Skeleton className="h-5 w-5" />
+    </div>
+)
 
 export default function ProfilePage() {
   const { profile, supabase } = useAppContext();
@@ -68,9 +87,7 @@ export default function ProfilePage() {
             <PreferencesDialog profile={profile}>
                 <ProfileRow icon={Settings} label="Preferences" description="Customize your notification settings." />
             </PreferencesDialog>
-            <div onClick={() => router.push('/help')}>
-              <ProfileRow icon={HelpCircle} label="Help Center" description="Get support or read our FAQs." />
-            </div>
+            <ProfileRow icon={HelpCircle} label="Help Center" description="Get support or read our FAQs." onClick={() => router.push('/help')} />
         </CardContent>
       </Card>
       

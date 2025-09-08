@@ -5,18 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Compass, Search, Bot, Bell } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
-
-const featureVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: {
-      duration: 0.5
-    }
-  },
-};
 
 export default function LandingPage() {
   return (
@@ -69,14 +57,10 @@ export default function LandingPage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                  <Link href="/signup" prefetch={false}>
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <Button size="lg">Get Started</Button>
-                    </motion.div>
+                    <Button size="lg">Get Started</Button>
                 </Link>
                 <Link href="#how-it-works" prefetch={false}>
-                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <Button size="lg" variant="outline">Learn More</Button>
-                   </motion.div>
                 </Link>
               </div>
             </div>
@@ -88,6 +72,7 @@ export default function LandingPage() {
                     width={800}
                     height={600}
                     className="rounded-xl shadow-2xl object-cover aspect-video z-10 relative shadow-primary/10"
+                    priority
                 />
             </div>
           </div>
@@ -103,7 +88,7 @@ export default function LandingPage() {
                     </p>
                 </div>
                  <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-2 md:gap-12 lg:grid-cols-3">
-                    <motion.div className="grid gap-2" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} variants={featureVariants}>
+                    <div className="grid gap-2">
                         <div className="flex items-center gap-3">
                             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
                                 <Search className="h-6 w-6 text-primary"/>
@@ -111,8 +96,8 @@ export default function LandingPage() {
                             <h3 className="text-lg font-bold">AI-Powered Search</h3>
                         </div>
                         <p className="text-sm text-muted-foreground">Our smart system analyzes descriptions and images to find matches with high accuracy, saving you time and effort.</p>
-                    </motion.div>
-                     <motion.div className="grid gap-2" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} variants={{...featureVariants, visible: {...featureVariants.visible, transition: {...featureVariants.visible.transition, delay: 0.2}}}}>
+                    </div>
+                     <div className="grid gap-2">
                         <div className="flex items-center gap-3">
                              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
                                 <Bot className="h-6 w-6 text-primary"/>
@@ -120,8 +105,8 @@ export default function LandingPage() {
                             <h3 className="text-lg font-bold">Smart Suggestions</h3>
                         </div>
                         <p className="text-sm text-muted-foreground">When you report an item, our AI helps you write a clear, detailed description and suggests a title automatically.</p>
-                    </motion.div>
-                     <motion.div className="grid gap-2" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} variants={{...featureVariants, visible: {...featureVariants.visible, transition: {...featureVariants.visible.transition, delay: 0.4}}}}>
+                    </div>
+                     <div className="grid gap-2">
                         <div className="flex items-center gap-3">
                              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
                                 <Bell className="h-6 w-6 text-primary"/>
@@ -129,7 +114,7 @@ export default function LandingPage() {
                             <h3 className="text-lg font-bold">Real-time Updates</h3>
                         </div>
                         <p className="text-sm text-muted-foreground">Get notified the moment a potential match for your lost item is found, so you can recover it quickly.</p>
-                    </motion.div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -144,7 +129,7 @@ export default function LandingPage() {
                         </p>
                 </div>
                 <div className="mx-auto grid max-w-5xl items-start gap-12 sm:grid-cols-2 md:gap-16 lg:grid-cols-3 lg:max-w-none mt-16">
-                    <motion.div className="grid gap-1 text-center" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} variants={featureVariants}>
+                    <div className="grid gap-1 text-center">
                         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground mb-4 border-4 border-primary/20">
                             <span className="text-2xl font-bold">1</span>
                         </div>
@@ -152,8 +137,8 @@ export default function LandingPage() {
                         <p className="text-sm text-muted-foreground">
                         Lost something? Found something? Quickly submit a report with a description and photo. Our AI will even help you write a clear description.
                         </p>
-                    </motion.div>
-                    <motion.div className="grid gap-1 text-center" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} variants={{...featureVariants, visible: {...featureVariants.visible, transition: {...featureVariants.visible.transition, delay: 0.2}}}}>
+                    </div>
+                    <div className="grid gap-1 text-center">
                         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground mb-4 border-4 border-primary/20">
                             <span className="text-2xl font-bold">2</span>
                         </div>
@@ -161,8 +146,8 @@ export default function LandingPage() {
                         <p className="text-sm text-muted-foreground">
                         Our smart system analyzes new reports in real-time, comparing text descriptions and images to find potential matches for your item.
                         </p>
-                    </motion.div>
-                    <motion.div className="grid gap-1 text-center" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} variants={{...featureVariants, visible: {...featureVariants.visible, transition: {...featureVariants.visible.transition, delay: 0.4}}}}>
+                    </div>
+                    <div className="grid gap-1 text-center">
                         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground mb-4 border-4 border-primary/20">
                             <span className="text-2xl font-bold">3</span>
                         </div>
@@ -170,7 +155,7 @@ export default function LandingPage() {
                         <p className="text-sm text-muted-foreground">
                         When a high-confidence match is found, you'll be notified immediately. Found items are secured in a campus locker for easy pickup.
                         </p>
-                    </motion.div>
+                    </div>
                 </div>
             </div>
         </section>

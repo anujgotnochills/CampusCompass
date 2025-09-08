@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -53,9 +54,11 @@ export function EditProfileDialog({ profile, children }: EditProfileDialogProps)
     },
   });
   
-  // Reset form when dialog opens
-  if (isOpen && form.getValues("name") !== (profile?.name || "")) {
-    form.reset({ name: profile?.name || "" });
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+    if (open) {
+      form.reset({ name: profile?.name || "" });
+    }
   }
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -84,7 +87,7 @@ export function EditProfileDialog({ profile, children }: EditProfileDialogProps)
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

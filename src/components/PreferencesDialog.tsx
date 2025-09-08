@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -31,12 +32,13 @@ export function PreferencesDialog({ profile, children }: PreferencesDialogProps)
   const [matchNotifications, setMatchNotifications] = useState(profile?.match_notifications_enabled ?? true);
   const [weeklySummary, setWeeklySummary] = useState(profile?.weekly_summary_enabled ?? false);
 
-  useEffect(() => {
-    if (profile) {
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+    if (open && profile) {
       setMatchNotifications(profile.match_notifications_enabled);
       setWeeklySummary(profile.weekly_summary_enabled);
     }
-  }, [profile, isOpen]);
+  }
 
   const handleSaveChanges = async () => {
     setIsLoading(true);
@@ -49,7 +51,7 @@ export function PreferencesDialog({ profile, children }: PreferencesDialogProps)
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
