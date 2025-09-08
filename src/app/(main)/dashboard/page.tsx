@@ -51,7 +51,7 @@ export default function DashboardPage() {
             <p className="text-xs text-muted-foreground">Earn points by helping others</p>
           </CardContent>
         </Card>
-        <Card className="lg:col-span-3">
+        <Card className="md:col-span-2 lg:col-span-3">
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                     <TrendingUp className="h-5 w-5 text-muted-foreground" />
