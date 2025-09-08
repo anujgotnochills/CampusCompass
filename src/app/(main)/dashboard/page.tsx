@@ -19,10 +19,10 @@ export default function DashboardPage() {
   const recentFoundItems = items.filter((item) => item.type === 'found' && !item.is_recovered).slice(0, 4);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* Left column for recent items */}
       <div className="lg:col-span-2">
-         <div className="space-y-6 h-full flex flex-col">
+         <div className="space-y-6 flex flex-col">
           <Tabs defaultValue="lost" className="flex-grow flex flex-col">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
               <h2 className="text-2xl font-bold tracking-tight">Recent Items</h2>
