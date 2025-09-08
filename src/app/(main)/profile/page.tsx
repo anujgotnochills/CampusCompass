@@ -74,7 +74,7 @@ export default function ProfilePage() {
             <EditProfileDialog profile={profile}>
                 <ListItem icon={UserIcon} label="Personal Information" description="Update your name and contact details." />
             </EditProfileDialog>
-             <PreferencesDialog>
+             <PreferencesDialog profile={profile}>
                 <ListItem icon={Settings} label="Preferences" description="Customize your notification settings." />
             </PreferencesDialog>
             <ListItem icon={HelpCircle} label="Help Center" description="Get support or read our FAQs." href="/help" />

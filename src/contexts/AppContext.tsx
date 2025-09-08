@@ -14,8 +14,9 @@ type SupabaseContextType = {
   profile: Profile | null;
   items: Item[];
   isLoading: boolean;
-  addItem: (itemData: Omit<Item, 'id' | 'created_at' | 'is_recovered' | 'user_id' | 'locker_number' | 'postedAt'> & {date: Date}) => Promise<Item | null>;
+  addItem: (itemData: Omit<Item, 'id' | 'created_at' | 'is_recovered' | 'user_id' | 'locker_number'> & {date: Date}) => Promise<Item | null>;
   markAsRecovered: (item: Item) => Promise<void>;
+  updatePreferences: (prefs: { match_notifications_enabled: boolean; weekly_summary_enabled: boolean }) => Promise<void>;
 };
 
 const AppContext = createContext<SupabaseContextType | undefined>(undefined);
@@ -39,12 +40,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     const getInitialData = async () => {
         setIsLoading(true);
-        // Check if a user session exists
         const { data: { session } } = await supabase.auth.getSession();
         setSession(session);
 
         if (session) {
-            // If the user is logged in, fetch their profile from the 'profiles' table.
             const { data: profileData, error: profileError } = await supabase
                 .from('profiles')
                 .select('*')
@@ -54,7 +53,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
             if (profileError) console.error("Error fetching profile:", profileError);
             else setProfile(profileData);
 
-            // Fetch all lost/found reports from the 'items' table.
             const { data: itemsData, error: itemsError } = await supabase
                 .from('items')
                 .select('*')
@@ -68,7 +66,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     
     getInitialData();
 
-    // This listener handles authentication changes (login/logout).
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       if (!session) {
@@ -78,7 +75,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
             router.push('/login');
         }
       } else {
-        // If a new user logs in, fetch their data.
         getInitialData();
         router.refresh();
       }
@@ -92,21 +88,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!session || !supabase) return;
 
-    // This is the REAL-TIME connection. It listens for any updates to the user's profile.
     const profileChannel = supabase
       .channel('profile-updates')
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'profiles', filter: `id=eq.${session.user.id}` }, (payload) => {
-         console.log('Change received on profile!', payload);
          setProfile(payload.new as Profile);
       })
       .subscribe();
       
-    // This listens for any new items being added, updated, or deleted in real-time.
     const itemsChannel = supabase
       .channel('items-updates')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'items' }, (payload) => {
-        console.log('Change received on items!', payload)
-        // Refetch all items to keep the UI perfectly in sync with the database.
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'items' }, () => {
         supabase.from('items').select('*').order('created_at', { ascending: false }).then(({ data }) => {
             setItems(data || []);
         });
@@ -120,7 +111,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [supabase, session]);
 
 
-  const addItem = async (itemData: Omit<Item, 'id' | 'created_at' | 'is_recovered' | 'user_id' | 'locker_number' | 'postedAt'> & {date: Date}) => {
+  const addItem = async (itemData: Omit<Item, 'id' | 'created_at' | 'is_recovered' | 'user_id' | 'locker_number'> & {date: Date}) => {
     if (!session || !supabase) {
         toast({ variant: 'destructive', title: 'Not authenticated' });
         return null;
@@ -178,6 +169,31 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }
   };
 
+  const updatePreferences = async (prefs: { match_notifications_enabled: boolean; weekly_summary_enabled: boolean }) => {
+    if (!session || !supabase) {
+      toast({ variant: 'destructive', title: 'Not authenticated' });
+      return;
+    }
+
+    const { error } = await supabase
+      .from('profiles')
+      .update({ ...prefs, updated_at: new Date().toISOString() })
+      .eq('id', session.user.id);
+
+    if (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Error updating preferences',
+        description: error.message,
+      });
+    } else {
+      toast({
+        title: 'Preferences Updated',
+        description: 'Your settings have been successfully saved.',
+      });
+    }
+  };
+
 
   const value = {
     supabase,
@@ -186,7 +202,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     items,
     isLoading: isLoading || !supabase,
     addItem,
-    markAsRecovered
+    markAsRecovered,
+    updatePreferences
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

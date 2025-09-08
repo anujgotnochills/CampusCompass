@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,21 +14,37 @@ import {
 } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
+import { useAppContext } from "@/contexts/AppContext";
+import type { Profile } from "@/lib/types";
+import { Loader2 } from "lucide-react";
 
 interface PreferencesDialogProps {
+  profile: Profile | null;
   children: React.ReactNode;
 }
 
-export function PreferencesDialog({ children }: PreferencesDialogProps) {
+export function PreferencesDialog({ profile, children }: PreferencesDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const { toast } = useToast();
+  const { updatePreferences } = useAppContext();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSaveChanges = () => {
-    toast({
-        title: "Preferences Saved",
-        description: "Your notification settings have been updated.",
+  const [matchNotifications, setMatchNotifications] = useState(profile?.match_notifications_enabled || false);
+  const [weeklySummary, setWeeklySummary] = useState(profile?.weekly_summary_enabled || false);
+
+  useEffect(() => {
+    if (profile) {
+      setMatchNotifications(profile.match_notifications_enabled);
+      setWeeklySummary(profile.weekly_summary_enabled);
+    }
+  }, [profile]);
+
+  const handleSaveChanges = async () => {
+    setIsLoading(true);
+    await updatePreferences({
+        match_notifications_enabled: matchNotifications,
+        weekly_summary_enabled: weeklySummary,
     });
+    setIsLoading(false);
     setIsOpen(false);
   }
 
@@ -54,6 +70,8 @@ export function PreferencesDialog({ children }: PreferencesDialogProps) {
                 </div>
                 <Switch
                     id="match-notifications"
+                    checked={matchNotifications}
+                    onCheckedChange={setMatchNotifications}
                     aria-label="Toggle new match notifications"
                 />
             </div>
@@ -68,12 +86,17 @@ export function PreferencesDialog({ children }: PreferencesDialogProps) {
                 </div>
                 <Switch
                     id="weekly-summary"
+                    checked={weeklySummary}
+                    onCheckedChange={setWeeklySummary}
                     aria-label="Toggle weekly summary notifications"
                 />
             </div>
         </div>
         <DialogFooter>
-          <Button onClick={handleSaveChanges}>Save changes</Button>
+          <Button onClick={handleSaveChanges} disabled={isLoading}>
+            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Save changes
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

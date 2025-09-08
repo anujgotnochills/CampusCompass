@@ -14,7 +14,6 @@ export interface Item {
   is_recovered: boolean;
   locker_number?: number;
   created_at: string; // ISO String
-  postedAt: number; // Unix timestamp
 }
 
 export interface Profile {
@@ -22,4 +21,6 @@ export interface Profile {
   name: string;
   reward_points: number;
   updated_at: string; // ISO string
+  match_notifications_enabled: boolean;
+  weekly_summary_enabled: boolean;
 }
