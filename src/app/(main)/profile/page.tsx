@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { EditProfileDialog } from '@/components/EditProfileDialog';
 import { PreferencesDialog } from '@/components/PreferencesDialog';
 import Link from 'next/link';
-import { DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 
 const ProfileRow = ({ icon: Icon, label, description, action }: { icon: React.ElementType, label: string, description: string, action: React.ReactNode }) => (
     <div className="flex items-center p-3 -mx-3 rounded-lg hover:bg-muted cursor-pointer">
