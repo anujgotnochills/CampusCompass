@@ -1,14 +1,15 @@
 
 "use client";
 
-import { Award, FileText, Search, PlusCircle } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Award, FileText, Search, PlusCircle, TrendingUp } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAppContext } from "@/contexts/AppContext";
 import { ItemCard } from "@/components/ItemCard";
 import { EmptyState } from "@/components/EmptyState";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { ItemsChart } from "@/components/ItemsChart";
 
 export default function DashboardPage() {
   const { items, profile } = useAppContext();
@@ -51,6 +52,19 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       </div>
+
+       <Card className="lg:col-span-2">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                    <TrendingUp className="h-5 w-5 text-muted-foreground" />
+                    Activity Overview
+                </CardTitle>
+                <CardDescription>Lost and found items reported in the last 7 days.</CardDescription>
+            </CardHeader>
+            <CardContent className="pl-2">
+              <ItemsChart items={items} />
+            </CardContent>
+        </Card>
       
        <div className="space-y-6">
         <Tabs defaultValue="lost">

@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { format, parseISO } from 'date-fns';
-import { Tag, Calendar, CheckCircle } from 'lucide-react';
+import { Tag, Calendar, CheckCircle, ArrowRight } from 'lucide-react';
 
 import type { Item } from '@/lib/types';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
@@ -18,7 +18,7 @@ export function ItemCard({ item }: ItemCardProps) {
 
   return (
     <Link href={`/items/${item.id}`} className="group">
-      <Card className="h-full flex flex-col overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1 bg-card/50">
+      <Card className="h-full flex flex-col overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/50 hover:-translate-y-1 bg-card">
         <CardHeader className="p-0">
           <div className="relative">
             <Image
@@ -27,15 +27,18 @@ export function ItemCard({ item }: ItemCardProps) {
               data-ai-hint="lost item"
               width={400}
               height={300}
-              className="object-cover aspect-[4/3] w-full"
+              className="object-cover aspect-[4/3] w-full transition-transform duration-500 group-hover:scale-105"
             />
-             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
             <Badge 
               variant={item.type === 'lost' ? 'destructive' : 'secondary'}
               className="absolute top-3 left-3"
             >
               {item.type === 'lost' ? 'Lost' : 'Found'}
             </Badge>
+             <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-background/80 backdrop-blur-sm p-2 rounded-full">
+                <ArrowRight className="h-5 w-5 text-foreground" />
+             </div>
             {item.is_recovered && (
                 <Badge className="absolute top-3 right-3 flex items-center gap-1 bg-green-600 text-white">
                     <CheckCircle className="h-3 w-3"/>
@@ -45,11 +48,11 @@ export function ItemCard({ item }: ItemCardProps) {
           </div>
         </CardHeader>
         <CardContent className="flex-grow p-4">
-          <h3 className="font-bold text-lg leading-tight truncate group-hover:text-primary transition-colors">{item.title}</h3>
-          <div className="flex items-center text-sm text-muted-foreground mt-2">
+          <div className="flex items-center text-sm text-muted-foreground mb-2">
             <CategoryIcon className="h-4 w-4 mr-2" />
             <span>{item.category}</span>
           </div>
+          <h3 className="font-bold text-lg leading-tight truncate group-hover:text-primary transition-colors">{item.title}</h3>
         </CardContent>
         <CardFooter className="p-4 pt-0 text-xs text-muted-foreground flex items-center">
             <Calendar className="h-3 w-3 mr-1.5" />
