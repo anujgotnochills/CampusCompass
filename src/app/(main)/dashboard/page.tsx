@@ -15,14 +15,14 @@ export default function DashboardPage() {
   const { items, profile } = useAppContext();
 
   const openCases = items.filter((item) => !item.is_recovered).length;
-  const recentLostItems = items.filter((item) => item.type === 'lost' && !item.is_recovered).slice(0, 4);
-  const recentFoundItems = items.filter((item) => item.type === 'found' && !item.is_recovered).slice(0, 4);
+  const recentLostItems = items.filter((item) => item.type === 'lost' && !item.is_recovered).slice(0, 6);
+  const recentFoundItems = items.filter((item) => item.type === 'found' && !item.is_recovered).slice(0, 6);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
       {/* Left column for recent items */}
       <div className="lg:col-span-2">
-         <div className="space-y-6 flex flex-col">
+         <div className="space-y-6 flex flex-col h-full">
           <Tabs defaultValue="lost" className="flex-grow flex flex-col">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
               <h2 className="text-2xl font-bold tracking-tight">Recent Items</h2>
@@ -34,7 +34,7 @@ export default function DashboardPage() {
             <TabsContent value="lost" className="flex-grow">
               {recentLostItems.length > 0 ? (
                 <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-                  {recentLostItems.slice(0,3).map((item) => (
+                  {recentLostItems.map((item) => (
                     <ItemCard key={item.id} item={item} />
                   ))}
                 </div>
@@ -56,7 +56,7 @@ export default function DashboardPage() {
             <TabsContent value="found" className="flex-grow">
               {recentFoundItems.length > 0 ? (
                 <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-                  {recentFoundItems.slice(0,3).map((item) => (
+                  {recentFoundItems.map((item) => (
                     <ItemCard key={item.id} item={item} />
                   ))}
                 </div>
@@ -93,7 +93,7 @@ export default function DashboardPage() {
                 <ItemsChart items={items} />
               </CardContent>
           </Card>
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 gap-6">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">Total Items Reported</CardTitle>
