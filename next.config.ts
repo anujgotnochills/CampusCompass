@@ -24,14 +24,12 @@ const nextConfig: NextConfig = {
       }
     ],
   },
-  devIndicators: {
-    buildActivity: false,
-  },
   experimental: {
-    allowedDevOrigins: [
-        'https://6000-firebase-studio-1755514717840.cluster-zumahodzirciuujpqvsniawo3o.cloudworkstations.dev',
-    ]
+    
   },
+  allowedDevOrigins: [
+      'https://6000-firebase-studio-1755514717840.cluster-zumahodzirciuujpqvsniawo3o.cloudworkstations.dev',
+  ]
 };
 
 export default nextConfig;
