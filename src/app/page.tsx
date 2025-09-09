@@ -120,11 +120,11 @@ export default function LandingPage() {
                 </div>
                 <div className="relative">
                   <Image 
-                      src="https://picsum.photos/800/900"
+                      src="https://picsum.photos/800/1000"
                       alt="Student using phone"
                       data-ai-hint="student phone campus"
                       width={800}
-                      height={900}
+                      height={1000}
                       className="rounded-xl shadow-2xl object-cover aspect-[4/5] z-10 relative shadow-primary/10"
                       priority
                   />
