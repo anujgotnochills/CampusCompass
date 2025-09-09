@@ -46,7 +46,7 @@ export default function LandingPage() {
         <section className="relative w-full py-24 md:py-32 lg:py-40">
            <div className="absolute inset-0 z-0 opacity-10 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"></div>
           <div className="container px-4 md:px-6 text-center flex flex-col items-center space-y-6 relative z-10">
-              <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-7xl text-foreground">
+              <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-7xl text-foreground font-outfit">
                 The <span className="text-primary hover-headline">Smartest</span> Way to Find Lost Items on Campus
               </h1>
               <p className="max-w-[700px] text-muted-foreground md:text-xl">
