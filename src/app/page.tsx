@@ -10,7 +10,7 @@ import { Card, CardContent } from '@/components/ui/card';
 export default function LandingPage() {
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
-       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur-sm">
+       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-sm">
         <div className="container flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2 font-bold text-lg text-primary" prefetch={false}>
             <Compass className="h-6 w-6" />
@@ -151,7 +151,7 @@ export default function LandingPage() {
 }
 
 const FeatureCard = ({ icon: Icon, title, description }: { icon: React.ElementType, title: string, description: string }) => (
-  <Card className="p-6 bg-transparent border-border/50 hover:bg-muted/50 hover:-translate-y-1 transition-all duration-300">
+  <Card className="p-6 bg-background/50 border-border/50 hover:border-primary/50 hover:-translate-y-2 transition-all duration-300 backdrop-blur-sm">
     <div className="flex items-center gap-4 mb-4">
         <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
             <Icon className="h-6 w-6 text-primary"/>
@@ -162,7 +162,7 @@ const FeatureCard = ({ icon: Icon, title, description }: { icon: React.ElementTy
   </Card>
 );
 
-const HowItWorksStep = ({step, title, description}: {step: string, title: string, description: string}) => (
+const HowItWorksStep = ({step, string, title, description}: {step: string, title: string, description: string}) => (
   <div className="flex items-start gap-4">
     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-lg flex-shrink-0">
         {step}
@@ -173,5 +173,7 @@ const HowItWorksStep = ({step, title, description}: {step: string, title: string
     </div>
   </div>
 )
+
+    
 
     
