@@ -4,7 +4,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { PlusCircle } from "lucide-react";
+import { LayoutGrid, List, HeartHandshake, User, PlusCircle } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -12,16 +12,14 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+const navItems = [
+  { href: "/dashboard", icon: LayoutGrid, label: "Dashboard" },
+  { href: "/items", icon: List, label: "All Items" },
+  { href: "/matches", icon: HeartHandshake, label: "Matches" },
+  { href: "/profile", icon: User, label: "Profile" },
+];
 
-interface MobileNavProps {
-    navItems: {
-        href: string;
-        icon: React.ElementType;
-        label: string;
-    }[];
-}
-
-export default function MobileNav({ navItems }: MobileNavProps) {
+export default function MobileNav() {
     const pathname = usePathname();
 
     return (
