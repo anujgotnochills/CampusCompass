@@ -3,8 +3,13 @@
 
 import Link from "next/link";
 import { Compass, ArrowRight } from "lucide-react";
-import { AuthDialog } from "@/components/AuthDialog";
 import { Button } from "@/components/ui/button";
+import dynamic from "next/dynamic";
+
+const AuthDialog = dynamic(() => import('@/components/AuthDialog').then(mod => mod.AuthDialog), {
+  ssr: false,
+});
+
 
 export const GetStartedButton = () => (
     <AuthDialog initialView="signup">
