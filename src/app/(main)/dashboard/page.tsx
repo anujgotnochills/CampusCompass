@@ -1,8 +1,8 @@
 
 "use client";
 
-import { Award, FileText, Search, PlusCircle, TrendingUp, LayoutGrid, List, HeartHandshake, User } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Award, FileText, Search, PlusCircle, TrendingUp, LayoutGrid, List, HeartHandshake, User, Calendar, Tag } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAppContext } from "@/contexts/AppContext";
 import { ItemCard } from "@/components/ItemCard";
@@ -25,6 +25,10 @@ export default function DashboardPage() {
   const recentLostItems = items.filter((item) => item.type === 'lost' && !item.is_recovered).slice(0, 6);
   const recentFoundItems = items.filter((item) => item.type === 'found' && !item.is_recovered).slice(0, 6);
 
+  // Show a more detailed skeleton when items are loading but profile is ready.
+  // isInitialLoading is now only for session/profile.
+  const areItemsLoading = items.length === 0 && !isInitialLoading;
+
   if (isInitialLoading) {
     return (
         <div className="space-y-6">
@@ -37,15 +41,21 @@ export default function DashboardPage() {
                     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 md:gap-6">
                         {[...Array(6)].map((_, i) => (
                            <Card key={i}>
-                               <CardHeader>
-                                   <Skeleton className="aspect-[4/3] w-full" />
+                               <CardHeader className="p-0">
+                                   <Skeleton className="aspect-[4/3] w-full rounded-t-lg" />
                                </CardHeader>
-                               <CardContent>
-                                   <Skeleton className="h-4 w-1/3 mb-2" />
+                               <CardContent className="p-4">
+                                   <div className="flex items-center text-sm text-muted-foreground mb-2">
+                                        <Skeleton className="h-4 w-4 mr-2 rounded-full" />
+                                        <Skeleton className="h-4 w-1/3" />
+                                   </div>
                                    <Skeleton className="h-6 w-full" />
                                </CardContent>
-                               <CardFooter>
-                                   <Skeleton className="h-4 w-1/2" />
+                               <CardFooter className="p-4 pt-0">
+                                   <div className="flex items-center text-xs text-muted-foreground">
+                                        <Skeleton className="h-3 w-3 mr-1.5 rounded-full" />
+                                        <Skeleton className="h-3 w-1/2" />
+                                   </div>
                                </CardFooter>
                            </Card>
                         ))}
@@ -78,7 +88,11 @@ export default function DashboardPage() {
                 </TabsList>
               </div>
               <TabsContent value="lost" className="flex-grow">
-                {recentLostItems.length > 0 ? (
+                {areItemsLoading ? (
+                    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 md:gap-6">
+                        {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-[350px] w-full" />)}
+                    </div>
+                ) : recentLostItems.length > 0 ? (
                   <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 md:gap-6">
                     {recentLostItems.map((item) => (
                       <ItemCard key={item.id} item={item} />
@@ -100,7 +114,11 @@ export default function DashboardPage() {
                 )}
               </TabsContent>
               <TabsContent value="found" className="flex-grow">
-                {recentFoundItems.length > 0 ? (
+                {areItemsLoading ? (
+                     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 md:gap-6">
+                        {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-[350px] w-full" />)}
+                    </div>
+                ) : recentFoundItems.length > 0 ? (
                   <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 md:gap-6">
                     {recentFoundItems.map((item) => (
                       <ItemCard key={item.id} item={item} />
@@ -145,7 +163,7 @@ export default function DashboardPage() {
                     <FileText className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">{items.length}</div>
+                    <div className="text-2xl font-bold">{areItemsLoading ? <Skeleton className="h-8 w-12" /> : items.length}</div>
                 </CardContent>
                 </Card>
                 <Card>
@@ -154,7 +172,7 @@ export default function DashboardPage() {
                     <Search className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">{openCases}</div>
+                    <div className="text-2xl font-bold">{areItemsLoading ? <Skeleton className="h-8 w-12" /> : openCases}</div>
                 </CardContent>
                 </Card>
                 <Card>

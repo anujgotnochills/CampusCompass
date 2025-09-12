@@ -34,7 +34,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const getInitialSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setSession(session);
-      setIsInitialLoading(false);
+      // Let the session-based useEffect handle the loading state
     };
 
     getInitialSession();
@@ -44,6 +44,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
        if (!session) {
         setProfile(null);
         setItems([]);
+        setIsInitialLoading(false);
         if (window.location.pathname !== '/login' && window.location.pathname !== '/signup' && window.location.pathname !== '/') {
             router.push('/login');
         }
@@ -61,6 +62,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       return;
     };
 
+    setIsInitialLoading(true);
+
     const fetchInitialData = async () => {
         const { data: profileData, error: profileError } = await supabase
             .from('profiles')
@@ -68,16 +71,25 @@ export function AppProvider({ children }: { children: ReactNode }) {
             .eq('id', session.user.id)
             .single();
         
-        if (profileError) console.error("Error fetching profile:", profileError);
-        else setProfile(profileData);
+        if (profileError) {
+            console.error("Error fetching profile:", profileError);
+        } else {
+            setProfile(profileData);
+        }
+        
+        // Profile is loaded, main structure can be shown.
+        setIsInitialLoading(false);
 
         const { data: itemsData, error: itemsError } = await supabase
             .from('items')
             .select('*')
             .order('created_at', { ascending: false });
         
-        if (itemsError) console.error("Error fetching items:", itemsError);
-        else setItems(itemsData || []);
+        if (itemsError) {
+            console.error("Error fetching items:", itemsError);
+        } else {
+            setItems(itemsData || []);
+        }
     };
     
     fetchInitialData();
