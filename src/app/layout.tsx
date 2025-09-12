@@ -1,11 +1,11 @@
 
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Outfit } from 'next/font/google';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { Providers } from '@/contexts/Providers';
 
-const inter = Inter({ 
+const outfit = Outfit({ 
   subsets: ['latin'], 
   variable: '--font-sans',
   display: 'swap',
@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className="dark">
-       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable, 'font-outfit')}>
+       <body className={cn('min-h-screen bg-background font-sans antialiased', outfit.variable)}>
           <Providers>
             {children}
           </Providers>
