@@ -6,6 +6,7 @@ import { UserNav } from "@/components/UserNav";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { MainContent } from "@/components/MainContent";
+import MobileNav from "@/components/MobileNav";
 
 
 const navItems = [
@@ -78,7 +79,7 @@ export default function MainLayout({
               ))}
             </nav>
 
-          <div className="flex items-center gap-4 ml-auto">
+          <div className="flex items-center gap-2 ml-auto">
             <Link href="/report?type=lost" className="hidden sm:inline-flex">
                 <Button size="sm" variant="outline">
                     Report Lost
@@ -96,6 +97,7 @@ export default function MainLayout({
         <MainContent>
           {children}
         </MainContent>
+        <MobileNav navItems={navItems} />
     </div>
   );
 }

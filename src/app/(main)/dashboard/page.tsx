@@ -20,10 +20,9 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-8 items-start">
         {/* Left column for recent items */}
-        <div className="lg:col-span-2">
-           <div className="space-y-6 flex flex-col h-full">
+        <div className="flex flex-col h-full">
             <Tabs defaultValue="lost" className="flex-grow flex flex-col">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
                 <h2 className="text-2xl font-bold tracking-tight">Recent Items</h2>
@@ -77,11 +76,10 @@ export default function DashboardPage() {
                 )}
               </TabsContent>
             </Tabs>
-          </div>
         </div>
         
-        {/* Right column for chart */}
-        <div className="lg:col-span-1 flex flex-col gap-6">
+        {/* Right column for chart and summary */}
+        <div className="flex flex-col gap-6">
             <Card className="flex flex-col">
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
@@ -94,38 +92,36 @@ export default function DashboardPage() {
                   <ItemsChart items={items} />
                 </CardContent>
             </Card>
+            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-6">
+                <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">Total Items</CardTitle>
+                    <FileText className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                    <div className="text-2xl font-bold">{items.length}</div>
+                </CardContent>
+                </Card>
+                <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">Open Cases</CardTitle>
+                    <Search className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                    <div className="text-2xl font-bold">{openCases}</div>
+                </CardContent>
+                </Card>
+                <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">Reward Points</CardTitle>
+                    <Award className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                    <div className="text-2xl font-bold text-primary">{profile?.reward_points || 0}</div>
+                </CardContent>
+                </Card>
+            </div>
         </div>
-      </div>
-      
-      {/* Summary Cards Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Total Items Reported</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{items.length}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Open Cases</CardTitle>
-            <Search className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{openCases}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Reward Points</CardTitle>
-            <Award className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-primary">{profile?.reward_points || 0}</div>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );

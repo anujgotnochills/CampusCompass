@@ -24,34 +24,33 @@ interface MatchResult extends MatchLostAndFoundOutput {
 const MATCH_CONFIDENCE_THRESHOLD = 0.5;
 
 export default function MatchesPage() {
-  const { items } = useAppContext();
+  const { items, profile } = useAppContext();
   const [matches, setMatches] = useState<MatchResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
 
-  const { lostItems, foundItems } = useMemo(() => {
+  const { myLostItems, foundItems } = useMemo(() => {
     const activeItems = items.filter(item => !item.is_recovered);
     return {
-      lostItems: activeItems.filter(item => item.type === 'lost'),
+      myLostItems: activeItems.filter(item => item.type === 'lost' && item.user_id === profile?.id),
       foundItems: activeItems.filter(item => item.type === 'found'),
     };
-  }, [items]);
+  }, [items, profile]);
   
   const findMatches = async () => {
-    if (lostItems.length === 0 || foundItems.length === 0) {
-      setIsLoading(false);
-      setHasSearched(true);
-      return;
-    }
-
     setIsLoading(true);
     setHasSearched(true);
     setError(null);
     setMatches([]);
+    
+    if (myLostItems.length === 0 || foundItems.length === 0) {
+      setIsLoading(false);
+      return;
+    }
 
     try {
-      const matchPromises = lostItems.flatMap(lostItem =>
+      const matchPromises = myLostItems.flatMap(lostItem =>
         foundItems.map(foundItem =>
           matchLostAndFound({
             lostItemDescription: lostItem.description,
@@ -111,18 +110,18 @@ export default function MatchesPage() {
       return (
         <EmptyState
           icon={Bot}
-          title="Ready to Find Matches?"
-          description="Click the button to let our AI search for potential matches between lost and found items."
+          title="Ready to Find Your Items?"
+          description="Click the button to let our AI search for potential matches for your lost items."
         >
           <Button onClick={findMatches} size="lg">
             <Search className="mr-2 h-5 w-5" />
-            Find Matches Now
+            Find My Matches
           </Button>
         </EmptyState>
       );
     }
 
-    if (lostItems.length === 0) {
+    if (myLostItems.length === 0) {
         return (
             <EmptyState 
                 icon={Search} 
@@ -148,7 +147,7 @@ export default function MatchesPage() {
         <EmptyState 
             icon={HeartHandshake} 
             title="No Matches Found" 
-            description="We didn't find any high-confidence matches. We'll keep checking as new items are reported."
+            description="We didn't find any high-confidence matches for your items. We'll keep checking as new items are reported."
         >
              <Button onClick={findMatches} variant="outline">
                 <Search className="mr-2 h-4 w-4" />
@@ -178,6 +177,13 @@ export default function MatchesPage() {
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold tracking-tight">Potential Matches</h1>
       </div>
+       <Alert>
+            <Bot className="h-4 w-4" />
+            <AlertTitle>Your Personal AI Matchmaker</AlertTitle>
+            <AlertDescription>
+                This page is just for you. We only search for matches for items that you have personally reported as lost.
+            </AlertDescription>
+        </Alert>
       {renderContent()}
     </div>
   );

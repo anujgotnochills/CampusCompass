@@ -50,9 +50,9 @@ export default function ItemDetailPage() {
              <Skeleton className="h-10 w-32" />
              <Card>
                 <CardContent className="p-0">
-                    <div className="grid md:grid-cols-2 gap-6">
-                        <div className="p-6">
-                             <Skeleton className="rounded-lg aspect-square w-full" />
+                    <div className="grid md:grid-cols-2 gap-0 md:gap-6">
+                        <div className="p-0 md:p-6">
+                             <Skeleton className="rounded-t-lg md:rounded-lg aspect-video md:aspect-square w-full" />
                         </div>
                          <div className="p-6 flex flex-col justify-center space-y-4">
                               <Skeleton className="h-8 w-3/4" />
@@ -100,28 +100,28 @@ export default function ItemDetailPage() {
 
   return (
     <div className="max-w-4xl mx-auto">
-        <Button variant="ghost" onClick={() => router.back()} className="mb-4">
+        <Button variant="ghost" onClick={() => router.back()} className="mb-4 -ml-4">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to items
+            Back
         </Button>
         <Card>
             <CardContent className="p-0">
-            <div className="grid md:grid-cols-2 gap-6">
-                <div className="p-6">
+            <div className="grid md:grid-cols-2 gap-0 md:gap-6">
+                <div className="p-0 md:p-6">
                 <Image
                     src={item.image_data_uri || "https://placehold.co/600x400.png"}
                     alt={item.title}
                     data-ai-hint="lost item"
                     width={600}
                     height={400}
-                    className="rounded-lg object-cover aspect-square w-full"
+                    className="rounded-t-lg md:rounded-lg object-cover aspect-video md:aspect-square w-full"
                 />
                 </div>
                 <div className="p-6 flex flex-col justify-center">
                     <div className="flex justify-between items-start mb-4">
                         <div>
                             <Badge variant={item.type === 'lost' ? 'destructive' : 'secondary'} className="mb-2">{item.type === 'lost' ? 'Lost Item' : 'Found Item'}</Badge>
-                            <h1 className="text-3xl font-bold">{item.title}</h1>
+                            <h1 className="text-2xl md:text-3xl font-bold">{item.title}</h1>
                         </div>
                         <Badge variant={item.is_recovered ? 'default' : 'outline'} className="capitalize flex items-center gap-1">
                             {item.is_recovered ? <CheckCircle className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
