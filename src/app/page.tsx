@@ -120,7 +120,7 @@ export default function LandingPage() {
                 </div>
                 <div className="relative">
                   <Image 
-                      src="https://picsum.photos/800/1000"
+                      src="https://picsum.photos/seed/1/800/1000"
                       alt="Student using phone"
                       data-ai-hint="student phone campus"
                       width={800}
@@ -173,3 +173,5 @@ const HowItWorksStep = ({step, title, description}: {step: string, title: string
     </div>
   </div>
 )
+
+    
