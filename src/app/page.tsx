@@ -1,19 +1,17 @@
 
-
-import { Compass, ArrowRight, Search, List, User, ShieldCheck } from 'lucide-react';
+import { ArrowRight, List, Search, ShieldCheck, User } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { MouseTracer } from '@/components/MouseTracer';
-import placeholderImages from '@/lib/placeholder-images.json';
 import { LandingHeader, GetStartedButton } from '@/components/LandingHeader';
-import { Card } from '@/components/ui/card';
+import placeholderImages from '@/lib/placeholder-images.json';
+import { MouseTracer } from '@/components/MouseTracer';
 
 export default function LandingPage() {
   const dashboardImage = placeholderImages.dashboard;
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
       <MouseTracer />
-       <LandingHeader />
+      <LandingHeader />
       <main className="flex-1">
         <section className="relative w-full py-24 md:py-32 lg:py-40 overflow-hidden">
            <div className="absolute inset-0 z-0">
@@ -62,7 +60,7 @@ export default function LandingPage() {
                     height={dashboardImage.height}
                     className="rounded-b-xl"
                     priority
-                    sizes="(max-width: 768px) 100vw, 80vw"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
             </div>
         </section>
