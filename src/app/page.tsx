@@ -3,7 +3,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Compass, ArrowRight, Search, List, User } from 'lucide-react';
+import { Compass, ArrowRight, Search, List, User, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { MouseTracer } from '@/components/MouseTracer';
@@ -30,7 +30,7 @@ export default function LandingPage() {
             </Link>
             <Link
               href="#how-it-works"
-              className="transition-colors hover:text-primary text-muted-foreground"
+              className="transition-colors hovertext-primary text-muted-foreground"
               prefetch={false}
             >
               How It Works
@@ -78,8 +78,8 @@ export default function LandingPage() {
         </section>
         
         <section className="container mx-auto px-4 md:px-6 relative z-10 -mt-16">
-            <div className="relative rounded-xl border border-border/20 bg-background/60 shadow-2xl shadow-primary/10 backdrop-blur-lg">
-                <div className="p-2 flex items-center justify-between border-b border-border/20">
+            <div className="relative rounded-xl border border-white/10 bg-black/10 backdrop-blur-sm shadow-2xl shadow-primary/10">
+                <div className="p-2 flex items-center justify-between border-b border-white/10">
                     <div className="flex items-center gap-2">
                         <div className="w-3 h-3 rounded-full bg-red-500"></div>
                         <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
@@ -108,7 +108,7 @@ export default function LandingPage() {
                         We've packed our app with features to make finding lost items a breeze.
                     </p>
                 </div>
-                 <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-2 md:gap-12 lg:grid-cols-3">
+                 <div className="mx-auto grid max-w-7xl items-start gap-8 sm:grid-cols-2 lg:grid-cols-4">
                     <FeatureCard
                       icon={Search}
                       title="AI-Powered Matching"
@@ -123,6 +123,11 @@ export default function LandingPage() {
                       icon={User}
                       title="Community Focused"
                       description="Join a community of students helping each other. Earn rewards for reuniting people with their lost belongings."
+                    />
+                     <FeatureCard
+                      icon={ShieldCheck}
+                      title="Secure Locker System"
+                      description="Found items are stored securely in campus lockers, ensuring they are safe until picked up by their rightful owner."
                     />
                 </div>
             </div>
