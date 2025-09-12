@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 import { ReactLenis } from '@studio-freight/react-lenis'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
-const outfit = Outfit({ subsets: ['latin'], weight: ['700'], variable: '--font-outfit' });
+const outfit = Outfit({ subsets: ['latin'], weight: ['400', '700'], variable: '--font-outfit' });
 
 
 // export const metadata: Metadata = {

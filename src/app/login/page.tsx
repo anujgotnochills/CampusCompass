@@ -74,7 +74,7 @@ export default function LoginPage() {
        <div className="absolute top-8 left-8 flex items-center gap-2 font-bold text-lg text-primary">
             <Link href="/" className="flex items-center gap-2">
                 <Compass className="h-6 w-6" />
-                <span>Campus Compass</span>
+                <span className="font-outfit font-bold text-2xl text-white">Campus Compass</span>
             </Link>
         </div>
       <Card className="w-full max-w-md">
