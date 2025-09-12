@@ -7,6 +7,7 @@ import { Compass, ArrowRight, Search, List, User } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { MouseTracer } from '@/components/MouseTracer';
+import { AuthDialog } from '@/components/AuthDialog';
 
 
 export default function LandingPage() {
@@ -36,12 +37,12 @@ export default function LandingPage() {
             </Link>
           </nav>
            <div className="flex items-center gap-4">
-             <Link href="/login" prefetch={false}>
+             <AuthDialog initialView="login">
                 <Button variant="ghost">Log In</Button>
-            </Link>
-             <Link href="/signup" prefetch={false}>
+            </AuthDialog>
+             <AuthDialog initialView="signup">
                 <Button>Sign Up <ArrowRight className="ml-2 h-4 w-4" /></Button>
-            </Link>
+            </AuthDialog>
           </div>
         </div>
       </header>
@@ -66,9 +67,9 @@ export default function LandingPage() {
                 Unlock a seamless way to find lost items. Campus Compass helps you streamline reporting and intelligently matches items.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                 <Link href="/signup" prefetch={false}>
+                 <AuthDialog initialView="signup">
                     <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold">Get Started Now <ArrowRight className="ml-2 h-4 w-4" /></Button>
-                </Link>
+                </AuthDialog>
                 <Link href="#features" prefetch={false}>
                     <Button size="lg" variant="outline" className="bg-transparent border-muted-foreground/50 hover:border-primary hover:text-primary">Learn More</Button>
                 </Link>

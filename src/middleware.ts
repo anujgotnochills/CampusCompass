@@ -17,9 +17,9 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL('/dashboard', req.url))
   }
 
-  // if user is not signed in and the current path is not a public page, redirect the user to /login
+  // if user is not signed in and the current path is not a public page, redirect the user to the home page to login
   if (!user && !['/', '/login', '/signup'].includes(req.nextUrl.pathname)) {
-    return NextResponse.redirect(new URL('/login', req.url))
+    return NextResponse.redirect(new URL('/', req.url))
   }
   
   await supabase.auth.getSession()
