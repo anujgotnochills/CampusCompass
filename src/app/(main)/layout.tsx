@@ -97,7 +97,7 @@ export default function MainLayout({
         <MainContent>
           {children}
         </MainContent>
-        <MobileNav navItems={navItems} />
+        <MobileNav />
     </div>
   );
 }

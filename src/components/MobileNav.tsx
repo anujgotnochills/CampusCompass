@@ -19,11 +19,15 @@ interface NavItem {
     label: string;
 }
 
-interface MobileNavProps {
-    navItems: NavItem[];
-}
+const navItems: NavItem[] = [
+    { href: "/dashboard", icon: LayoutGrid, label: "Dashboard" },
+    { href: "/items", icon: List, label: "All Items" },
+    { href: "/matches", icon: HeartHandshake, label: "Matches" },
+    { href: "/profile", icon: User, label: "Profile" },
+];
 
-export default function MobileNav({ navItems }: MobileNavProps) {
+
+export default function MobileNav() {
     const pathname = usePathname();
 
     return (
