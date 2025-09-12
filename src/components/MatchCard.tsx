@@ -46,7 +46,7 @@ export function MatchCard({ match }: MatchCardProps) {
 
   return (
     <Card className="overflow-hidden bg-gradient-to-br from-card to-muted/20 border-border/50">
-      <CardContent className="p-4 md:p-6">
+      <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] items-stretch gap-4 md:gap-6">
           <MiniItemCard item={match.lostItem} type="Lost" />
           

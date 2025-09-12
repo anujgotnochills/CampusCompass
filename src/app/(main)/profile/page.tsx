@@ -60,15 +60,15 @@ export default function ProfilePage() {
 
   return (
     <div className="space-y-8 max-w-3xl mx-auto">
-      <div className="flex items-center gap-6">
-        <Avatar className="h-24 w-24">
-          <AvatarFallback className="text-3xl">
-            {initials ? initials : <UserIcon className="h-10 w-10" />}
+      <div className="flex items-center gap-4 md:gap-6">
+        <Avatar className="h-20 w-20 md:h-24 md:w-24">
+          <AvatarFallback className="text-2xl md:text-3xl">
+            {initials ? initials : <UserIcon className="h-8 w-8 md:h-10 md:w-10" />}
           </AvatarFallback>
         </Avatar>
         <div>
-          <h1 className="text-3xl font-bold">{profile?.name || 'User'}</h1>
-          <p className="text-muted-foreground">{profile?.id}</p>
+          <h1 className="text-2xl md:text-3xl font-bold">{profile?.name || 'User'}</h1>
+          <p className="text-sm md:text-base text-muted-foreground truncate max-w-[200px] sm:max-w-full">{profile?.id}</p>
           <EditProfileDialog profile={profile}>
             <Button variant="outline" size="sm" className="mt-2">Edit Profile</Button>
           </EditProfileDialog>

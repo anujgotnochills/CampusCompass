@@ -19,7 +19,7 @@ export function ItemCard({ item }: ItemCardProps) {
   return (
     <Link href={`/items/${item.id}`} className="group">
       <Card className="h-full flex flex-col overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/50 hover:-translate-y-1 bg-card">
-        <CardHeader className="p-0">
+        <CardHeader>
           <div className="relative">
             <Image
               src={item.image_data_uri || "https://placehold.co/400x300.png"}
@@ -47,14 +47,14 @@ export function ItemCard({ item }: ItemCardProps) {
             )}
           </div>
         </CardHeader>
-        <CardContent className="flex-grow p-4">
+        <CardContent className="flex-grow">
           <div className="flex items-center text-sm text-muted-foreground mb-2">
             <CategoryIcon className="h-4 w-4 mr-2" />
             <span>{item.category}</span>
           </div>
           <h3 className="font-bold text-lg leading-tight truncate group-hover:text-primary transition-colors">{item.title}</h3>
         </CardContent>
-        <CardFooter className="p-4 pt-0 text-xs text-muted-foreground flex items-center">
+        <CardFooter className="pt-0 text-xs text-muted-foreground flex items-center">
             <Calendar className="h-3 w-3 mr-1.5" />
             <span>{format(parseISO(item.date), 'MMM d, yyyy')}</span>
         </CardFooter>

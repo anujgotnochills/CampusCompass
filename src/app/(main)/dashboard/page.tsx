@@ -33,7 +33,7 @@ export default function DashboardPage() {
               </div>
               <TabsContent value="lost" className="flex-grow">
                 {recentLostItems.length > 0 ? (
-                  <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                  <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 md:gap-6">
                     {recentLostItems.map((item) => (
                       <ItemCard key={item.id} item={item} />
                     ))}
@@ -55,7 +55,7 @@ export default function DashboardPage() {
               </TabsContent>
               <TabsContent value="found" className="flex-grow">
                 {recentFoundItems.length > 0 ? (
-                  <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                  <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 md:gap-6">
                     {recentFoundItems.map((item) => (
                       <ItemCard key={item.id} item={item} />
                     ))}

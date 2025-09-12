@@ -44,12 +44,12 @@ export default function HelpPage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
-       <Button variant="ghost" onClick={() => router.back()} className="mb-4 -ml-4">
+       <Button variant="ghost" onClick={() => router.back()} className="mb-4 -ml-4 hidden md:inline-flex">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back
         </Button>
       <div className="text-center">
-        <h1 className="text-4xl font-bold">Help Center</h1>
+        <h1 className="text-3xl md:text-4xl font-bold">Help Center</h1>
         <p className="text-muted-foreground mt-2">
           Find answers to your questions or get in touch with our support team.
         </p>

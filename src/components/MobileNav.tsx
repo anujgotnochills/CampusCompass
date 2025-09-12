@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { LayoutGrid, List, HeartHandshake, User, PlusCircle } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -12,14 +13,17 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-const navItems = [
-  { href: "/dashboard", icon: LayoutGrid, label: "Dashboard" },
-  { href: "/items", icon: List, label: "All Items" },
-  { href: "/matches", icon: HeartHandshake, label: "Matches" },
-  { href: "/profile", icon: User, label: "Profile" },
-];
+interface NavItem {
+    href: string;
+    icon: LucideIcon;
+    label: string;
+}
 
-export default function MobileNav() {
+interface MobileNavProps {
+    navItems: NavItem[];
+}
+
+export default function MobileNav({ navItems }: MobileNavProps) {
     const pathname = usePathname();
 
     return (
@@ -33,7 +37,7 @@ export default function MobileNav() {
                                     href={item.href}
                                     className={cn(
                                         "flex flex-col items-center justify-center gap-1 text-muted-foreground",
-                                        pathname.startsWith(item.href) && "text-primary"
+                                        pathname === item.href && "text-primary"
                                     )}
                                 >
                                     <item.icon className="h-5 w-5" />

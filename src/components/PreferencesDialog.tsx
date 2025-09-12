@@ -53,7 +53,7 @@ export function PreferencesDialog({ profile, children }: PreferencesDialogProps)
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Preferences</DialogTitle>
           <DialogDescription>

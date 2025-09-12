@@ -49,7 +49,7 @@ export default function ItemDetailPage() {
         <div className="max-w-4xl mx-auto space-y-4">
              <Skeleton className="h-10 w-32" />
              <Card>
-                <CardContent className="p-0">
+                <CardContent>
                     <div className="grid md:grid-cols-2 gap-0 md:gap-6">
                         <div className="p-0 md:p-6">
                              <Skeleton className="rounded-t-lg md:rounded-lg aspect-video md:aspect-square w-full" />
@@ -100,14 +100,14 @@ export default function ItemDetailPage() {
 
   return (
     <div className="max-w-4xl mx-auto">
-        <Button variant="ghost" onClick={() => router.back()} className="mb-4 -ml-4">
+        <Button variant="ghost" onClick={() => router.back()} className="mb-4 -ml-4 hidden md:inline-flex">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back
         </Button>
         <Card>
-            <CardContent className="p-0">
+            <CardContent>
             <div className="grid md:grid-cols-2 gap-0 md:gap-6">
-                <div className="p-0 md:p-6">
+                <div className="md:p-6">
                 <Image
                     src={item.image_data_uri || "https://placehold.co/600x400.png"}
                     alt={item.title}
