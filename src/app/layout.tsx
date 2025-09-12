@@ -7,7 +7,6 @@ import './globals.css';
 import { AppProvider } from '@/contexts/AppContext';
 import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
-import { ReactLenis } from '@studio-freight/react-lenis'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 const outfit = Outfit({ subsets: ['latin'], weight: ['400', '700'], variable: '--font-outfit' });
@@ -24,14 +23,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning style={{ scrollBehavior: 'smooth' }} className="dark">
+    <html lang="en" suppressHydrationWarning className="dark">
        <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable, outfit.variable)}>
-        <ReactLenis root>
           <AppProvider>
             {children}
             <Toaster />
           </AppProvider>
-        </ReactLenis>
       </body>
     </html>
   );
