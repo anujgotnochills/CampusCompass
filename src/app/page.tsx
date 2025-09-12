@@ -8,9 +8,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { MouseTracer } from '@/components/MouseTracer';
 import { AuthDialog } from '@/components/AuthDialog';
+import placeholderImages from '@/lib/placeholder-images.json';
 
 
 export default function LandingPage() {
+  const dashboardImage = placeholderImages.dashboard;
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
       <MouseTracer />
@@ -30,7 +32,7 @@ export default function LandingPage() {
             </Link>
             <Link
               href="#how-it-works"
-              className="transition-colors hovertext-primary text-muted-foreground"
+              className="transition-colors hover:text-primary text-muted-foreground"
               prefetch={false}
             >
               How It Works
@@ -81,20 +83,21 @@ export default function LandingPage() {
             <div className="relative mx-auto max-w-7xl rounded-xl border border-white/10 bg-black/10 backdrop-blur-sm shadow-2xl shadow-primary/10">
                 <div className="p-2 flex items-center justify-between border-b border-white/10">
                     <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                        <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                        <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                        <div className="w-3 h-3 rounded-full bg-red-500" aria-label="close button decor"></div>
+                        <div className="w-3 h-3 rounded-full bg-yellow-500" aria-label="minimize button decor"></div>
+                        <div className="w-3 h-3 rounded-full bg-green-500" aria-label="maximize button decor"></div>
                     </div>
                      <div className="text-sm text-muted-foreground">campus-compass-dashboard</div>
                      <div></div>
                 </div>
                 <Image
-                    src="https://picsum.photos/seed/dashboard/1200/800"
+                    src={dashboardImage.src}
                     alt="App Dashboard Preview"
                     data-ai-hint="dashboard user interface"
-                    width={1200}
-                    height={800}
+                    width={dashboardImage.width}
+                    height={dashboardImage.height}
                     className="rounded-b-xl"
+                    priority
                 />
             </div>
         </section>
@@ -163,7 +166,3 @@ const FeatureCard = ({ icon: Icon, title, description }: { icon: React.ElementTy
         <p className="text-sm text-muted-foreground">{description}</p>
     </Card>
 );
-
-    
-
-    

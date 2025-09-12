@@ -12,9 +12,11 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 const EditProfileDialog = dynamic(() => import('@/components/EditProfileDialog').then(mod => mod.EditProfileDialog), {
   loading: () => <ProfileRowSkeleton />,
+  ssr: false
 });
 const PreferencesDialog = dynamic(() => import('@/components/PreferencesDialog').then(mod => mod.PreferencesDialog), {
   loading: () => <ProfileRowSkeleton />,
+  ssr: false
 });
 
 const ProfileRow = ({ icon: Icon, label, description, children, onClick }: { icon: React.ElementType, label: string, description: string, children?: React.ReactNode, onClick?: () => void }) => (

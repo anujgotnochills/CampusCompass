@@ -8,6 +8,7 @@ import type { Item } from '@/lib/types';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { CATEGORIES } from '@/lib/constants';
+import placeholderImages from '@/lib/placeholder-images.json';
 
 interface ItemCardProps {
   item: Item;
@@ -15,6 +16,7 @@ interface ItemCardProps {
 
 export function ItemCard({ item }: ItemCardProps) {
   const CategoryIcon = CATEGORIES.find(c => c.name === item.category)?.icon || Tag;
+  const placeholderImage = placeholderImages.item;
 
   return (
     <Link href={`/items/${item.id}`} className="group">
@@ -22,11 +24,11 @@ export function ItemCard({ item }: ItemCardProps) {
         <CardHeader>
           <div className="relative">
             <Image
-              src={item.image_data_uri || "https://placehold.co/400x300.png"}
+              src={item.image_data_uri || placeholderImage.src}
               alt={item.title}
               data-ai-hint="lost item"
-              width={400}
-              height={300}
+              width={placeholderImage.width}
+              height={placeholderImage.height}
               className="object-cover aspect-[4/3] w-full transition-transform duration-500 group-hover:scale-105"
             />
              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>

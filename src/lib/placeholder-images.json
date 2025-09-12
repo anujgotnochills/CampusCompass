@@ -1,0 +1,20 @@
+{
+    "dashboard": {
+        "src": "https://picsum.photos/seed/dashboard/1200/800",
+        "width": 1200,
+        "height": 800,
+        "hint": "dashboard user interface"
+    },
+    "item": {
+        "src": "https://picsum.photos/seed/item/400/300",
+        "width": 400,
+        "height": 300,
+        "hint": "lost item"
+    },
+    "item-detail": {
+        "src": "https://picsum.photos/seed/detail/600/400",
+        "width": 600,
+        "height": 400,
+        "hint": "found object"
+    }
+}
