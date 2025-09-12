@@ -1,5 +1,5 @@
 
-import { ArrowRight, List, Search, ShieldCheck, User } from 'lucide-react';
+import { List, Search, ShieldCheck, User } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { LandingHeader, GetStartedButton } from '@/components/LandingHeader';
@@ -153,3 +153,5 @@ const HowItWorksStep = ({ number, title, description }: { number: string; title:
     <p className="text-sm text-muted-foreground">{description}</p>
   </div>
 );
+
+    
