@@ -23,7 +23,7 @@ export default function MobileNav() {
     const pathname = usePathname();
 
     return (
-        <div className="fixed bottom-0 left-0 right-0 z-40 h-16 border-t bg-background/95 backdrop-blur-sm md:hidden">
+        <div className="fixed bottom-0 left-0 right-0 z-40 h-16 border-t bg-background/80 backdrop-blur-lg md:hidden">
             <nav className="grid h-full grid-cols-5 items-center">
                 {navItems.map((item) => (
                     <TooltipProvider key={item.href} delayDuration={0}>

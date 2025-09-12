@@ -2,6 +2,7 @@
 "use client";
 
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { Compass, ArrowRight, Search, List, User } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -12,7 +13,7 @@ export default function LandingPage() {
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
       <MouseTracer />
-       <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-sm">
+       <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-lg">
         <div className="container flex h-16 items-center justify-between mx-auto px-4 md:px-6">
           <Link href="/" className="flex items-center gap-2 font-bold text-lg text-primary" prefetch={false}>
             <Compass className="h-6 w-6" />
@@ -76,7 +77,7 @@ export default function LandingPage() {
         </section>
         
         <section className="container mx-auto px-4 md:px-6 relative z-10 -mt-16">
-            <div className="relative rounded-xl border border-border/20 bg-background/50 shadow-2xl shadow-primary/10 backdrop-blur-md">
+            <div className="relative rounded-xl border border-border/20 bg-background/60 shadow-2xl shadow-primary/10 backdrop-blur-lg">
                 <div className="p-2 flex items-center justify-between border-b border-border/20">
                     <div className="flex items-center gap-2">
                         <div className="w-3 h-3 rounded-full bg-red-500"></div>
@@ -146,7 +147,7 @@ export default function LandingPage() {
 }
 
 const FeatureCard = ({ icon: Icon, title, description }: { icon: React.ElementType, title: string, description: string }) => (
-    <div className="p-6 bg-background/50 border border-border/20 rounded-xl hover:-translate-y-2 transition-all duration-300 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10 backdrop-blur-sm">
+    <Card className="p-6 hover:-translate-y-2 transition-all duration-300 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10">
         <div className="flex items-center gap-4 mb-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
                 <Icon className="h-6 w-6 text-primary"/>
@@ -154,5 +155,5 @@ const FeatureCard = ({ icon: Icon, title, description }: { icon: React.ElementTy
             <h3 className="text-lg font-bold text-white">{title}</h3>
         </div>
         <p className="text-sm text-muted-foreground">{description}</p>
-    </div>
+    </Card>
 );
