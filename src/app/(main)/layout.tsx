@@ -1,4 +1,5 @@
 
+
 import { Compass, LayoutGrid, List, HeartHandshake, User, PlusCircle, Menu } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -8,19 +9,18 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { MainContent } from "@/components/MainContent";
 import MobileNav from "@/components/MobileNav";
 
-
-const navItems = [
-  { href: "/dashboard", icon: LayoutGrid, label: "Dashboard" },
-  { href: "/items", icon: List, label: "All Items" },
-  { href: "/matches", icon: HeartHandshake, label: "Matches" },
-  { href: "/profile", icon: User, label: "Profile" },
-];
-
 export default function MainLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const navItems = [
+    { href: "/dashboard", icon: LayoutGrid, label: "Dashboard" },
+    { href: "/items", icon: List, label: "All Items" },
+    { href: "/matches", icon: HeartHandshake, label: "Matches" },
+    { href: "/profile", icon: User, label: "Profile" },
+  ];
+
   return (
     <div className="flex flex-col min-h-screen w-full">
       <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-background/10 backdrop-blur-sm px-4 md:px-6">

@@ -1,53 +1,19 @@
 
-"use client";
 
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { Compass, ArrowRight, Search, List, User, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { MouseTracer } from '@/components/MouseTracer';
-import { AuthDialog } from '@/components/AuthDialog';
 import placeholderImages from '@/lib/placeholder-images.json';
-
+import { LandingHeader } from '@/components/LandingHeader';
+import { Card } from '@/components/ui/card';
 
 export default function LandingPage() {
   const dashboardImage = placeholderImages.dashboard;
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
       <MouseTracer />
-       <header className="sticky top-0 z-50 w-full bg-background/10 backdrop-blur-sm">
-        <div className="container flex h-16 items-center justify-between mx-auto px-4 md:px-6">
-          <Link href="/" className="flex items-center gap-2 font-bold text-lg text-primary" prefetch={false}>
-            <Compass className="h-6 w-6" />
-            <span className="font-outfit font-bold text-2xl text-white">Campus Compass</span>
-          </Link>
-          <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
-             <Link
-              href="#features"
-              className="transition-colors hover:text-primary text-muted-foreground"
-              prefetch={false}
-            >
-              Features
-            </Link>
-            <Link
-              href="#how-it-works"
-              className="transition-colors hover:text-primary text-muted-foreground"
-              prefetch={false}
-            >
-              How It Works
-            </Link>
-          </nav>
-           <div className="flex items-center gap-4">
-             <AuthDialog initialView="login">
-                <Button variant="ghost">Log In</Button>
-            </AuthDialog>
-             <AuthDialog initialView="signup">
-                <Button>Sign Up <ArrowRight className="ml-2 h-4 w-4" /></Button>
-            </AuthDialog>
-          </div>
-        </div>
-      </header>
+       <LandingHeader />
       <main className="flex-1">
         <section className="relative w-full py-24 md:py-32 lg:py-40 overflow-hidden">
            <div className="absolute inset-0 z-0">
@@ -69,11 +35,9 @@ export default function LandingPage() {
                 Unlock a seamless way to find lost items. Campus Compass helps you streamline reporting and intelligently matches items.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                 <AuthDialog initialView="signup">
-                    <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold">Get Started Now <ArrowRight className="ml-2 h-4 w-4" /></Button>
-                </AuthDialog>
+                <LandingHeader.GetStartedButton />
                 <Link href="#features" prefetch={false}>
-                    <Button size="lg" variant="outline" className="bg-transparent border-muted-foreground/50 hover:border-primary hover:text-primary">Learn More</Button>
+                    <button className="h-11 rounded-md px-8 inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-transparent border-muted-foreground/50 hover:border-primary hover:text-primary">Learn More</button>
                 </Link>
               </div>
           </div>
@@ -98,6 +62,7 @@ export default function LandingPage() {
                     height={dashboardImage.height}
                     className="rounded-b-xl"
                     priority
+                    sizes="(max-width: 768px) 100vw, 80vw"
                 />
             </div>
         </section>
@@ -136,7 +101,23 @@ export default function LandingPage() {
             </div>
         </section>
 
-
+        <section id="how-it-works" className="w-full py-24 md:py-32 lg:py-40 bg-black/20">
+          <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
+            <div className="space-y-3">
+              <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight text-white font-outfit">How It Works</h2>
+              <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                Finding what you've lost is easier than ever. Follow these simple steps.
+              </p>
+            </div>
+            <div className="mx-auto w-full max-w-4xl pt-12">
+              <div className="grid gap-8 sm:grid-cols-3">
+                <HowItWorksStep number="1" title="Report Your Item" description="Fill out a quick form with details about the lost or found item. Upload a photo for better matching." />
+                <HowItWorksStep number="2" title="AI Finds Matches" description="Our AI gets to work, comparing your item against the database to find potential matches in real-time." />
+                <HowItWorksStep number="3" title="Get Notified & Recover" description="Receive a notification when a likely match is found. Arrange for a secure pickup at a campus locker." />
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
       <footer className="border-t border-border/20 mt-20">
         <div className="container flex flex-col gap-4 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6">
@@ -165,4 +146,12 @@ const FeatureCard = ({ icon: Icon, title, description }: { icon: React.ElementTy
         </div>
         <p className="text-sm text-muted-foreground">{description}</p>
     </Card>
+);
+
+const HowItWorksStep = ({ number, title, description }: { number: string; title: string; description: string }) => (
+  <div className="flex flex-col items-center text-center gap-4 relative">
+    <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 border-2 border-primary/30 text-primary text-2xl font-bold">{number}</div>
+    <h3 className="text-lg font-bold text-white">{title}</h3>
+    <p className="text-sm text-muted-foreground">{description}</p>
+  </div>
 );
