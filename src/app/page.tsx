@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { MouseTracer } from '@/components/MouseTracer';
 import placeholderImages from '@/lib/placeholder-images.json';
-import { LandingHeader } from '@/components/LandingHeader';
+import { LandingHeader, GetStartedButton } from '@/components/LandingHeader';
 import { Card } from '@/components/ui/card';
 
 export default function LandingPage() {
@@ -35,7 +35,7 @@ export default function LandingPage() {
                 Unlock a seamless way to find lost items. Campus Compass helps you streamline reporting and intelligently matches items.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <LandingHeader.GetStartedButton />
+                <GetStartedButton />
                 <Link href="#features" prefetch={false}>
                     <button className="h-11 rounded-md px-8 inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-transparent border-muted-foreground/50 hover:border-primary hover:text-primary">Learn More</button>
                 </Link>

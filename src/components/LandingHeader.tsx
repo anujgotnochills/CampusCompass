@@ -6,7 +6,7 @@ import { Compass, ArrowRight } from "lucide-react";
 import { AuthDialog } from "@/components/AuthDialog";
 import { Button } from "@/components/ui/button";
 
-const GetStartedButton = () => (
+export const GetStartedButton = () => (
     <AuthDialog initialView="signup">
         <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold">
             Get Started Now <ArrowRight className="ml-2 h-4 w-4" />
@@ -34,13 +34,9 @@ export function LandingHeader() {
           <AuthDialog initialView="login">
             <Button variant="ghost">Log In</Button>
           </AuthDialog>
-          <AuthDialog initialView="signup">
-            <Button>Sign Up <ArrowRight className="ml-2 h-4 w-4" /></Button>
-          </AuthDialog>
+          <GetStartedButton />
         </div>
       </div>
     </header>
   );
 }
-
-LandingHeader.GetStartedButton = GetStartedButton;
