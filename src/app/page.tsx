@@ -14,7 +14,7 @@ export default function LandingPage() {
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
       <MouseTracer />
-       <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-lg">
+       <header className="sticky top-0 z-50 w-full bg-background/10 backdrop-blur-sm">
         <div className="container flex h-16 items-center justify-between mx-auto px-4 md:px-6">
           <Link href="/" className="flex items-center gap-2 font-bold text-lg text-primary" prefetch={false}>
             <Compass className="h-6 w-6" />
