@@ -77,8 +77,8 @@ export default function LandingPage() {
           </div>
         </section>
         
-        <section className="container mx-auto px-4 md:px-6 relative z-10 -mt-16">
-            <div className="relative rounded-xl border border-white/10 bg-black/10 backdrop-blur-sm shadow-2xl shadow-primary/10">
+        <section className="relative z-10 -mt-16 px-4 md:px-6">
+            <div className="relative mx-auto max-w-7xl rounded-xl border border-white/10 bg-black/10 backdrop-blur-sm shadow-2xl shadow-primary/10">
                 <div className="p-2 flex items-center justify-between border-b border-white/10">
                     <div className="flex items-center gap-2">
                         <div className="w-3 h-3 rounded-full bg-red-500"></div>
@@ -163,5 +163,7 @@ const FeatureCard = ({ icon: Icon, title, description }: { icon: React.ElementTy
         <p className="text-sm text-muted-foreground">{description}</p>
     </Card>
 );
+
+    
 
     
