@@ -137,7 +137,7 @@ export default function LandingPage() {
 }
 
 const FeatureCard = ({ icon: Icon, title, description }: { icon: React.ElementType, title: string, description: string }) => (
-    <Card className="p-6 hover:-translate-y-2 transition-all duration-300 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10">
+    <div className="p-6 rounded-lg hover:-translate-y-2 transition-all duration-300 border border-transparent hover:border-primary/50 hover:bg-card hover:shadow-2xl hover:shadow-primary/10">
         <div className="flex items-center gap-4 mb-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
                 <Icon className="h-6 w-6 text-primary"/>
@@ -145,7 +145,7 @@ const FeatureCard = ({ icon: Icon, title, description }: { icon: React.ElementTy
             <h3 className="text-lg font-bold text-white">{title}</h3>
         </div>
         <p className="text-sm text-muted-foreground">{description}</p>
-    </Card>
+    </div>
 );
 
 const HowItWorksStep = ({ number, title, description }: { number: string; title: string; description: string }) => (

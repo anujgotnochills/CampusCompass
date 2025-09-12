@@ -1,19 +1,19 @@
 
 {
     "dashboard": {
-        "src": "https://placehold.co/1200x800.png",
+        "src": "https://picsum.photos/seed/1/1200/800",
         "width": 1200,
         "height": 800,
         "hint": "dashboard user interface"
     },
     "item": {
-        "src": "https://placehold.co/400x300.png",
+        "src": "https://picsum.photos/seed/2/400/300",
         "width": 400,
         "height": 300,
         "hint": "lost item"
     },
     "item-detail": {
-        "src": "https://placehold.co/600x400.png",
+        "src": "https://picsum.photos/seed/3/600/400",
         "width": 600,
         "height": 400,
         "hint": "found object"
