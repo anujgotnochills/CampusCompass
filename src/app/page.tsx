@@ -158,3 +158,5 @@ const FeatureCard = ({ icon: Icon, title, description }: { icon: React.ElementTy
         <p className="text-sm text-muted-foreground">{description}</p>
     </Card>
 );
+
+    
