@@ -1,7 +1,7 @@
 
 "use client";
 
-import { Award, FileText, Search, PlusCircle, TrendingUp } from "lucide-react";
+import { Award, FileText, Search, PlusCircle, TrendingUp, LayoutGrid, List, HeartHandshake, User } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAppContext } from "@/contexts/AppContext";
@@ -9,14 +9,60 @@ import { ItemCard } from "@/components/ItemCard";
 import { EmptyState } from "@/components/EmptyState";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ItemsChart } from "@/components/ItemsChart";
+import dynamic from "next/dynamic";
+import { Skeleton } from "@/components/ui/skeleton";
+
+const ItemsChart = dynamic(() => import('@/components/ItemsChart').then(mod => mod.ItemsChart), {
+  loading: () => <Skeleton className="h-[200px] w-full" />,
+  ssr: false,
+});
+
 
 export default function DashboardPage() {
-  const { items, profile } = useAppContext();
+  const { items, profile, isInitialLoading } = useAppContext();
 
   const openCases = items.filter((item) => !item.is_recovered).length;
   const recentLostItems = items.filter((item) => item.type === 'lost' && !item.is_recovered).slice(0, 6);
   const recentFoundItems = items.filter((item) => item.type === 'found' && !item.is_recovered).slice(0, 6);
+
+  if (isInitialLoading) {
+    return (
+        <div className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-8 items-start">
+                <div className="flex flex-col gap-4">
+                    <div className="flex justify-between items-center">
+                         <Skeleton className="h-8 w-48" />
+                         <Skeleton className="h-10 w-44" />
+                    </div>
+                    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 md:gap-6">
+                        {[...Array(6)].map((_, i) => (
+                           <Card key={i}>
+                               <CardHeader>
+                                   <Skeleton className="aspect-[4/3] w-full" />
+                               </CardHeader>
+                               <CardContent>
+                                   <Skeleton className="h-4 w-1/3 mb-2" />
+                                   <Skeleton className="h-6 w-full" />
+                               </CardContent>
+                               <CardFooter>
+                                   <Skeleton className="h-4 w-1/2" />
+                               </CardFooter>
+                           </Card>
+                        ))}
+                    </div>
+                </div>
+                <div className="flex flex-col gap-6">
+                    <Skeleton className="h-64 w-full" />
+                    <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-6">
+                        <Skeleton className="h-24 w-full" />
+                        <Skeleton className="h-24 w-full" />
+                        <Skeleton className="h-24 w-full" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+  }
 
   return (
     <div className="space-y-6">

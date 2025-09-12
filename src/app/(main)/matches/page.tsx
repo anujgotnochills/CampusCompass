@@ -1,24 +1,25 @@
 
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useAppContext } from '@/contexts/AppContext';
-import { matchLostAndFound } from '@/ai/flows/match-lost-and-found';
+import { findMatchingItems } from '@/ai/flows/find-matching-items';
 import type { Item } from '@/lib/types';
-import type { MatchLostAndFoundOutput } from '@/ai/flows/match-lost-and-found';
 import { MatchCard } from '@/components/MatchCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/EmptyState';
-import { HeartHandshake, Search, Bot } from 'lucide-react';
+import { HeartHandshake, Search, Bot, Loader2 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Terminal } from "lucide-react"
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
 
-interface MatchResult extends MatchLostAndFoundOutput {
+interface MatchResult {
   lostItem: Item;
   foundItem: Item;
+  matchConfidence: number;
+  reason: string;
 }
 
 const MATCH_CONFIDENCE_THRESHOLD = 0.5;
@@ -26,43 +27,64 @@ const MATCH_CONFIDENCE_THRESHOLD = 0.5;
 export default function MatchesPage() {
   const { items, profile } = useAppContext();
   const [matches, setMatches] = useState<MatchResult[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
 
-  const { myLostItems, foundItems } = useMemo(() => {
+  const { myLostItems, foundItems, allItemsById } = useMemo(() => {
     const activeItems = items.filter(item => !item.is_recovered);
+    const allItemsByIdMap = new Map(items.map(item => [item.id, item]));
     return {
       myLostItems: activeItems.filter(item => item.type === 'lost' && item.user_id === profile?.id),
       foundItems: activeItems.filter(item => item.type === 'found'),
+      allItemsById: allItemsByIdMap,
     };
   }, [items, profile]);
   
-  const findMatches = async () => {
-    setIsLoading(true);
+  const findMatches = useCallback(async () => {
+    setIsSearching(true);
     setHasSearched(true);
     setError(null);
     setMatches([]);
     
     if (myLostItems.length === 0 || foundItems.length === 0) {
-      setIsLoading(false);
+      setIsSearching(false);
       return;
     }
 
     try {
-      const matchPromises = myLostItems.flatMap(lostItem =>
-        foundItems.map(foundItem =>
-          matchLostAndFound({
-            lostItemDescription: lostItem.description,
-            foundItemDescription: foundItem.description,
-            lostItemImageDataUri: lostItem.image_data_uri,
-            foundItemImageDataUri: foundItem.image_data_uri,
-          }).then(result => ({ ...result, lostItem, foundItem }))
-        )
+      const matchPromises = myLostItems.map(lostItem =>
+        findMatchingItems({
+          lostItem: {
+            id: lostItem.id,
+            description: lostItem.description,
+            image_data_uri: lostItem.image_data_uri,
+          },
+          foundItems: foundItems.map(f => ({
+            id: f.id,
+            description: f.description,
+            image_data_uri: f.image_data_uri,
+          })),
+        })
       );
 
       const results = await Promise.all(matchPromises);
-      const highConfidenceMatches = results
+      
+      const allFoundMatches = results.flatMap((result, index) => {
+        const lostItem = myLostItems[index];
+        return result.matches.map(match => {
+          const foundItem = allItemsById.get(match.foundItemId);
+          if (!foundItem) return null;
+          return {
+            lostItem,
+            foundItem,
+            matchConfidence: match.matchConfidence,
+            reason: match.reason,
+          };
+        }).filter((m): m is MatchResult => m !== null);
+      });
+
+      const highConfidenceMatches = allFoundMatches
         .filter(result => result.matchConfidence >= MATCH_CONFIDENCE_THRESHOLD)
         .sort((a, b) => b.matchConfidence - a.matchConfidence);
       
@@ -71,13 +93,13 @@ export default function MatchesPage() {
       console.error("Failed to find matches:", e);
       setError("Could not load matches due to an error. Please try again later.");
     } finally {
-      setIsLoading(false);
+      setIsSearching(false);
     }
-  };
+  }, [myLostItems, foundItems, allItemsById]);
 
 
   const renderContent = () => {
-    if (isLoading) {
+    if (isSearching) {
       return (
         <div className="space-y-6">
           {[...Array(3)].map((_, i) => (
@@ -113,8 +135,8 @@ export default function MatchesPage() {
           title="Ready to Find Your Items?"
           description="Click the button to let our AI search for potential matches for your lost items."
         >
-          <Button onClick={findMatches} size="lg">
-            <Search className="mr-2 h-5 w-5" />
+          <Button onClick={findMatches} size="lg" disabled={isSearching || myLostItems.length === 0}>
+            {isSearching ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <Search className="mr-2 h-5 w-5" />}
             Find My Matches
           </Button>
         </EmptyState>
@@ -149,8 +171,8 @@ export default function MatchesPage() {
             title="No Matches Found" 
             description="We didn't find any high-confidence matches for your items. We'll keep checking as new items are reported."
         >
-             <Button onClick={findMatches} variant="outline">
-                <Search className="mr-2 h-4 w-4" />
+             <Button onClick={findMatches} variant="outline" disabled={isSearching}>
+                {isSearching ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Search className="mr-2 h-4 w-4" />}
                 Search Again
             </Button>
         </EmptyState>
@@ -160,8 +182,8 @@ export default function MatchesPage() {
     return (
       <div className="space-y-6">
         <div className="flex justify-end">
-             <Button onClick={findMatches} variant="outline">
-                <Search className="mr-2 h-4 w-4" />
+             <Button onClick={findMatches} variant="outline" disabled={isSearching}>
+                {isSearching ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Search className="mr-2 h-4 w-4" />}
                 Refresh Matches
             </Button>
         </div>

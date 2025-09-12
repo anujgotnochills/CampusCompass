@@ -16,6 +16,7 @@ import {
 import { useAppContext } from "@/contexts/AppContext";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { PreferencesDialog } from "./PreferencesDialog";
 
 export function UserNav() {
   const { session, profile, supabase } = useAppContext();
@@ -63,14 +64,18 @@ export function UserNav() {
               <span>Profile</span>
             </DropdownMenuItem>
           </Link>          
-          <DropdownMenuItem>
-            <Settings className="mr-2 h-4 w-4" />
-            <span>Settings</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <HelpCircle className="mr-2 h-4 w-4" />
-            <span>Help Center</span>
-          </DropdownMenuItem>
+          <PreferencesDialog profile={profile}>
+             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                <Settings className="mr-2 h-4 w-4" />
+                <span>Settings</span>
+            </DropdownMenuItem>
+          </PreferencesDialog>
+          <Link href="/help">
+            <DropdownMenuItem>
+                <HelpCircle className="mr-2 h-4 w-4" />
+                <span>Help Center</span>
+            </DropdownMenuItem>
+          </Link>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout}>

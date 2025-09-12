@@ -9,11 +9,11 @@ import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 
 type SupabaseContextType = {
-  supabase: SupabaseClient | null;
+  supabase: SupabaseClient;
   session: Session | null;
   profile: Profile | null;
   items: Item[];
-  isLoading: boolean;
+  isInitialLoading: boolean;
   addItem: (itemData: Omit<Item, 'id' | 'created_at' | 'is_recovered' | 'user_id' | 'locker_number'> & {date: Date}) => Promise<Item | null>;
   markAsRecovered: (item: Item) => Promise<void>;
   updatePreferences: (prefs: { match_notifications_enabled: boolean; weekly_summary_enabled: boolean }) => Promise<void>;
@@ -22,61 +22,31 @@ type SupabaseContextType = {
 const AppContext = createContext<SupabaseContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [supabase, setSupabase] = useState<SupabaseClient | null>(null);
+  const [supabase] = useState(() => createClientComponentClient());
   const router = useRouter();
   const { toast } = useToast();
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [items, setItems] = useState<Item[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
 
   useEffect(() => {
-    const supabaseClient = createClientComponentClient();
-    setSupabase(supabaseClient);
-  }, []);
-
-  useEffect(() => {
-    if (!supabase) return;
-
-    const getInitialData = async () => {
-        setIsLoading(true);
-        const { data: { session } } = await supabase.auth.getSession();
-        setSession(session);
-
-        if (session) {
-            const { data: profileData, error: profileError } = await supabase
-                .from('profiles')
-                .select('*')
-                .eq('id', session.user.id)
-                .single();
-            
-            if (profileError) console.error("Error fetching profile:", profileError);
-            else setProfile(profileData);
-
-            const { data: itemsData, error: itemsError } = await supabase
-                .from('items')
-                .select('*')
-                .order('created_at', { ascending: false });
-            
-            if (itemsError) console.error("Error fetching items:", itemsError);
-            else setItems(itemsData || []);
-        }
-        setIsLoading(false);
+    const getInitialSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setSession(session);
+      setIsInitialLoading(false);
     };
-    
-    getInitialData();
+
+    getInitialSession();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
-      if (!session) {
+       if (!session) {
         setProfile(null);
         setItems([]);
         if (window.location.pathname !== '/login' && window.location.pathname !== '/signup' && window.location.pathname !== '/') {
             router.push('/login');
         }
-      } else {
-        getInitialData();
-        router.refresh();
       }
     });
 
@@ -86,7 +56,31 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [supabase, router]);
 
   useEffect(() => {
-    if (!session || !supabase) return;
+    if (!session) {
+      setIsInitialLoading(false);
+      return;
+    };
+
+    const fetchInitialData = async () => {
+        const { data: profileData, error: profileError } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', session.user.id)
+            .single();
+        
+        if (profileError) console.error("Error fetching profile:", profileError);
+        else setProfile(profileData);
+
+        const { data: itemsData, error: itemsError } = await supabase
+            .from('items')
+            .select('*')
+            .order('created_at', { ascending: false });
+        
+        if (itemsError) console.error("Error fetching items:", itemsError);
+        else setItems(itemsData || []);
+    };
+    
+    fetchInitialData();
 
     const profileChannel = supabase
       .channel('profile-updates')
@@ -97,10 +91,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
       
     const itemsChannel = supabase
       .channel('items-updates')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'items' }, () => {
-        supabase.from('items').select('*').order('created_at', { ascending: false }).then(({ data }) => {
-            setItems(data || []);
-        });
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'items' }, async (payload) => {
+         const { data: itemsData, error: itemsError } = await supabase
+            .from('items')
+            .select('*')
+            .order('created_at', { ascending: false });
+            
+        if (itemsError) console.error("Error re-fetching items:", itemsError);
+        else setItems(itemsData || []);
       })
       .subscribe()
 
@@ -200,7 +198,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     session,
     profile,
     items,
-    isLoading: isLoading || !supabase,
+    isInitialLoading,
     addItem,
     markAsRecovered,
     updatePreferences

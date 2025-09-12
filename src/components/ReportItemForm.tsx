@@ -133,6 +133,10 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
 
   async function onSubmit(values: ReportFormValues) {
     setIsSubmitting(true);
+    
+    // Non-blocking navigation
+    router.push('/dashboard');
+    
     try {
       const newItem = await addItem({
         ...values,
@@ -152,17 +156,21 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
                 description: 'Your item has been successfully listed.',
             });
           }
-          router.push('/dashboard');
+      } else {
+        throw new Error("Item creation failed.");
       }
       
     } catch (error) {
       toast({
         variant: 'destructive',
         title: 'Uh oh! Something went wrong.',
-        description: 'There was a problem with your request.',
+        description: 'There was a problem submitting your report.',
       });
+      // Since we navigated away, we can't easily revert. The user is on the dashboard.
     } finally {
-      setIsSubmitting(false);
+      // This state is local to a component that is now unmounted.
+      // But if we didn't navigate away, we would do:
+      // setIsSubmitting(false);
     }
   }
 

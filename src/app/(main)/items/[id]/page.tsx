@@ -39,17 +39,17 @@ export default function ItemDetailPage() {
   const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
-  const { items, markAsRecovered, isLoading, profile } = useAppContext();
+  const { items, markAsRecovered, isInitialLoading, profile } = useAppContext();
 
   const id = typeof params.id === 'string' ? params.id : '';
   const item = items.find((i) => i.id === id);
 
-  if (isLoading) {
+  if (isInitialLoading) {
     return (
         <div className="max-w-4xl mx-auto space-y-4">
              <Skeleton className="h-10 w-32" />
              <Card>
-                <CardContent>
+                <CardContent className="p-0 md:p-6">
                     <div className="grid md:grid-cols-2 gap-0 md:gap-6">
                         <div className="p-0 md:p-6">
                              <Skeleton className="rounded-t-lg md:rounded-lg aspect-video md:aspect-square w-full" />
@@ -105,7 +105,7 @@ export default function ItemDetailPage() {
             Back
         </Button>
         <Card>
-            <CardContent>
+            <CardContent className="p-0 md:p-6">
             <div className="grid md:grid-cols-2 gap-0 md:gap-6">
                 <div className="md:p-6">
                 <Image
