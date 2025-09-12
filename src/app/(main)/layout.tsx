@@ -23,7 +23,7 @@ export default function MainLayout({
 }) {
   return (
     <div className="flex flex-col min-h-screen w-full">
-      <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-background/80 backdrop-blur-lg px-4 md:px-6">
+      <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-background/50 backdrop-blur-lg px-4 md:px-6">
           <Sheet>
             <SheetTrigger asChild>
               <Button
