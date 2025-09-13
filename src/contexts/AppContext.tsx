@@ -83,8 +83,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
             setProfile(profileData);
         }
         
-        setIsInitialLoading(false);
-
         const { data: itemsData, error: itemsError } = await supabase
             .from('items')
             .select('*')
@@ -95,6 +93,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         } else {
             setItems(itemsData || []);
         }
+
+        setIsInitialLoading(false);
     };
     
     fetchInitialData();
@@ -108,14 +108,26 @@ export function AppProvider({ children }: { children: ReactNode }) {
       
     const itemsChannel = supabase
       .channel('items-updates')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'items' }, async (payload) => {
-         const { data: itemsData, error: itemsError } = await supabase
-            .from('items')
-            .select('*')
-            .order('created_at', { ascending: false });
-            
-        if (itemsError) console.error("Error re-fetching items:", itemsError);
-        else setItems(itemsData || []);
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'items' }, (payload) => {
+        switch (payload.eventType) {
+          case 'INSERT':
+            setItems((prevItems) => [payload.new as Item, ...prevItems]);
+            break;
+          case 'UPDATE':
+            setItems((prevItems) =>
+              prevItems.map((item) =>
+                item.id === payload.new.id ? (payload.new as Item) : item
+              )
+            );
+            break;
+          case 'DELETE':
+            setItems((prevItems) =>
+              prevItems.filter((item) => item.id !== (payload.old as any).id)
+            );
+            break;
+          default:
+            break;
+        }
       })
       .subscribe()
 
