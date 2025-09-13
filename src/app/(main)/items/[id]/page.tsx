@@ -11,7 +11,8 @@ import {
   Tag,
   CheckCircle,
   XCircle,
-  Lock
+  Lock,
+  Search
 } from "lucide-react";
 
 import { useAppContext } from "@/contexts/AppContext";
@@ -70,7 +71,7 @@ export default function ItemDetailPage() {
   }
 
   if (!item) {
-    return <EmptyState title="Item not found" description="The item you are looking for does not exist or has been removed." />;
+    return <EmptyState icon={Search} title="Item not found" description="The item you are looking for does not exist or has been removed." />;
   }
 
   const CategoryIcon = CATEGORIES.find(c => c.name === item.category)?.icon || Tag;
