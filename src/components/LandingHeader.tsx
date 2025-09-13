@@ -14,7 +14,7 @@ const AuthDialog = dynamic(() => import('@/components/AuthDialog').then(mod => m
 export const GetStartedButton = () => (
     <AuthDialog initialView="signup">
         <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold">
-            Get Started Now <ArrowRight className="ml-2 h-4 w-4" />
+            Sign Up <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
     </AuthDialog>
 );
