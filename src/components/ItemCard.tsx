@@ -20,8 +20,8 @@ export function ItemCard({ item }: ItemCardProps) {
 
   return (
     <Link href={`/items/${item.id}`} className="group">
-      <Card className="h-full flex flex-col overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/50 hover:-translate-y-1 bg-card">
-        <CardHeader>
+      <Card className="h-full flex flex-col overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-primary/20 hover:-translate-y-1 bg-card">
+        <CardHeader className="p-0">
           <div className="relative">
             <Image
               src={item.image_data_uri || placeholderImage.src}
@@ -31,7 +31,7 @@ export function ItemCard({ item }: ItemCardProps) {
               height={placeholderImage.height}
               className="object-cover aspect-[4/3] w-full transition-transform duration-500 group-hover:scale-105"
             />
-             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
             <Badge 
               variant={item.type === 'lost' ? 'destructive' : 'secondary'}
               className="absolute top-3 left-3"
@@ -42,21 +42,21 @@ export function ItemCard({ item }: ItemCardProps) {
                 <ArrowRight className="h-5 w-5 text-foreground" />
              </div>
             {item.is_recovered && (
-                <Badge className="absolute top-3 right-3 flex items-center gap-1 bg-green-600 text-white">
+                <Badge className="absolute top-3 right-3 flex items-center gap-1 bg-green-600 text-white border-green-700">
                     <CheckCircle className="h-3 w-3"/>
                     Recovered
                 </Badge>
             )}
           </div>
         </CardHeader>
-        <CardContent className="flex-grow">
+        <CardContent className="flex-grow p-4">
           <div className="flex items-center text-sm text-muted-foreground mb-2">
             <CategoryIcon className="h-4 w-4 mr-2" />
             <span>{item.category}</span>
           </div>
           <h3 className="font-bold text-lg leading-tight truncate group-hover:text-primary transition-colors">{item.title}</h3>
         </CardContent>
-        <CardFooter className="pt-0 text-xs text-muted-foreground flex items-center">
+        <CardFooter className="p-4 pt-0 text-xs text-muted-foreground flex items-center">
             <Calendar className="h-3 w-3 mr-1.5" />
             <span>{format(parseISO(item.date), 'MMM d, yyyy')}</span>
         </CardFooter>

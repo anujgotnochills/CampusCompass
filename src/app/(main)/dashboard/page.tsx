@@ -1,11 +1,11 @@
 
 "use client";
 
-import { Award, FileText, Search, PlusCircle, TrendingUp, LayoutGrid, List, HeartHandshake, User, Calendar, Tag } from "lucide-react";
+import { Award, FileText, Search, PlusCircle, TrendingUp, Calendar, Tag, Info } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAppContext } from "@/contexts/AppContext";
-import { ItemCard } from "@/components/ItemCard";
+import { ItemRow } from "@/components/ItemRow";
 import { EmptyState } from "@/components/EmptyState";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -22,137 +22,76 @@ export default function DashboardPage() {
   const { items, profile, isInitialLoading } = useAppContext();
 
   const openCases = items.filter((item) => !item.is_recovered).length;
-  const recentLostItems = items.filter((item) => item.type === 'lost' && !item.is_recovered).slice(0, 6);
-  const recentFoundItems = items.filter((item) => item.type === 'found' && !item.is_recovered).slice(0, 6);
+  const recentItems = items.slice(0, 10);
 
-  // Show a more detailed skeleton when items are loading but profile is ready.
-  // isInitialLoading is now only for session/profile.
   const areItemsLoading = items.length === 0 && !isInitialLoading;
-
-  if (isInitialLoading) {
-    return (
-        <div className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-8 items-start">
-                <div className="flex flex-col gap-4">
-                    <div className="flex justify-between items-center">
-                         <Skeleton className="h-8 w-48" />
-                         <Skeleton className="h-10 w-44" />
-                    </div>
-                    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 md:gap-6">
-                        {[...Array(6)].map((_, i) => (
-                           <Card key={i}>
-                               <CardHeader className="p-0">
-                                   <Skeleton className="aspect-[4/3] w-full rounded-t-lg" />
-                               </CardHeader>
-                               <CardContent className="p-4">
-                                   <div className="flex items-center text-sm text-muted-foreground mb-2">
-                                        <Skeleton className="h-4 w-4 mr-2 rounded-full" />
-                                        <Skeleton className="h-4 w-1/3" />
-                                   </div>
-                                   <Skeleton className="h-6 w-full" />
-                               </CardContent>
-                               <CardFooter className="p-4 pt-0">
-                                   <div className="flex items-center text-xs text-muted-foreground">
-                                        <Skeleton className="h-3 w-3 mr-1.5 rounded-full" />
-                                        <Skeleton className="h-3 w-1/2" />
-                                   </div>
-                               </CardFooter>
-                           </Card>
-                        ))}
-                    </div>
-                </div>
-                <div className="flex flex-col gap-6">
-                    <Skeleton className="h-64 w-full" />
-                    <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-6">
-                        <Skeleton className="h-24 w-full" />
-                        <Skeleton className="h-24 w-full" />
-                        <Skeleton className="h-24 w-full" />
-                    </div>
-                </div>
-            </div>
-        </div>
-    )
-  }
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-8 items-start">
+       <header className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Welcome, {profile?.name || 'User'}!</h1>
+          <p className="text-muted-foreground">Here's a summary of the latest activity.</p>
+        </div>
+        <div className="flex items-center gap-2">
+            <Link href="/report?type=lost">
+                <Button variant="outline">Report Lost Item</Button>
+            </Link>
+            <Link href="/report?type=found">
+                <Button>
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Report Found Item
+                </Button>
+            </Link>
+        </div>
+      </header>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         {/* Left column for recent items */}
-        <div className="flex flex-col h-full">
-            <Tabs defaultValue="lost" className="flex-grow flex flex-col">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-                <h2 className="text-2xl font-bold tracking-tight">Recent Items</h2>
-                <TabsList className="grid w-full sm:w-auto grid-cols-2">
-                  <TabsTrigger value="lost">Lost</TabsTrigger>
-                  <TabsTrigger value="found">Found</TabsTrigger>
-                </TabsList>
-              </div>
-              <TabsContent value="lost" className="flex-grow">
+        <Card className="lg:col-span-2 h-full">
+            <CardHeader>
+              <CardTitle>All Recent Items</CardTitle>
+              <CardDescription>A live feed of all lost and found items being reported.</CardDescription>
+            </CardHeader>
+            <CardContent>
                 {areItemsLoading ? (
-                    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 md:gap-6">
-                        {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-[350px] w-full" />)}
+                    <div className="space-y-4">
+                      {[...Array(6)].map((_, i) => (
+                        <div key={i} className="flex items-center space-x-4">
+                          <Skeleton className="h-10 w-10 rounded-lg" />
+                          <div className="space-y-2">
+                            <Skeleton className="h-4 w-[250px]" />
+                            <Skeleton className="h-4 w-[200px]" />
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                ) : recentLostItems.length > 0 ? (
-                  <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 md:gap-6">
-                    {recentLostItems.map((item) => (
-                      <ItemCard key={item.id} item={item} />
+                ) : recentItems.length > 0 ? (
+                  <div className="space-y-2">
+                    {recentItems.map((item) => (
+                      <ItemRow key={item.id} item={item} />
                     ))}
                   </div>
                 ) : (
                   <EmptyState
-                    icon={Search}
-                    title="No Recent Lost Items"
-                    description="No one has reported a lost item recently."
-                  >
-                    <Link href="/report?type=lost">
-                        <Button>
-                          <PlusCircle className="mr-2 h-4 w-4" />
-                          Report a Lost Item
-                        </Button>
-                      </Link>
-                  </EmptyState>
+                    icon={Info}
+                    title="No Items Reported Yet"
+                    description="When items are reported as lost or found, they will appear here."
+                  />
                 )}
-              </TabsContent>
-              <TabsContent value="found" className="flex-grow">
-                {areItemsLoading ? (
-                     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 md:gap-6">
-                        {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-[350px] w-full" />)}
-                    </div>
-                ) : recentFoundItems.length > 0 ? (
-                  <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 md:gap-6">
-                    {recentFoundItems.map((item) => (
-                      <ItemCard key={item.id} item={item} />
-                    ))}
-                  </div>
-                ) : (
-                    <EmptyState
-                        icon={Search}
-                        title="No Recent Found Items"
-                        description="No one has reported a found item recently."
-                    >
-                        <Link href="/report?type=found">
-                            <Button>
-                            <PlusCircle className="mr-2 h-4 w-4" />
-                            Report a Found Item
-                            </Button>
-                        </Link>
-                    </EmptyState>
-                )}
-              </TabsContent>
-            </Tabs>
-        </div>
+            </CardContent>
+        </Card>
         
         {/* Right column for chart and summary */}
         <div className="flex flex-col gap-6">
-            <Card className="flex flex-col">
+            <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
+                    <CardTitle className="flex items-center gap-2 text-base">
                         <TrendingUp className="h-5 w-5 text-muted-foreground" />
                         Activity Overview
                     </CardTitle>
-                    <CardDescription>Lost and found items reported in the last 7 days.</CardDescription>
                 </CardHeader>
-                <CardContent className="pl-2 flex-grow">
+                <CardContent className="pl-2">
                   <ItemsChart items={items} />
                 </CardContent>
             </Card>
