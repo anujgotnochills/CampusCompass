@@ -16,6 +16,7 @@ type SupabaseContextType = {
   isInitialLoading: boolean;
   addItem: (itemData: Omit<Item, 'id' | 'created_at' | 'is_recovered' | 'user_id' | 'locker_number'> & {date: Date}) => Promise<Item | null>;
   markAsRecovered: (item: Item) => Promise<void>;
+  updateProfile: (newData: { name: string }) => Promise<void>;
   updatePreferences: (prefs: { match_notifications_enabled: boolean; weekly_summary_enabled: boolean }) => Promise<void>;
 };
 
@@ -34,21 +35,18 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const getInitialSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setSession(session);
-      // Let the session-based useEffect handle the loading state
     };
 
     getInitialSession();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, newSession) => {
       const currentPath = window.location.pathname;
-      // If a user logs in, redirect to dashboard
       if (newSession && !session) {
         if (currentPath === '/login' || currentPath === '/signup' || currentPath === '/') {
           router.push('/dashboard');
         }
       }
       
-      // If a user logs out, redirect to home
       if (!newSession && session) {
          setProfile(null);
          setItems([]);
@@ -85,7 +83,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
             setProfile(profileData);
         }
         
-        // Profile is loaded, main structure can be shown.
         setIsInitialLoading(false);
 
         const { data: itemsData, error: itemsError } = await supabase
@@ -186,6 +183,31 @@ export function AppProvider({ children }: { children: ReactNode }) {
           }
       }
   };
+  
+  const updateProfile = async (newData: { name: string }) => {
+    if (!session || !supabase) {
+      toast({ variant: 'destructive', title: 'Not authenticated' });
+      return;
+    }
+
+    const { error } = await supabase
+      .from('profiles')
+      .update({ name: newData.name, updated_at: new Date().toISOString() })
+      .eq('id', session.user.id);
+
+    if (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Error updating profile',
+        description: error.message,
+      });
+    } else {
+      toast({
+        title: 'Profile Updated',
+        description: 'Your information has been successfully saved.',
+      });
+    }
+  };
 
   const updatePreferences = async (prefs: { match_notifications_enabled: boolean; weekly_summary_enabled: boolean }) => {
     if (!session || !supabase) {
@@ -221,6 +243,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     isInitialLoading,
     addItem,
     markAsRecovered,
+    updateProfile,
     updatePreferences
   };
 

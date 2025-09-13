@@ -42,8 +42,7 @@ interface EditProfileDialogProps {
 }
 
 export function EditProfileDialog({ profile, children }: EditProfileDialogProps) {
-  const { toast } = useToast();
-  const { supabase, session } = useAppContext();
+  const { updateProfile } = useAppContext();
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -62,28 +61,10 @@ export function EditProfileDialog({ profile, children }: EditProfileDialogProps)
   }
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    if (!session) return;
     setIsLoading(true);
-
-    const { error } = await supabase
-      .from('profiles')
-      .update({ name: values.name, updated_at: new Date().toISOString() })
-      .eq('id', session.user.id)
-
-    if (error) {
-       toast({
-        variant: 'destructive',
-        title: "Error updating profile",
-        description: error.message,
-      });
-    } else {
-        toast({
-        title: "Profile Updated",
-        description: "Your information has been successfully saved.",
-      });
-      setIsOpen(false);
-    }
+    await updateProfile({ name: values.name });
     setIsLoading(false);
+    setIsOpen(false);
   };
 
   return (
