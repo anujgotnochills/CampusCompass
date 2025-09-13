@@ -39,22 +39,30 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     getInitialSession();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-       if (!session) {
-        setProfile(null);
-        setItems([]);
-        setIsInitialLoading(false);
-        if (window.location.pathname !== '/login' && window.location.pathname !== '/signup' && window.location.pathname !== '/') {
-            router.push('/login');
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, newSession) => {
+      const currentPath = window.location.pathname;
+      // If a user logs in, redirect to dashboard
+      if (newSession && !session) {
+        if (currentPath === '/login' || currentPath === '/signup' || currentPath === '/') {
+          router.push('/dashboard');
         }
       }
+      
+      // If a user logs out, redirect to home
+      if (!newSession && session) {
+         setProfile(null);
+         setItems([]);
+         router.push('/');
+      }
+
+      setSession(newSession);
+
     });
 
     return () => {
         subscription.unsubscribe();
     };
-  }, [supabase, router]);
+  }, [supabase, router, session]);
 
   useEffect(() => {
     if (!session) {

@@ -76,8 +76,7 @@ export function SignupForm({ onSwitch, onSignupSuccess }: SignupFormProps) {
       if (onSignupSuccess) {
         onSignupSuccess();
       }
-      // Use window.location.href for reliable redirection in previews
-      window.location.href = '/dashboard';
+      // The redirection is now handled by the AppContext
     }
   };
 
