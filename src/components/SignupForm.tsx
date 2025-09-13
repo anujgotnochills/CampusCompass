@@ -67,6 +67,7 @@ export function SignupForm({ onSwitch, onSignupSuccess }: SignupFormProps) {
         title: 'Signup Failed',
         description: error.message,
       });
+      setIsLoading(false);
     } else {
       toast({
         title: 'Signup Successful',
@@ -75,10 +76,9 @@ export function SignupForm({ onSwitch, onSignupSuccess }: SignupFormProps) {
       if (onSignupSuccess) {
         onSignupSuccess();
       }
-      router.push('/dashboard');
-      router.refresh();
+      // Use window.location.href for reliable redirection in previews
+      window.location.href = '/dashboard';
     }
-    setIsLoading(false);
   };
 
   return (

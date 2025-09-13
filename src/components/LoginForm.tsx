@@ -60,6 +60,7 @@ export function LoginForm({ onSwitch, onLoginSuccess }: LoginFormProps) {
         title: 'Login Failed',
         description: error.message,
       });
+      setIsLoading(false);
     } else {
       toast({
         title: 'Login Successful',
@@ -68,10 +69,9 @@ export function LoginForm({ onSwitch, onLoginSuccess }: LoginFormProps) {
       if (onLoginSuccess) {
           onLoginSuccess();
       }
-      router.push('/dashboard');
-      router.refresh();
+      // Use window.location.href for reliable redirection in previews
+      window.location.href = '/dashboard';
     }
-    setIsLoading(false);
   };
 
   return (
