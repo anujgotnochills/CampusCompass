@@ -1,6 +1,7 @@
 
 "use client";
 
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { format, parseISO } from 'date-fns';
@@ -34,6 +35,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { EmptyState } from "@/components/EmptyState";
 import { Skeleton } from "@/components/ui/skeleton";
+import type { Item } from "@/lib/types";
 
 
 export default function ItemDetailPage() {
@@ -41,11 +43,18 @@ export default function ItemDetailPage() {
   const router = useRouter();
   const { toast } = useToast();
   const { items, markAsRecovered, isInitialLoading, profile } = useAppContext();
-
+  
   const id = typeof params.id === 'string' ? params.id : '';
-  const item = items.find((i) => i.id === id);
+  const [item, setItem] = useState<Item | undefined | null>(undefined);
 
-  if (isInitialLoading) {
+  useEffect(() => {
+    if (!isInitialLoading) {
+      const foundItem = items.find((i) => i.id === id);
+      setItem(foundItem || null);
+    }
+  }, [id, items, isInitialLoading]);
+
+  if (isInitialLoading || item === undefined) {
     return (
         <div className="max-w-4xl mx-auto space-y-4">
              <Skeleton className="h-10 w-32" />
@@ -70,7 +79,7 @@ export default function ItemDetailPage() {
     )
   }
 
-  if (!item) {
+  if (item === null) {
     return <EmptyState icon={Search} title="Item not found" description="The item you are looking for does not exist or has been removed." />;
   }
 
@@ -78,7 +87,11 @@ export default function ItemDetailPage() {
   const isOwner = profile?.id === item.user_id;
 
   const handleRecovery = async () => {
+    if (!item) return;
     await markAsRecovered(item);
+    
+    // Optimistically update local state
+    setItem({ ...item, is_recovered: true });
     
     let toastDescription = `The item "${item.title}" has been marked as recovered.`;
     if (item.type === 'lost' && item.locker_number) {
