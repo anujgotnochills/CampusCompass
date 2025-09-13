@@ -8,6 +8,9 @@ export async function middleware(req: NextRequest) {
   const res = NextResponse.next()
   const supabase = createMiddlewareClient({ req, res })
 
+  // Refresh session before checking auth status
+  await supabase.auth.getSession()
+
   const {
     data: { user },
   } = await supabase.auth.getUser()
@@ -22,12 +25,9 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL('/', req.url))
   }
   
-  await supabase.auth.getSession()
-
-
   return res
 }
 
 export const config = {
-  matcher: ['/', '/dashboard', '/items/:path*', '/matches', '/profile', '/report', '/login', '/signup'],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 }
