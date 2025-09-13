@@ -29,7 +29,6 @@ export default function ItemsPage() {
     return items
       .filter((item) => (typeFilter === "all" ? true : item.type === typeFilter))
       .filter((item) => (categoryFilter === "all" ? true : item.category === categoryFilter))
-      .sort((a,b) => b.postedAt - a.postedAt);
   }, [items, typeFilter, categoryFilter]);
 
   return (

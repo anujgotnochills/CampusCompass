@@ -5,14 +5,15 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import type { Item } from '@/lib/types';
-import type { MatchLostAndFoundOutput } from '@/ai/flows/match-lost-and-found';
 import { ArrowRight, Lightbulb } from 'lucide-react';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 
-interface MatchResult extends MatchLostAndFoundOutput {
+interface MatchResult {
   lostItem: Item;
   foundItem: Item;
+  matchConfidence: number;
+  reason: string;
 }
 
 interface MatchCardProps {
