@@ -24,9 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className="dark">
-       <head>
-          <link rel="preload" href="/_next/static/css/app/layout.css" as="style" />
-       </head>
+       <head />
        <body className={cn('min-h-screen bg-background font-sans antialiased', outfit.variable)}>
           <Providers>
             {children}
