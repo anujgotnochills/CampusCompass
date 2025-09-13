@@ -41,13 +41,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, newSession) => {
       const currentPath = window.location.pathname;
+      
       if (newSession && !session) {
+        // User logged in
         if (currentPath === '/login' || currentPath === '/signup' || currentPath === '/') {
           router.push('/dashboard');
         }
       }
       
       if (!newSession && session) {
+         // User logged out
          setProfile(null);
          setItems([]);
          router.push('/');
@@ -77,10 +80,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
             .eq('id', session.user.id)
             .single();
         
-        if (profileError) {
-            console.error("Error fetching profile:", profileError);
-        } else {
+        if (profileData) {
             setProfile(profileData);
+        } else if (profileError) {
+             console.error("Error fetching profile:", profileError);
         }
         
         const { data: itemsData, error: itemsError } = await supabase
@@ -102,6 +105,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const profileChannel = supabase
       .channel('profile-updates')
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'profiles', filter: `id=eq.${session.user.id}` }, (payload) => {
+         setProfile(payload.new as Profile);
+      })
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'profiles', filter: `id=eq.${session.user.id}` }, (payload) => {
          setProfile(payload.new as Profile);
       })
       .subscribe();
