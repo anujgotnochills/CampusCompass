@@ -40,7 +40,7 @@ export function ItemsChart({ items }: ItemsChartProps) {
   }
 
   return (
-    <ChartContainer config={chartConfig} className="w-full h-full min-h-[180px]">
+    <ChartContainer config={chartConfig} className="w-full h-full min-h-[200px]">
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={chartData} margin={{ top: 20, right: 20, bottom: 20, left: -10 }}>
           <CartesianGrid vertical={false} strokeDasharray="3 3" />
