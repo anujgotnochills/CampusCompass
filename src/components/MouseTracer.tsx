@@ -32,7 +32,7 @@ export function MouseTracer() {
     <div 
       className="pointer-events-none fixed inset-0 z-30 transition duration-300"
       style={{
-        background: `radial-gradient(600px at ${position.x}px ${position.y}px, rgba(244, 114, 182, 0.15), transparent 80%)`
+        background: `radial-gradient(600px at ${position.x}px ${position.y}px, hsl(var(--primary) / 0.15), transparent 80%)`
       }}
     />
   );

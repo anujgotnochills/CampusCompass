@@ -99,7 +99,7 @@ export default function LandingPage() {
             </div>
         </section>
 
-        <section id="how-it-works" className="w-full py-24 md:py-32 lg:py-40 bg-black/20">
+        <section id="how-it-works" className="w-full py-24 md-py-32 lg:py-40 bg-black/20">
           <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
             <div className="space-y-3">
               <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight text-white font-outfit">How It Works</h2>
