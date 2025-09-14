@@ -9,7 +9,7 @@ import { SignupForm } from '@/components/SignupForm';
 export default function SignupPage() {
   
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background/10 p-4 backdrop-blur-sm">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background/50 p-4 backdrop-blur-lg">
        <div className="absolute top-8 left-8 flex items-center gap-2 font-bold text-lg text-primary">
             <Link href="/" className="flex items-center gap-2">
                 <Compass className="h-6 w-6" />
