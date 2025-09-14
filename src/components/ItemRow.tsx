@@ -3,10 +3,17 @@
 
 import Link from "next/link";
 import { format, parseISO } from 'date-fns';
-import { Tag } from "lucide-react";
+import { Tag, CheckCircle, XCircle, MoreVertical } from "lucide-react";
 import type { Item } from "@/lib/types";
 import { CATEGORIES } from "@/lib/constants";
 import { Badge } from "./ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Button } from "./ui/button";
 
 interface ItemRowProps {
     item: Item;
@@ -16,21 +23,39 @@ export function ItemRow({ item }: ItemRowProps) {
     const CategoryIcon = CATEGORIES.find(c => c.name === item.category)?.icon || Tag;
 
     return (
-        <Link href={`/items/${item.id}`} className="block">
-            <div className="flex items-center p-3 -mx-3 rounded-lg hover:bg-accent cursor-pointer transition-colors">
-                <div className="h-10 w-10 mr-4 rounded-lg bg-muted flex items-center justify-center">
+         <div className="grid grid-cols-5 items-center px-6 py-3 hover:bg-accent transition-colors -mx-6">
+            <div className="col-span-2 flex items-center gap-4">
+                <div className="h-10 w-10 rounded-lg bg-muted flex-shrink-0 flex items-center justify-center">
                     <CategoryIcon className="h-5 w-5 text-muted-foreground" />
                 </div>
-                <div className="flex-grow">
-                    <p className="font-medium truncate">{item.title}</p>
-                    <p className="text-sm text-muted-foreground">
-                        {item.is_recovered ? 'Recovered' : (item.type === 'lost' ? 'Lost' : 'Found')} on {format(parseISO(item.date), 'MMM d')}
-                    </p>
+                <div className="font-medium truncate">
+                    <Link href={`/items/${item.id}`} className="hover:underline">{item.title}</Link>
                 </div>
-                <Badge variant={item.type === 'lost' ? 'destructive' : 'secondary'} className="ml-4 capitalize">
-                    {item.type}
+            </div>
+            <div>
+                 <Badge variant={item.is_recovered ? 'default' : 'outline'} className="capitalize flex items-center gap-1 w-fit bg-opacity-50">
+                    {item.is_recovered ? <CheckCircle className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
+                    {item.is_recovered ? 'Recovered' : 'Open'}
                 </Badge>
             </div>
-        </Link>
+            <div className="text-sm text-muted-foreground">
+                {format(parseISO(item.date), 'MMM d, yyyy')}
+            </div>
+            <div className="text-right">
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                            <MoreVertical className="h-4 w-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuItem asChild>
+                           <Link href={`/items/${item.id}`}>View Details</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>Mark as Recovered</DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
+        </div>
     )
 }

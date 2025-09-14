@@ -1,10 +1,7 @@
 
 "use client"
 
-import { subDays, format, parseISO } from 'date-fns';
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts"
-import type { Item } from '@/lib/types';
-import { Card, CardContent } from "@/components/ui/card"
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, Line, LineChart } from "recharts"
 import {
   ChartContainer,
   ChartTooltipContent,
@@ -12,21 +9,11 @@ import {
 
 
 interface ItemsChartProps {
-  items: Item[];
+  type: 'bar' | 'line';
+  data: any[];
 }
 
-export function ItemsChart({ items }: ItemsChartProps) {
-  const last7Days = Array.from({ length: 7 }, (_, i) => subDays(new Date(), i)).reverse();
-  
-  const chartData = last7Days.map(day => {
-    const formattedDate = format(day, 'MMM d');
-    const dayItems = items.filter(item => format(parseISO(item.created_at), 'yyyy-MM-dd') === format(day, 'yyyy-MM-dd'));
-    return {
-      date: formattedDate,
-      lost: dayItems.filter(item => item.type === 'lost').length,
-      found: dayItems.filter(item => item.type === 'found').length,
-    };
-  });
+export function ItemsChart({ type, data }: ItemsChartProps) {
 
   const chartConfig = {
     lost: {
@@ -37,34 +24,73 @@ export function ItemsChart({ items }: ItemsChartProps) {
       label: "Found",
       color: "hsl(var(--primary))",
     },
+     count: {
+      label: "Count",
+      color: "hsl(var(--primary))",
+    }
+  }
+
+  if (type === 'line') {
+      return (
+        <ChartContainer config={chartConfig} className="w-full h-full min-h-[250px]">
+          <ResponsiveContainer width="100%" height={250}>
+            <LineChart data={data} margin={{ top: 20, right: 20, bottom: 20, left: -10 }}>
+              <CartesianGrid vertical={false} strokeDasharray="3 3" />
+              <XAxis
+                dataKey="date"
+                stroke="hsl(var(--muted-foreground))"
+                fontSize={12}
+                tickLine={false}
+                axisLine={false}
+              />
+              <YAxis
+                stroke="hsl(var(--muted-foreground))"
+                fontSize={12}
+                tickLine={false}
+                axisLine={false}
+                allowDecimals={false}
+              />
+              <Tooltip 
+                 cursor={true}
+                 content={<ChartTooltipContent indicator="dot" />}
+                 wrapperStyle={{ outline: 'none' }}
+              />
+              <Line type="monotone" dataKey="lost" stroke="hsl(var(--destructive))" strokeWidth={2} dot={false} />
+              <Line type="monotone" dataKey="found" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
+            </LineChart>
+          </ResponsiveContainer>
+        </ChartContainer>
+      );
   }
 
   return (
     <ChartContainer config={chartConfig} className="w-full h-full min-h-[200px]">
       <ResponsiveContainer width="100%" height={200}>
-        <BarChart data={chartData} margin={{ top: 20, right: 20, bottom: 20, left: -10 }}>
-          <CartesianGrid vertical={false} strokeDasharray="3 3" />
+        <BarChart data={data} margin={{ top: 20, right: 0, bottom: 0, left: 0 }} layout="vertical">
+          <CartesianGrid horizontal={false} strokeDasharray="3 3" />
           <XAxis
-            dataKey="date"
+            type="number"
             stroke="hsl(var(--muted-foreground))"
             fontSize={12}
             tickLine={false}
             axisLine={false}
+            hide
           />
           <YAxis
+            dataKey="name"
+            type="category"
             stroke="hsl(var(--muted-foreground))"
             fontSize={12}
             tickLine={false}
             axisLine={false}
-            allowDecimals={false}
+            tick={{ width: 80 }}
           />
           <Tooltip 
              cursor={false}
              content={<ChartTooltipContent indicator="dot" />}
              wrapperStyle={{ outline: 'none' }}
           />
-          <Bar dataKey="lost" fill="var(--color-lost)" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="found" fill="var(--color-found)" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="count" fill="var(--color-count)" radius={[0, 4, 4, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </ChartContainer>
