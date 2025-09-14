@@ -24,7 +24,7 @@ export function AuthDialog({ children, initialView = 'login' }: AuthDialogProps)
             <div onClick={() => setIsOpen(true)}>
                  {children}
             </div>
-            <DialogContent>
+            <DialogContent className="bg-card/50 backdrop-blur-lg border-white/10">
                 <DialogHeader>
                     <DialogTitle className="text-2xl">{view === 'login' ? 'Login' : 'Sign Up'}</DialogTitle>
                     <DialogDescription>
