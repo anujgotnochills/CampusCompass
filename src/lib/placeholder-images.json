@@ -1,7 +1,7 @@
 
 {
     "dashboard": {
-        "src": "https://picsum.photos/seed/1/1200/800",
+        "src": "https://picsum.photos/seed/4/1200/800",
         "width": 1200,
         "height": 800,
         "hint": "dashboard user interface"
