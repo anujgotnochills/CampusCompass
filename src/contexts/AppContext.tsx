@@ -35,21 +35,24 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const getInitialSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setSession(session);
+      setIsInitialLoading(false); // Set initial loading to false after session is checked
     };
 
     getInitialSession();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, newSession) => {
       const currentPath = window.location.pathname;
-      
-      if (newSession && !session) {
+      const isLoggedIn = !!newSession;
+      const wasLoggedIn = !!session;
+
+      if (isLoggedIn && !wasLoggedIn) {
         // User logged in
         if (currentPath === '/login' || currentPath === '/signup' || currentPath === '/') {
           router.push('/dashboard');
         }
       }
       
-      if (!newSession && session) {
+      if (!isLoggedIn && wasLoggedIn) {
          // User logged out
          setProfile(null);
          setItems([]);
@@ -57,17 +60,19 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }
 
       setSession(newSession);
-
     });
 
     return () => {
         subscription.unsubscribe();
     };
-  }, [supabase, router, session]);
+  }, [router, supabase]);
 
   useEffect(() => {
     if (!session) {
-      setIsInitialLoading(false);
+      // If no session, clear data and stop loading.
+      if (isInitialLoading) setIsInitialLoading(false);
+      setProfile(null);
+      setItems([]);
       return;
     };
 
@@ -83,7 +88,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         if (profileData) {
             setProfile(profileData);
         } else if (profileError) {
-             console.error("Error fetching profile:", profileError);
+             console.error("Error fetching profile:", profileError.message);
         }
         
         const { data: itemsData, error: itemsError } = await supabase
@@ -92,7 +97,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
             .order('created_at', { ascending: false });
         
         if (itemsError) {
-            console.error("Error fetching items:", itemsError);
+            console.error("Error fetching items:", itemsError.message);
         } else {
             setItems(itemsData || []);
         }
