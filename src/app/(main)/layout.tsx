@@ -9,6 +9,12 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { MainContent } from "@/components/MainContent";
 import MobileNav from "@/components/MobileNav";
 import { Input } from "@/components/ui/input";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 export default function MainLayout({
   children,
@@ -23,37 +29,54 @@ export default function MainLayout({
   ];
 
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr_280px] lg:grid-cols-[280px_1fr_320px] bg-background">
+    <div className="grid min-h-screen w-full md:grid-cols-[60px_1fr_280px] lg:grid-cols-[60px_1fr_320px] bg-background">
       <div className="hidden border-r bg-card md:block">
-        <div className="flex h-full max-h-screen flex-col gap-2">
-          <div className="flex h-16 items-center border-b px-4 lg:h-[60px] lg:px-6">
+        <div className="flex h-full max-h-screen flex-col gap-2 items-center">
+          <div className="flex h-16 items-center justify-center border-b px-4 lg:h-[60px] lg:px-6 w-full">
             <Link href="/dashboard" className="flex items-center gap-2 font-semibold text-primary">
               <Compass className="h-6 w-6" />
-              <span className="">Campus Compass</span>
+              <span className="sr-only">Campus Compass</span>
             </Link>
           </div>
           <div className="flex-1">
-            <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
+            <nav className="grid items-start text-sm font-medium">
+              <TooltipProvider>
               {navItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary hover:bg-muted"
-                >
-                  <item.icon className="h-4 w-4" />
-                  {item.label}
-                </Link>
+                <Tooltip key={item.href} delayDuration={0}>
+                  <TooltipTrigger asChild>
+                    <Link
+                      href={item.href}
+                      className="flex items-center justify-center h-12 w-12 gap-3 rounded-lg text-muted-foreground transition-all hover:text-primary hover:bg-muted"
+                    >
+                      <item.icon className="h-5 w-5" />
+                      <span className="sr-only">{item.label}</span>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">
+                    {item.label}
+                  </TooltipContent>
+                </Tooltip>
               ))}
+              </TooltipProvider>
             </nav>
           </div>
           <div className="mt-auto p-4">
-            <Link
-                href="/settings"
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary hover:bg-muted"
-              >
-                <Settings className="h-4 w-4" />
-                Settings
-              </Link>
+             <TooltipProvider>
+                <Tooltip delayDuration={0}>
+                    <TooltipTrigger asChild>
+                        <Link
+                            href="/settings"
+                            className="flex items-center justify-center h-12 w-12 gap-3 rounded-lg text-muted-foreground transition-all hover:text-primary hover:bg-muted"
+                        >
+                            <Settings className="h-5 w-5" />
+                             <span className="sr-only">Settings</span>
+                        </Link>
+                    </TooltipTrigger>
+                    <TooltipContent side="right">
+                        Settings
+                    </TooltipContent>
+                </Tooltip>
+             </TooltipProvider>
           </div>
         </div>
       </div>
