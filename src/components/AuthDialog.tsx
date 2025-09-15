@@ -26,7 +26,9 @@ export function AuthDialog({ children, initialView = 'login' }: AuthDialogProps)
             </div>
             <DialogContent className="border-white/10">
                 <DialogHeader>
-                    <DialogTitle className="text-2xl">{view === 'login' ? 'Login' : 'Sign Up'}</DialogTitle>
+                    <DialogTitle className="text-2xl">
+                        {view === 'login' ? 'Login' : 'Sign Up'}
+                    </DialogTitle>
                     <DialogDescription>
                         {view === 'login' 
                             ? "Enter your email below to login to your account" 

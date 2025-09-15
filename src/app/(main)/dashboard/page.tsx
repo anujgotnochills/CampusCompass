@@ -69,7 +69,7 @@ export default function DashboardPage() {
         <CardHeader>
           <CardTitle>Trend</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="h-[300px]">
           <ItemsChart type="line" data={trendData} />
         </CardContent>
       </Card>
@@ -82,7 +82,7 @@ export default function DashboardPage() {
             <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex flex-col items-center justify-center space-y-2">
                      <h3 className="text-muted-foreground font-medium">Open vs. Recovered</h3>
-                     <div className="h-[200px] w-full">
+                     <div className="h-[150px] w-full">
                         <ChartContainer config={{}} className="w-full h-full">
                             <PieChart>
                                 <ChartTooltip content={<ChartTooltipContent hideLabel />} />
@@ -107,7 +107,7 @@ export default function DashboardPage() {
                 </div>
                  <div className="flex flex-col items-center justify-center space-y-2">
                      <h3 className="text-muted-foreground font-medium">Items by Category</h3>
-                     <div className="h-[200px] w-full">
+                     <div className="h-[150px] w-full">
                         <ItemsChart type="bar" data={categoryData} />
                      </div>
                 </div>
@@ -121,14 +121,14 @@ export default function DashboardPage() {
                  <div className="flex items-center justify-between p-4 rounded-lg bg-muted/50">
                     <div>
                         <p className="text-sm text-muted-foreground">Total Items</p>
-                        <p className="text-2xl font-bold">{areItemsLoading ? <Skeleton className="h-8 w-12" /> : items.length}</p>
+                        <div className="text-2xl font-bold">{areItemsLoading ? <Skeleton className="h-8 w-12" /> : items.length}</div>
                     </div>
                     <FileText className="h-6 w-6 text-muted-foreground" />
                 </div>
                 <div className="flex items-center justify-between p-4 rounded-lg bg-muted/50">
                     <div>
                         <p className="text-sm text-muted-foreground">Open Cases</p>
-                        <p className="text-2xl font-bold">{areItemsLoading ? <Skeleton className="h-8 w-12" /> : openCases}</p>
+                        <div className="text-2xl font-bold">{areItemsLoading ? <Skeleton className="h-8 w-12" /> : openCases}</div>
                     </div>
                     <Search className="h-6 w-6 text-muted-foreground" />
                 </div>

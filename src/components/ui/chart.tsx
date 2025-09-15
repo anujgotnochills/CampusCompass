@@ -148,9 +148,9 @@ const ChartTooltipContent = React.forwardRef<
 
       if (labelFormatter) {
         return (
-          <div className={cn("font-medium", labelClassName)}>
+          <span className={cn("font-medium block", labelClassName)}>
             {labelFormatter(value, payload)}
-          </div>
+          </span>
         )
       }
 
@@ -158,7 +158,7 @@ const ChartTooltipContent = React.forwardRef<
         return null
       }
 
-      return <div className={cn("font-medium", labelClassName)}>{value}</div>
+      return <span className={cn("font-medium block", labelClassName)}>{value}</span>
     }, [
       label,
       labelFormatter,
@@ -184,14 +184,14 @@ const ChartTooltipContent = React.forwardRef<
         )}
       >
         {!nestLabel ? tooltipLabel : null}
-        <div className="grid gap-1.5">
+        <span className="grid gap-1.5">
           {payload.map((item, index) => {
             const key = `${nameKey || item.name || item.dataKey || "value"}`
             const itemConfig = getPayloadConfigFromPayload(config, item, key)
             const indicatorColor = color || item.payload.fill || item.color
 
             return (
-              <div
+              <span
                 key={item.dataKey}
                 className={cn(
                   "flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5 [&>svg]:text-muted-foreground",
@@ -246,10 +246,10 @@ const ChartTooltipContent = React.forwardRef<
                     </div>
                   </>
                 )}
-              </div>
+              </span>
             )
           })}
-        </div>
+        </span>
       </div>
     )
   }
