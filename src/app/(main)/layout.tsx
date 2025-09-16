@@ -29,7 +29,7 @@ export default function MainLayout({
   ];
 
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[60px_1fr_280px] lg:grid-cols-[60px_1fr_320px] bg-background">
+    <div className="grid min-h-screen w-full md:grid-cols-[60px_1fr] bg-background">
       <div className="hidden border-r bg-card md:block">
         <div className="flex h-full max-h-screen flex-col gap-2 items-center">
           <div className="flex h-16 items-center justify-center border-b px-4 lg:h-[60px] lg:px-6 w-full">
@@ -127,30 +127,6 @@ export default function MainLayout({
           </div>
       </main>
 
-      <div className="hidden border-l bg-card md:flex flex-col">
-        <div className="flex h-16 items-center border-b px-4 lg:h-[60px] lg:px-6 justify-between">
-            <form>
-                <div className="relative">
-                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input
-                        type="search"
-                        placeholder="Search..."
-                        className="pl-8 sm:w-[200px] bg-background"
-                    />
-                </div>
-            </form>
-            <div className="flex items-center gap-4">
-                <Button variant="ghost" size="icon">
-                    <Bell className="h-5 w-5"/>
-                    <span className="sr-only">Notifications</span>
-                </Button>
-                <UserNav />
-            </div>
-        </div>
-        <div className="flex-1 p-6">
-            {/* Right sidebar content goes here */}
-        </div>
-      </div>
       <MobileNav />
     </div>
   );

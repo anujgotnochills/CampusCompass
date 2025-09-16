@@ -32,15 +32,18 @@ export default function ItemsPage() {
   }, [items, typeFilter, categoryFilter]);
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h1 className="text-3xl font-bold tracking-tight">All Reported Items</h1>
-        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+    <div className="flex flex-col gap-8 p-6">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold tracking-tight">All Reported Items</h1>
+          <p className="text-muted-foreground">Browse and filter through all lost and found items</p>
+        </div>
+        <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
           <Select
             onValueChange={(value) => setCategoryFilter(value as Category | "all")}
             defaultValue="all"
           >
-            <SelectTrigger className="w-full sm:w-[180px]">
+            <SelectTrigger className="w-full sm:w-[200px]">
               <SelectValue placeholder="Filter by category" />
             </SelectTrigger>
             <SelectContent>
@@ -60,7 +63,7 @@ export default function ItemsPage() {
             onValueChange={(value) => setTypeFilter(value as "all" | "lost" | "found")}
             className="w-full sm:w-auto"
           >
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-3 min-w-[200px]">
               <TabsTrigger value="all">All</TabsTrigger>
               <TabsTrigger value="lost">Lost</TabsTrigger>
               <TabsTrigger value="found">Found</TabsTrigger>
