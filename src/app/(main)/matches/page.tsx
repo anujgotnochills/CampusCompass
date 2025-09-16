@@ -232,10 +232,12 @@ export default function MatchesPage() {
             <Bell className="h-5 w-5" />
             <span className="sr-only">Notifications</span>
           </Button>
-          <Button variant="ghost" size="icon">
-            <Settings className="h-5 w-5" />
-            <span className="sr-only">Settings</span>
-          </Button>
+          <Link href="/settings">
+            <Button variant="ghost" size="icon">
+              <Settings className="h-5 w-5" />
+              <span className="sr-only">Settings</span>
+            </Button>
+          </Link>
           <UserNav />
         </div>
       </div>

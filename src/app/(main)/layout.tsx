@@ -29,8 +29,8 @@ export default function MainLayout({
   ];
 
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[60px_1fr] bg-background">
-      <div className="hidden border-r bg-card md:block">
+    <div className="relative min-h-screen w-full bg-background overflow-x-hidden">
+      <div className="hidden border-r bg-card md:block fixed left-0 top-0 z-50 h-screen w-[60px]">
         <div className="flex h-full max-h-screen flex-col gap-2 items-center">
           <div className="flex h-16 items-center justify-center border-b px-4 lg:h-[60px] lg:px-6 w-full">
             <Link href="/dashboard" className="flex items-center gap-2 font-semibold text-primary">
@@ -81,7 +81,7 @@ export default function MainLayout({
         </div>
       </div>
       
-      <main className="flex flex-1 flex-col">
+      <main className="flex flex-1 flex-col md:ml-[60px] min-h-screen max-w-full overflow-x-hidden">
           <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b bg-background/80 px-4 md:px-6 backdrop-blur-lg md:hidden">
               <Sheet>
               <SheetTrigger asChild>
