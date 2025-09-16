@@ -195,9 +195,12 @@ export default function MatchesPage() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold tracking-tight">Potential Matches</h1>
+    <div className="flex flex-col gap-8 p-6">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold tracking-tight">Potential Matches</h1>
+          <p className="text-muted-foreground">AI-powered matching for your lost items</p>
+        </div>
       </div>
        <Alert>
             <Bot className="h-4 w-4" />
