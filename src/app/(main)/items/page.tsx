@@ -15,8 +15,10 @@ import type { Category, Item } from "@/lib/types";
 import { CATEGORIES } from "@/lib/constants";
 import { ItemCard } from "@/components/ItemCard";
 import { EmptyState } from "@/components/EmptyState";
-import { Search, PlusCircle } from "lucide-react";
+import { Search, PlusCircle, Bell, Settings, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { UserNav } from "@/components/UserNav";
 import Link from "next/link";
 
 
@@ -32,45 +34,88 @@ export default function ItemsPage() {
   }, [items, typeFilter, categoryFilter]);
 
   return (
-    <div className="flex flex-col gap-8 p-6">
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-        <div className="space-y-2">
-          <h1 className="text-3xl font-bold tracking-tight">All Reported Items</h1>
-          <p className="text-muted-foreground">Browse and filter through all lost and found items</p>
+    <div className="flex flex-col gap-8">
+      {/* Header */}
+      <div className="sticky top-0 z-40 flex h-16 items-center justify-between gap-4 border-b bg-background/80 px-6 backdrop-blur-lg">
+        <div className="flex items-center gap-4">
+          <h1 className="text-2xl font-bold">All Items</h1>
         </div>
-        <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
-          <Select
-            onValueChange={(value) => setCategoryFilter(value as Category | "all")}
-            defaultValue="all"
-          >
-            <SelectTrigger className="w-full sm:w-[200px]">
-              <SelectValue placeholder="Filter by category" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
-              {CATEGORIES.map(({ name, icon: Icon }) => (
-                <SelectItem key={name} value={name}>
-                  <div className="flex items-center gap-2">
-                    <Icon className="h-4 w-4" />
-                    {name}
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Tabs
-            defaultValue="all"
-            onValueChange={(value) => setTypeFilter(value as "all" | "lost" | "found")}
-            className="w-full sm:w-auto"
-          >
-            <TabsList className="grid w-full grid-cols-3 min-w-[200px]">
-              <TabsTrigger value="all">All</TabsTrigger>
-              <TabsTrigger value="lost">Lost</TabsTrigger>
-              <TabsTrigger value="found">Found</TabsTrigger>
-            </TabsList>
-          </Tabs>
+        <div className="flex items-center gap-4">
+          <form className="flex-1 max-w-md">
+            <div className="relative">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Search items..."
+                className="pl-8 w-full bg-background"
+              />
+            </div>
+          </form>
+          <div className="flex items-center gap-2">
+            <Link href="/report?type=lost">
+              <Button variant="outline" size="sm">
+                <FileText className="h-4 w-4 mr-2" />
+                Report Lost
+              </Button>
+            </Link>
+            <Link href="/report?type=found">
+              <Button size="sm">
+                <PlusCircle className="h-4 w-4 mr-2" />
+                Report Found
+              </Button>
+            </Link>
+          </div>
+          <Button variant="ghost" size="icon">
+            <Bell className="h-5 w-5" />
+            <span className="sr-only">Notifications</span>
+          </Button>
+          <Button variant="ghost" size="icon">
+            <Settings className="h-5 w-5" />
+            <span className="sr-only">Settings</span>
+          </Button>
+          <UserNav />
         </div>
       </div>
+
+      {/* Main Content */}
+      <div className="px-6 space-y-6">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+          <div className="space-y-2">
+            <p className="text-muted-foreground">Browse and filter through all lost and found items</p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
+            <Select
+              onValueChange={(value) => setCategoryFilter(value as Category | "all")}
+              defaultValue="all"
+            >
+              <SelectTrigger className="w-full sm:w-[200px]">
+                <SelectValue placeholder="Filter by category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Categories</SelectItem>
+                {CATEGORIES.map(({ name, icon: Icon }) => (
+                  <SelectItem key={name} value={name}>
+                    <div className="flex items-center gap-2">
+                      <Icon className="h-4 w-4" />
+                      {name}
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Tabs
+              defaultValue="all"
+              onValueChange={(value) => setTypeFilter(value as "all" | "lost" | "found")}
+              className="w-full sm:w-auto"
+            >
+              <TabsList className="grid w-full grid-cols-3 min-w-[200px]">
+                <TabsTrigger value="all">All</TabsTrigger>
+                <TabsTrigger value="lost">Lost</TabsTrigger>
+                <TabsTrigger value="found">Found</TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
+        </div>
       
       {filteredItems.length > 0 ? (
         <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -79,26 +124,27 @@ export default function ItemsPage() {
           ))}
         </div>
       ) : (
-        <div className="mt-16">
-            <EmptyState
-                icon={Search}
-                title="No Items Found"
-                description="No items match your current filters. Try a different combination or report an item."
-            >
-                <div className="flex gap-4">
-                    <Link href="/report?type=lost">
-                        <Button variant="outline">Report Lost Item</Button>
-                    </Link>
-                    <Link href="/report?type=found">
-                        <Button>
-                            <PlusCircle className="mr-2 h-4 w-4" />
-                            Report Found Item
-                        </Button>
-                    </Link>
-                </div>
-            </EmptyState>
-        </div>
-      )}
+          <div className="mt-16">
+              <EmptyState
+                  icon={Search}
+                  title="No Items Found"
+                  description="No items match your current filters. Try a different combination or report an item."
+              >
+                  <div className="flex gap-4">
+                      <Link href="/report?type=lost">
+                          <Button variant="outline">Report Lost Item</Button>
+                      </Link>
+                      <Link href="/report?type=found">
+                          <Button>
+                              <PlusCircle className="mr-2 h-4 w-4" />
+                              Report Found Item
+                          </Button>
+                      </Link>
+                  </div>
+              </EmptyState>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -13,6 +13,8 @@ import { Badge } from "@/components/ui/badge";
 import { subDays, format, parseISO } from "date-fns";
 import { Input } from "@/components/ui/input";
 import { UserNav } from "@/components/UserNav";
+import Link from "next/link";
+import { PlusCircle } from "lucide-react";
 import {
   ChartContainer,
   ChartTooltip,
@@ -106,6 +108,20 @@ export default function DashboardPage() {
               />
             </div>
           </form>
+          <div className="flex items-center gap-2">
+            <Link href="/report?type=lost">
+              <Button variant="outline" size="sm">
+                <FileText className="h-4 w-4 mr-2" />
+                Report Lost
+              </Button>
+            </Link>
+            <Link href="/report?type=found">
+              <Button size="sm">
+                <PlusCircle className="h-4 w-4 mr-2" />
+                Report Found
+              </Button>
+            </Link>
+          </div>
           <Button variant="ghost" size="icon">
             <Bell className="h-5 w-5" />
             <span className="sr-only">Notifications</span>

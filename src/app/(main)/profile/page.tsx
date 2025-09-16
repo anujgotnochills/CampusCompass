@@ -1,14 +1,17 @@
 
 "use client";
 
-import { ChevronRight, HelpCircle, LogOut, Settings, User as UserIcon } from 'lucide-react';
+import { ChevronRight, HelpCircle, LogOut, Settings, User as UserIcon, Search, Bell, FileText, PlusCircle } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAppContext } from "@/contexts/AppContext";
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { UserNav } from '@/components/UserNav';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/skeleton';
+import Link from 'next/link';
 
 const EditProfileDialog = dynamic(() => import('@/components/EditProfileDialog').then(mod => mod.EditProfileDialog), {
   loading: () => <ProfileRowSkeleton />,
@@ -61,21 +64,65 @@ export default function ProfilePage() {
   const initials = getInitials(profile?.name);
 
   return (
-    <div className="space-y-8 max-w-3xl mx-auto">
-      <div className="flex items-center gap-4 md:gap-6">
-        <Avatar className="h-20 w-20 md:h-24 md:w-24">
-          <AvatarFallback className="text-2xl md:text-3xl">
-            {initials ? initials : <UserIcon className="h-8 w-8 md:h-10 md:w-10" />}
-          </AvatarFallback>
-        </Avatar>
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold">{profile?.name || 'User'}</h1>
-          <p className="text-sm md:text-base text-muted-foreground truncate max-w-[200px] sm:max-w-full">{profile?.id}</p>
-          <EditProfileDialog profile={profile}>
-            <Button variant="outline" size="sm" className="mt-2">Edit Profile</Button>
-          </EditProfileDialog>
+    <div className="flex flex-col gap-8">
+      {/* Header */}
+      <div className="sticky top-0 z-40 flex h-16 items-center justify-between gap-4 border-b bg-background/80 px-6 backdrop-blur-lg">
+        <div className="flex items-center gap-4">
+          <h1 className="text-2xl font-bold">Profile</h1>
+        </div>
+        <div className="flex items-center gap-4">
+          <form className="flex-1 max-w-md">
+            <div className="relative">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Search items..."
+                className="pl-8 w-full bg-background"
+              />
+            </div>
+          </form>
+          <div className="flex items-center gap-2">
+            <Link href="/report?type=lost">
+              <Button variant="outline" size="sm">
+                <FileText className="h-4 w-4 mr-2" />
+                Report Lost
+              </Button>
+            </Link>
+            <Link href="/report?type=found">
+              <Button size="sm">
+                <PlusCircle className="h-4 w-4 mr-2" />
+                Report Found
+              </Button>
+            </Link>
+          </div>
+          <Button variant="ghost" size="icon">
+            <Bell className="h-5 w-5" />
+            <span className="sr-only">Notifications</span>
+          </Button>
+          <Button variant="ghost" size="icon">
+            <Settings className="h-5 w-5" />
+            <span className="sr-only">Settings</span>
+          </Button>
+          <UserNav />
         </div>
       </div>
+
+      {/* Main Content */}
+      <div className="px-6 space-y-8 max-w-3xl mx-auto w-full">
+        <div className="flex items-center gap-4 md:gap-6">
+          <Avatar className="h-20 w-20 md:h-24 md:w-24">
+            <AvatarFallback className="text-2xl md:text-3xl">
+              {initials ? initials : <UserIcon className="h-8 w-8 md:h-10 md:w-10" />}
+            </AvatarFallback>
+          </Avatar>
+          <div>
+            <h2 className="text-2xl md:text-3xl font-bold">{profile?.name || 'User'}</h2>
+            <p className="text-sm md:text-base text-muted-foreground truncate max-w-[200px] sm:max-w-full">{profile?.id}</p>
+            <EditProfileDialog profile={profile}>
+              <Button variant="outline" size="sm" className="mt-2">Edit Profile</Button>
+            </EditProfileDialog>
+          </div>
+        </div>
       
       <Card>
         <CardHeader>
@@ -93,18 +140,19 @@ export default function ProfilePage() {
         </CardContent>
       </Card>
       
-      <Card className="border-destructive">
-         <CardHeader>
-          <CardTitle>Danger Zone</CardTitle>
-           <CardDescription>Be careful with these actions.</CardDescription>
-        </CardHeader>
-        <CardContent>
-            <Button variant="destructive" onClick={handleLogout}>
-                <LogOut className="mr-2 h-4 w-4" />
-                Log Out
-            </Button>
-        </CardContent>
-      </Card>
+        <Card className="border-destructive">
+           <CardHeader>
+            <CardTitle>Danger Zone</CardTitle>
+             <CardDescription>Be careful with these actions.</CardDescription>
+          </CardHeader>
+          <CardContent>
+              <Button variant="destructive" onClick={handleLogout}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Log Out
+              </Button>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

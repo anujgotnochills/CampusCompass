@@ -16,6 +16,7 @@ type SupabaseContextType = {
   isInitialLoading: boolean;
   addItem: (itemData: Omit<Item, 'id' | 'created_at' | 'is_recovered' | 'user_id' | 'locker_number'> & {date: Date}) => Promise<Item | null>;
   markAsRecovered: (item: Item) => Promise<void>;
+  deleteItem: (itemId: string) => Promise<void>;
   updateProfile: (newData: { name: string }) => Promise<void>;
   updatePreferences: (prefs: { match_notifications_enabled: boolean; weekly_summary_enabled: boolean }) => Promise<void>;
 };
@@ -257,6 +258,32 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const deleteItem = async (itemId: string) => {
+    if (!session || !supabase) {
+      toast({ variant: 'destructive', title: 'Not authenticated' });
+      return;
+    }
+
+    const { error } = await supabase
+      .from('items')
+      .delete()
+      .eq('id', itemId)
+      .eq('user_id', session.user.id); // Ensure user can only delete their own items
+
+    if (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Error deleting item',
+        description: error.message,
+      });
+    } else {
+      toast({
+        title: 'Item Deleted',
+        description: 'The item has been successfully removed.',
+      });
+    }
+  };
+
 
   const value = {
     supabase,
@@ -266,6 +293,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     isInitialLoading,
     addItem,
     markAsRecovered,
+    deleteItem,
     updateProfile,
     updatePreferences
   };

@@ -8,11 +8,13 @@ import type { Item } from '@/lib/types';
 import { MatchCard } from '@/components/MatchCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/EmptyState';
-import { HeartHandshake, Search, Bot, Loader2 } from 'lucide-react';
+import { HeartHandshake, Search, Bot, Loader2, Bell, Settings, FileText } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Terminal } from "lucide-react"
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { UserNav } from '@/components/UserNav';
 import { PlusCircle } from 'lucide-react';
 
 interface MatchResult {
@@ -195,21 +197,65 @@ export default function MatchesPage() {
   };
 
   return (
-    <div className="flex flex-col gap-8 p-6">
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-        <div className="space-y-2">
-          <h1 className="text-3xl font-bold tracking-tight">Potential Matches</h1>
-          <p className="text-muted-foreground">AI-powered matching for your lost items</p>
+    <div className="flex flex-col gap-8">
+      {/* Header */}
+      <div className="sticky top-0 z-40 flex h-16 items-center justify-between gap-4 border-b bg-background/80 px-6 backdrop-blur-lg">
+        <div className="flex items-center gap-4">
+          <h1 className="text-2xl font-bold">Matches</h1>
+        </div>
+        <div className="flex items-center gap-4">
+          <form className="flex-1 max-w-md">
+            <div className="relative">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Search items..."
+                className="pl-8 w-full bg-background"
+              />
+            </div>
+          </form>
+          <div className="flex items-center gap-2">
+            <Link href="/report?type=lost">
+              <Button variant="outline" size="sm">
+                <FileText className="h-4 w-4 mr-2" />
+                Report Lost
+              </Button>
+            </Link>
+            <Link href="/report?type=found">
+              <Button size="sm">
+                <PlusCircle className="h-4 w-4 mr-2" />
+                Report Found
+              </Button>
+            </Link>
+          </div>
+          <Button variant="ghost" size="icon">
+            <Bell className="h-5 w-5" />
+            <span className="sr-only">Notifications</span>
+          </Button>
+          <Button variant="ghost" size="icon">
+            <Settings className="h-5 w-5" />
+            <span className="sr-only">Settings</span>
+          </Button>
+          <UserNav />
         </div>
       </div>
-       <Alert>
-            <Bot className="h-4 w-4" />
-            <AlertTitle>Your Personal AI Matchmaker</AlertTitle>
-            <AlertDescription>
-                This page is just for you. We only search for matches for items that you have personally reported as lost.
-            </AlertDescription>
-        </Alert>
-      {renderContent()}
+
+      {/* Main Content */}
+      <div className="px-6 space-y-6">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+          <div className="space-y-2">
+            <p className="text-muted-foreground">AI-powered matching for your lost items</p>
+          </div>
+        </div>
+        <Alert>
+              <Bot className="h-4 w-4" />
+              <AlertTitle>Your Personal AI Matchmaker</AlertTitle>
+              <AlertDescription>
+                  This page is just for you. We only search for matches for items that you have personally reported as lost.
+              </AlertDescription>
+          </Alert>
+        {renderContent()}
+      </div>
     </div>
   );
 }
