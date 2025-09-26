@@ -1,14 +1,14 @@
 
 "use client";
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { format } from 'date-fns';
-import { Calendar as CalendarIcon, Loader2, Sparkles, Upload, X } from 'lucide-react';
+import { Calendar as CalendarIcon, Loader2, Sparkles, Upload, X, Camera, CameraIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -38,6 +38,7 @@ import { cn } from '@/lib/utils';
 import type { Category } from '@/lib/types';
 import { generateItemTitle } from '@/ai/flows/generate-item-title';
 import { describeImage } from '@/ai/flows/describe-image';
+import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 
 const formSchema = z.object({
   type: z.enum(['lost', 'found']),
@@ -62,7 +63,13 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGeneratingTitle, setIsGeneratingTitle] = useState(false);
   const [isGeneratingDescription, setIsGeneratingDescription] = useState(false);
+  const [hasCameraPermission, setHasCameraPermission] = useState<boolean | undefined>(undefined);
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
+  
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
 
   const form = useForm<ReportFormValues>({
     resolver: zodResolver(formSchema),
@@ -76,6 +83,20 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
   });
 
   const imageDataUri = form.watch('image_data_uri');
+
+  const stopCamera = () => {
+    if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+        streamRef.current = null;
+    }
+    setIsCameraOpen(false);
+  };
+  
+  useEffect(() => {
+    return () => {
+      stopCamera();
+    };
+  }, []);
   
   const handleGenerateTitle = async () => {
     const description = form.getValues('description');
@@ -103,30 +124,73 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
     }
   };
 
+  const processImageAndGenerateDescription = async (dataUri: string) => {
+    form.setValue('image_data_uri', dataUri);
+    setIsGeneratingDescription(true);
+    try {
+        const result = await describeImage({ photoDataUri: dataUri });
+        form.setValue('description', result.description, { shouldValidate: true });
+    } catch (error) {
+        console.error(error);
+        toast({
+            variant: 'destructive',
+            title: 'Error Analyzing Image',
+            description: 'Could not generate a description. Please enter one manually.',
+        });
+    } finally {
+        setIsGeneratingDescription(false);
+    }
+  }
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = async () => {
         const dataUri = reader.result as string;
-        form.setValue('image_data_uri', dataUri);
-        
-        setIsGeneratingDescription(true);
-        try {
-          const result = await describeImage({ photoDataUri: dataUri });
-          form.setValue('description', result.description, { shouldValidate: true });
-        } catch (error) {
-            console.error(error);
-            toast({
-                variant: 'destructive',
-                title: 'Error Analyzing Image',
-                description: 'Could not generate a description. Please enter one manually.',
-            });
-        } finally {
-            setIsGeneratingDescription(false);
-        }
+        await processImageAndGenerateDescription(dataUri);
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleOpenCamera = async () => {
+    if (isCameraOpen) {
+        stopCamera();
+        return;
+    }
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        setHasCameraPermission(true);
+        setIsCameraOpen(true);
+        streamRef.current = stream;
+        if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+        }
+    } catch (error) {
+        console.error('Error accessing camera:', error);
+        setHasCameraPermission(false);
+        toast({
+            variant: 'destructive',
+            title: 'Camera Access Denied',
+            description: 'Please enable camera permissions in your browser settings.',
+        });
+    }
+  };
+  
+  const handleTakePicture = async () => {
+    if (videoRef.current && canvasRef.current) {
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const context = canvas.getContext('2d');
+      if (context) {
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataUri = canvas.toDataURL('image/jpeg');
+        await processImageAndGenerateDescription(dataUri);
+      }
+      stopCamera();
     }
   };
 
@@ -193,6 +257,8 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
                         onChange={handleFileChange}
                         className="hidden"
                     />
+                    <canvas ref={canvasRef} className="hidden" />
+
                     {imageDataUri ? (
                         <div className="relative w-full aspect-video rounded-md overflow-hidden">
                             <Image src={imageDataUri} alt="Uploaded item" fill objectFit="cover" />
@@ -207,15 +273,53 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
                             </Button>
                         </div>
                     ) : (
-                        <Button 
-                            type="button" 
-                            variant="outline"
-                            className="w-full"
-                            onClick={() => fileInputRef.current?.click()}
-                        >
-                            <Upload className="mr-2 h-4 w-4" />
-                            Upload an Image
-                        </Button>
+                        <div className="space-y-2">
+                             {isCameraOpen && (
+                                <div className='relative'>
+                                    <video ref={videoRef} className="w-full aspect-video rounded-md bg-muted" autoPlay muted playsInline />
+                                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-4">
+                                        <Button type="button" onClick={handleTakePicture} size="lg">
+                                            <Camera className="mr-2 h-4 w-4"/>
+                                            Take Picture
+                                        </Button>
+                                         <Button type="button" variant="destructive" onClick={stopCamera}>
+                                            Close Camera
+                                        </Button>
+                                    </div>
+                                </div>
+                            )}
+
+                             {hasCameraPermission === false && (
+                                <Alert variant="destructive">
+                                    <CameraIcon className="h-4 w-4" />
+                                    <AlertTitle>Camera Access Denied</AlertTitle>
+                                    <AlertDescription>
+                                        Please allow camera access in your browser settings to use this feature.
+                                    </AlertDescription>
+                                </Alert>
+                            )}
+
+                            <div className="flex gap-2">
+                                <Button 
+                                    type="button" 
+                                    variant="outline"
+                                    className="w-full"
+                                    onClick={handleOpenCamera}
+                                >
+                                    <Camera className="mr-2 h-4 w-4" />
+                                    {isCameraOpen ? 'Close Camera' : 'Open Camera'}
+                                </Button>
+                                <Button 
+                                    type="button" 
+                                    variant="outline"
+                                    className="w-full"
+                                    onClick={() => fileInputRef.current?.click()}
+                                >
+                                    <Upload className="mr-2 h-4 w-4" />
+                                    Upload an Image
+                                </Button>
+                            </div>
+                        </div>
                     )}
                     </div>
                 </FormControl>
@@ -369,3 +473,4 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
     </Form>
   );
 }
+
