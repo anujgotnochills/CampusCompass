@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -8,6 +9,9 @@ export type PillNavItem = {
   label: string;
   href: string;
   ariaLabel?: string;
+  action?: 'login' | 'signup';
+  isPrimary?: boolean;
+  children?: React.ReactNode;
 };
 
 export interface PillNavProps {
@@ -23,6 +27,7 @@ export interface PillNavProps {
   pillTextColor?: string;
   onMobileMenuClick?: () => void;
   initialLoadAnimation?: boolean;
+  onItemClick?: (action?: 'login' | 'signup') => void;
 }
 
 const PillNav: React.FC<PillNavProps> = ({
@@ -38,6 +43,7 @@ const PillNav: React.FC<PillNavProps> = ({
   pillTextColor,
   onMobileMenuClick,
   initialLoadAnimation = true,
+  onItemClick,
 }) => {
   const resolvedPillTextColor = pillTextColor ?? baseColor;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -245,7 +251,7 @@ const PillNav: React.FC<PillNavProps> = ({
     ['--pill-gap']: '3px',
   } as React.CSSProperties;
 
-  const homeHref = items?.[0]?.href || '/';
+  const homeHref = items?.find(item => !item.action)?.href || '/';
 
   return (
     <div className="absolute top-0 left-0 w-full z-50 p-4">
@@ -291,19 +297,24 @@ const PillNav: React.FC<PillNavProps> = ({
               {items.map((item, i) => {
                 const isActive = activeHref === item.href;
 
-                const pillStyle: React.CSSProperties = {
+                const pillStyle: React.CSSProperties = item.isPrimary ? {
                   background: 'var(--pill-bg, #fff)',
                   color: 'var(--pill-text, var(--base, #000))',
                   paddingLeft: 'var(--pill-pad-x)',
                   paddingRight: 'var(--pill-pad-x)',
-                };
+                } : {
+                  background: 'transparent',
+                  color: 'var(--hover-text, #fff)',
+                   paddingLeft: 'var(--pill-pad-x)',
+                  paddingRight: 'var(--pill-pad-x)',
+                }
 
                 const PillContent = (
                   <>
                     <span
                       className="hover-circle absolute left-1/2 bottom-0 rounded-full z-[1] block pointer-events-none"
                       style={{
-                        background: 'var(--base, #000)',
+                        background: 'var(--pill-bg, #000)',
                         willChange: 'transform',
                       }}
                       aria-hidden="true"
@@ -314,14 +325,14 @@ const PillNav: React.FC<PillNavProps> = ({
                     <span className="label-stack relative inline-block leading-[1] z-[2]">
                       <span
                         className="pill-label relative z-[2] inline-block leading-[1]"
-                        style={{ willChange: 'transform' }}
+                        style={{ willChange: 'transform', color: item.isPrimary ? 'var(--pill-text)' : 'var(--hover-text)' }}
                       >
                         {item.label}
                       </span>
                       <span
                         className="pill-label-hover absolute left-0 top-0 z-[3] inline-block"
                         style={{
-                          color: 'var(--hover-text, #fff)',
+                          color: item.isPrimary ? 'var(--base)' : 'var(--pill-text)',
                           willChange: 'transform, opacity',
                         }}
                         aria-hidden="true"
@@ -340,11 +351,26 @@ const PillNav: React.FC<PillNavProps> = ({
                 );
 
                 const basePillClasses =
-                  'relative overflow-hidden inline-flex items-center justify-center h-full no-underline rounded-full box-border font-semibold text-[16px] leading-[0] uppercase tracking-[0.2px] whitespace-nowrap cursor-pointer px-0';
+                  'relative overflow-hidden inline-flex items-center justify-center h-full no-underline rounded-full box-border font-semibold text-sm leading-[0] tracking-[0.2px] whitespace-nowrap cursor-pointer px-0';
 
-                return (
-                  <li key={item.href} role="none" className="flex h-full">
-                    {isExternalLink(item.href) ? (
+                const renderPill = () => {
+                  if (item.action) {
+                    return (
+                      <button
+                        onClick={() => onItemClick?.(item.action)}
+                        className={basePillClasses}
+                        style={pillStyle}
+                        aria-label={item.ariaLabel || item.label}
+                        onMouseEnter={() => handleEnter(i)}
+                        onMouseLeave={() => handleLeave(i)}
+                      >
+                        {PillContent}
+                      </button>
+                    );
+                  }
+
+                  if (isExternalLink(item.href)) {
+                    return (
                        <a
                         role="menuitem"
                         href={item.href}
@@ -356,7 +382,10 @@ const PillNav: React.FC<PillNavProps> = ({
                       >
                         {PillContent}
                       </a>
-                    ) : (
+                    );
+                  }
+                  
+                  return (
                       <Link
                         role="menuitem"
                         href={item.href}
@@ -368,7 +397,12 @@ const PillNav: React.FC<PillNavProps> = ({
                       >
                         {PillContent}
                       </Link>
-                    )}
+                  )
+                }
+                
+                return (
+                  <li key={item.label + i} role="none" className="flex h-full">
+                    {renderPill()}
                   </li>
                 );
               })}
@@ -392,11 +426,11 @@ const PillNav: React.FC<PillNavProps> = ({
             }}
           >
             <span
-              className="hamburger-line w-4 h-0.5 rounded origin-center transition-all duration-[10ms] ease-[cubic-bezier(0.25,0.1,0.25,1)]"
+              className="hamburger-line w-4 h-0.5 rounded origin-center transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
               style={{ background: 'var(--pill-text, #fff)' }}
             />
             <span
-              className="hamburger-line w-4 h-0.5 rounded origin-center transition-all duration-[10ms] ease-[cubic-bezier(0.25,0.1,0.25,1)]"
+              className="hamburger-line w-4 h-0.5 rounded origin-center transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
               style={{ background: 'var(--pill-text, #fff)' }}
             />
           </button>
@@ -427,7 +461,30 @@ const PillNav: React.FC<PillNavProps> = ({
             };
 
             const linkClasses =
-              'block py-3 px-4 text-[16px] font-medium rounded-full transition-all duration-200 ease-[cubic-bezier(0.25,0.1,0.25,1)] text-center no-underline';
+              'block py-3 px-4 text-sm font-medium rounded-full transition-all duration-200 ease-[cubic-bezier(0.25,0.1,0.25,1)] text-center no-underline';
+            
+            const handleClick = () => {
+              setIsMobileMenuOpen(false);
+              if (item.action) {
+                onItemClick?.(item.action);
+              }
+            };
+
+            if (item.action) {
+              return (
+                 <li key={item.label}>
+                    <button
+                        onClick={handleClick}
+                        className={`${linkClasses} w-full`}
+                        style={defaultStyle}
+                        onMouseEnter={hoverIn}
+                        onMouseLeave={hoverOut}
+                    >
+                        {item.label}
+                    </button>
+                 </li>
+              )
+            }
 
             return (
               <li key={item.href}>
@@ -438,7 +495,7 @@ const PillNav: React.FC<PillNavProps> = ({
                     style={defaultStyle}
                     onMouseEnter={hoverIn}
                     onMouseLeave={hoverOut}
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={handleClick}
                   >
                     {item.label}
                   </a>
@@ -449,7 +506,7 @@ const PillNav: React.FC<PillNavProps> = ({
                     style={defaultStyle}
                     onMouseEnter={hoverIn}
                     onMouseLeave={hoverOut}
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={handleClick}
                   >
                     {item.label}
                   </Link>

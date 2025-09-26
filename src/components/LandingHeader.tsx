@@ -1,13 +1,11 @@
+
 "use client";
 
 import Link from "next/link";
 import { Compass, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
-
-export const AuthDialog = dynamic(() => import('@/components/AuthDialog').then(mod => mod.AuthDialog), {
-  ssr: false,
-});
+import { AuthDialog } from "./AuthDialog";
 
 
 export const GetStartedButton = () => (

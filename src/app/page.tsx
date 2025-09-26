@@ -1,3 +1,6 @@
+
+"use client";
+
 import { List, Search, ShieldCheck, User, Compass } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -6,31 +9,47 @@ import placeholderImages from '@/lib/placeholder-images.json';
 import { MouseTracer } from '@/components/MouseTracer';
 import TextPressure from '@/components/TextPressure';
 import ClickSpark from '@/components/ClickSpark';
-import { AuthDialog, GetStartedButton } from '@/components/LandingHeader';
+import { AuthDialog } from '@/components/AuthDialog';
+import { useState } from 'react';
+import type { AuthDialogView } from '@/components/AuthDialog';
 
 export default function LandingPage() {
   const dashboardImage = placeholderImages.dashboard;
+  const [isAuthDialogOpen, setAuthDialogOpen] = useState(false);
+  const [authDialogView, setAuthDialogView] = useState<AuthDialogView>('login');
+
+  const handlePillClick = (action?: 'login' | 'signup') => {
+    if (action) {
+      setAuthDialogView(action);
+      setAuthDialogOpen(true);
+    }
+  };
+
+
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
       <MouseTracer />
-      <PillNav
-        logo={<Compass className="h-6 w-6" />}
-        items={[
-          { label: 'Features', href: '#features' },
-          { label: 'How It Works', href: '#how-it-works' },
-        ]}
-        baseColor="hsl(var(--card))"
-        pillColor="hsl(var(--primary))"
-        pillTextColor="hsl(var(--primary-foreground))"
-        hoveredPillTextColor="hsl(var(--primary-foreground))"
+      <AuthDialog
+        open={isAuthDialogOpen}
+        onOpenChange={setAuthDialogOpen}
+        initialView={authDialogView}
+        onViewChange={setAuthDialogView}
       >
-        <div className="flex items-center gap-2">
-            <AuthDialog initialView="login">
-              <button className="h-full rounded-full px-4 text-sm font-medium text-primary-foreground">Log In</button>
-            </AuthDialog>
-            <GetStartedButton />
-        </div>
-      </PillNav>
+        <PillNav
+          onItemClick={handlePillClick}
+          logo={<Compass className="h-6 w-6" />}
+          items={[
+            { label: 'Features', href: '#features' },
+            { label: 'How It Works', href: '#how-it-works' },
+            { label: 'Log In', href: '#', action: 'login' },
+            { label: 'Sign Up', href: '#', action: 'signup', isPrimary: true },
+          ]}
+          baseColor="hsl(var(--card))"
+          pillColor="hsl(var(--primary))"
+          pillTextColor="hsl(var(--primary-foreground))"
+          hoveredPillTextColor="hsl(var(--primary-foreground))"
+        />
+      </AuthDialog>
       <main className="flex-1">
         <ClickSpark>
           <section className="relative w-full pt-48 pb-24 md:pt-56 md:pb-32 lg:pt-64 lg:pb-40 overflow-hidden">
@@ -74,7 +93,7 @@ export default function LandingPage() {
                 matches items.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <GetStartedButton />
+                 <button onClick={() => handlePillClick('signup')} className="h-11 rounded-md px-8 inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90">Get Started</button>
                 <Link href="#features" prefetch={false}>
                   <button className="h-11 rounded-md px-8 inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-transparent border-muted-foreground/50 hover:border-primary hover:text-primary">
                     Learn More
@@ -84,30 +103,6 @@ export default function LandingPage() {
             </div>
           </section>
         </ClickSpark>
-
-        <section className="relative z-10 -mt-16 px-4 md:px-6">
-          <div className="relative mx-auto max-w-7xl rounded-xl border border-white/10 bg-black/10 backdrop-blur-sm shadow-2xl shadow-primary/10">
-            <div className="p-2 flex items-center justify-between border-b border-white/10">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-red-500" aria-label="close button decor"></div>
-                <div className="w-3 h-3 rounded-full bg-yellow-500" aria-label="minimize button decor"></div>
-                <div className="w-3 h-3 rounded-full bg-green-500" aria-label="maximize button decor"></div>
-              </div>
-              <div className="text-sm text-muted-foreground">campus-compass-dashboard</div>
-              <div></div>
-            </div>
-            <Image
-              src={dashboardImage.src}
-              alt="App Dashboard Preview"
-              data-ai-hint="dashboard user interface"
-              width={dashboardImage.width}
-              height={dashboardImage.height}
-              className="rounded-b-xl"
-              priority
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
-          </div>
-        </section>
 
         <ClickSpark>
           <section id="features" className="w-full py-24 md:py-32 lg:py-40">
@@ -221,3 +216,5 @@ const HowItWorksStep = ({ number, title, description }: { number: string; title:
     <p className="text-sm text-muted-foreground">{description}</p>
   </div>
 );
+
+    
