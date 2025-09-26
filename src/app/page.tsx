@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { LandingHeader, GetStartedButton } from '@/components/LandingHeader';
 import placeholderImages from '@/lib/placeholder-images.json';
 import { MouseTracer } from '@/components/MouseTracer';
+import TextPressure from '@/components/TextPressure';
 
 export default function LandingPage() {
   const dashboardImage = placeholderImages.dashboard;
@@ -26,9 +27,17 @@ export default function LandingPage() {
               <Link href="#" className="inline-block rounded-full bg-primary/10 border border-primary/30 px-4 py-1 text-sm font-medium text-primary hover:bg-primary/20 transition-colors">
                 What's New? <span className="text-white">AI-Powered Matching!</span>
               </Link>
-              <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-7xl text-white font-outfit">
-                Accelerate Your Search with <span className="text-primary">Smarter Solutions.</span>
-              </h1>
+              <div className="h-[200px] w-full max-w-[900px]">
+                <TextPressure
+                  text="Accelerate Your Search with Smarter Solutions."
+                  className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
+                  flex={true}
+                  width={true}
+                  weight={true}
+                  italic={true}
+                  minFontSize={36}
+                />
+              </div>
               <p className="max-w-[700px] text-muted-foreground md:text-xl">
                 Unlock a seamless way to find lost items. Campus Compass helps you streamline reporting and intelligently matches items.
               </p>
