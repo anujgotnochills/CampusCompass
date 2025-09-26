@@ -137,7 +137,7 @@ const TextPressure: React.FC<TextPressureProps> = ({
           };
 
           const wdth = width ? Math.floor(getAttr(newDist, 100, 400)) : 100;
-          const wght = weight ? Math.floor(getAttr(d, 100, 900)) : 400;
+          const wght = weight ? Math.floor(getAttr(d, 400, 900)) : 400;
           const italVal = italic ? getAttr(d, 0, 1).toFixed(2) : '0';
           const alphaVal = alpha ? getAttr(d, 0, 1).toFixed(2) : '1';
           span.style.opacity = alphaVal;
