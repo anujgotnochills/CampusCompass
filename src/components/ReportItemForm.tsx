@@ -311,26 +311,28 @@ export function ReportItemForm({ type, onFinished }: ReportItemFormProps) {
                     ) : (
                         <div className="space-y-2">
                              {isCameraOpen && (
-                                <div className='relative'>
-                                    <video ref={videoRef} className="w-full aspect-video rounded-md bg-muted" autoPlay muted playsInline />
-                                    <div className="absolute top-4 right-4">
-                                        <Button 
-                                            type="button" 
-                                            variant="secondary" 
-                                            size="icon"
-                                            onClick={handleSwitchCamera}
-                                            className="bg-black/50 hover:bg-black/70 text-white border-white/20"
-                                        >
-                                            <RotateCcw className="h-4 w-4" />
-                                            <span className="sr-only">Switch Camera</span>
-                                        </Button>
+                                <div className="space-y-4">
+                                    <div className='relative'>
+                                        <video ref={videoRef} className="w-full aspect-video rounded-md bg-muted" autoPlay muted playsInline />
+                                        <div className="absolute top-4 right-4">
+                                            <Button 
+                                                type="button" 
+                                                variant="secondary" 
+                                                size="icon"
+                                                onClick={handleSwitchCamera}
+                                                className="bg-black/50 hover:bg-black/70 text-white border-white/20"
+                                            >
+                                                <RotateCcw className="h-4 w-4" />
+                                                <span className="sr-only">Switch Camera</span>
+                                            </Button>
+                                        </div>
                                     </div>
-                                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-3 md:gap-4 flex-col sm:flex-row">
-                                        <Button type="button" onClick={handleTakePicture} size="lg" className="min-h-[48px] touch-manipulation">
+                                    <div className="flex gap-3 md:gap-4 flex-col sm:flex-row">
+                                        <Button type="button" onClick={handleTakePicture} size="lg" className="min-h-[48px] touch-manipulation flex-1 sm:flex-none">
                                             <Camera className="mr-2 h-4 w-4"/>
                                             Take Picture
                                         </Button>
-                                         <Button type="button" variant="destructive" onClick={() => setIsCameraOpen(false)} className="min-h-[48px] touch-manipulation">
+                                         <Button type="button" variant="destructive" onClick={() => setIsCameraOpen(false)} className="min-h-[48px] touch-manipulation flex-1 sm:flex-none">
                                             Close Camera
                                         </Button>
                                     </div>
