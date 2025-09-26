@@ -6,6 +6,7 @@ import { LandingHeader, GetStartedButton } from '@/components/LandingHeader';
 import placeholderImages from '@/lib/placeholder-images.json';
 import { MouseTracer } from '@/components/MouseTracer';
 import TextPressure from '@/components/TextPressure';
+import ClickSpark from '@/components/ClickSpark';
 
 export default function LandingPage() {
   const dashboardImage = placeholderImages.dashboard;
@@ -15,48 +16,50 @@ export default function LandingPage() {
       <LandingHeader />
       <main className="flex-1">
         <section className="relative w-full py-24 md:py-32 lg:py-40 overflow-hidden">
-           <div className="absolute inset-0 z-0">
-             <div className="absolute top-1/2 left-1/2 w-[80vw] h-[80vw] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/30 to-transparent rounded-full blur-3xl opacity-40"></div>
-             <div className="absolute top-1/2 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent animate-pulse"></div>
-             <div className="absolute top-1/2 left-1/2 w-[300px] h-[300px] -translate-x-1/2 -translate-y-1/2">
-                <div className="absolute w-full h-full border-2 border-primary/20 rounded-full animate-ping-slow"></div>
-                <div className="absolute w-full h-full border-2 border-primary/30 rounded-full animate-ping-slow animation-delay-500"></div>
-             </div>
-           </div>
-          <div className="container px-4 md:px-6 text-center flex flex-col items-center space-y-6 relative z-10">
-              <Link href="#" className="inline-block rounded-full bg-primary/10 border border-primary/30 px-4 py-1 text-sm font-medium text-primary hover:bg-primary/20 transition-colors">
-                What's New? <span className="text-white">AI-Powered Matching!</span>
-              </Link>
-              <div className="h-[200px] w-full max-w-[900px] flex flex-col items-center justify-center -mt-4">
-                <TextPressure
-                  text="Accelerate Your Search"
-                  className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
-                  flex={true}
-                  width={true}
-                  weight={true}
-                  italic={true}
-                  minFontSize={36}
-                />
-                 <TextPressure
-                  text="with Smarter Solutions."
-                  className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
-                  flex={true}
-                  width={true}
-                  weight={true}
-                  italic={true}
-                  minFontSize={36}
-                />
+          <ClickSpark>
+            <div className="absolute inset-0 z-0">
+              <div className="absolute top-1/2 left-1/2 w-[80vw] h-[80vw] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/30 to-transparent rounded-full blur-3xl opacity-40"></div>
+              <div className="absolute top-1/2 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent animate-pulse"></div>
+              <div className="absolute top-1/2 left-1/2 w-[300px] h-[300px] -translate-x-1/2 -translate-y-1/2">
+                  <div className="absolute w-full h-full border-2 border-primary/20 rounded-full animate-ping-slow"></div>
+                  <div className="absolute w-full h-full border-2 border-primary/30 rounded-full animate-ping-slow animation-delay-500"></div>
               </div>
-              <p className="max-w-[700px] text-muted-foreground md:text-xl">
-                Unlock a seamless way to find lost items. Campus Compass helps you streamline reporting and intelligently matches items.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <GetStartedButton />
-                <Link href="#features" prefetch={false}>
-                    <button className="h-11 rounded-md px-8 inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-transparent border-muted-foreground/50 hover:border-primary hover:text-primary">Learn More</button>
+            </div>
+            <div className="container px-4 md:px-6 text-center flex flex-col items-center space-y-6 relative z-10">
+                <Link href="#" className="inline-block rounded-full bg-primary/10 border border-primary/30 px-4 py-1 text-sm font-medium text-primary hover:bg-primary/20 transition-colors">
+                  What's New? <span className="text-white">AI-Powered Matching!</span>
                 </Link>
-              </div>
-          </div>
+                <div className="h-[200px] w-full max-w-[900px] flex flex-col items-center justify-center -mt-4">
+                  <TextPressure
+                    text="Accelerate Your Search"
+                    className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
+                    flex={true}
+                    width={true}
+                    weight={true}
+                    italic={true}
+                    minFontSize={36}
+                  />
+                  <TextPressure
+                    text="with Smarter Solutions."
+                    className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
+                    flex={true}
+                    width={true}
+                    weight={true}
+                    italic={true}
+                    minFontSize={36}
+                  />
+                </div>
+                <p className="max-w-[700px] text-muted-foreground md:text-xl">
+                  Unlock a seamless way to find lost items. Campus Compass helps you streamline reporting and intelligently matches items.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <GetStartedButton />
+                  <Link href="#features" prefetch={false}>
+                      <button className="h-11 rounded-md px-8 inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-transparent border-muted-foreground/50 hover:border-primary hover:text-primary">Learn More</button>
+                  </Link>
+                </div>
+            </div>
+          </ClickSpark>
         </section>
         
         <section className="relative z-10 -mt-16 px-4 md:px-6">
