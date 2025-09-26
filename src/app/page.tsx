@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { List, Search, ShieldCheck, User, Compass } from 'lucide-react';
@@ -12,6 +13,7 @@ import ClickSpark from '@/components/ClickSpark';
 import { AuthDialog } from '@/components/AuthDialog';
 import { useState } from 'react';
 import type { AuthDialogView } from '@/components/AuthDialog';
+import ScrollStack, { ScrollStackItem } from '@/components/ScrollStack';
 
 export default function LandingPage() {
   const dashboardImage = placeholderImages.dashboard;
@@ -118,28 +120,36 @@ export default function LandingPage() {
                   We've packed our app with features to make finding lost items a breeze.
                 </p>
               </div>
-              <div className="mx-auto grid max-w-7xl items-start gap-8 sm:grid-cols-2 lg:grid-cols-4">
-                <FeatureCard
-                  icon={Search}
-                  title="AI-Powered Matching"
-                  description="Our smart system analyzes descriptions and images to find matches with high accuracy, saving you time and effort."
-                />
-                <FeatureCard
-                  icon={List}
-                  title="Effortless Reporting"
-                  description="Quickly report lost or found items with a simple form. Our AI can even help you write a better description."
-                />
-                <FeatureCard
-                  icon={User}
-                  title="Community Focused"
-                  description="Join a community of students helping each other. Earn rewards for reuniting people with their lost belongings."
-                />
-                <FeatureCard
-                  icon={ShieldCheck}
-                  title="Secure Locker System"
-                  description="Found items are stored securely in campus lockers, ensuring they are safe until picked up by their rightful owner."
-                />
-              </div>
+              <ScrollStack useWindowScroll={true} itemDistance={10} itemScale={0.05} rotationAmount={-2} blurAmount={1}>
+                <ScrollStackItem itemClassName="bg-card text-card-foreground">
+                  <FeatureCard
+                    icon={Search}
+                    title="AI-Powered Matching"
+                    description="Our smart system analyzes descriptions and images to find matches with high accuracy, saving you time and effort."
+                  />
+                </ScrollStackItem>
+                <ScrollStackItem itemClassName="bg-card text-card-foreground">
+                  <FeatureCard
+                    icon={List}
+                    title="Effortless Reporting"
+                    description="Quickly report lost or found items with a simple form. Our AI can even help you write a better description."
+                  />
+                </ScrollStackItem>
+                <ScrollStackItem itemClassName="bg-card text-card-foreground">
+                  <FeatureCard
+                    icon={User}
+                    title="Community Focused"
+                    description="Join a community of students helping each other. Earn rewards for reuniting people with their lost belongings."
+                  />
+                </ScrollStackItem>
+                 <ScrollStackItem itemClassName="bg-card text-card-foreground">
+                  <FeatureCard
+                    icon={ShieldCheck}
+                    title="Secure Locker System"
+                    description="Found items are stored securely in campus lockers, ensuring they are safe until picked up by their rightful owner."
+                  />
+                </ScrollStackItem>
+              </ScrollStack>
             </div>
           </section>
         </ClickSpark>
@@ -196,7 +206,7 @@ export default function LandingPage() {
 }
 
 const FeatureCard = ({ icon: Icon, title, description }: { icon: React.ElementType; title: string; description: string }) => (
-  <div className="p-6 rounded-lg hover:-translate-y-2 transition-all duration-300 border border-transparent hover:border-primary/50 hover:bg-card hover:shadow-2xl hover:shadow-primary/10">
+  <div className="p-6 rounded-lg transition-all duration-300">
     <div className="flex items-center gap-4 mb-4">
       <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
         <Icon className="h-6 w-6 text-primary" />
