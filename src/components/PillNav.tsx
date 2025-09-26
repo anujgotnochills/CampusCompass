@@ -12,6 +12,7 @@ export type PillNavItem = {
 
 export interface PillNavProps {
   logo?: React.ReactNode;
+  children?: React.ReactNode;
   items: PillNavItem[];
   activeHref?: string;
   className?: string;
@@ -26,6 +27,7 @@ export interface PillNavProps {
 
 const PillNav: React.FC<PillNavProps> = ({
   logo,
+  children,
   items,
   activeHref,
   className = '',
@@ -248,8 +250,8 @@ const PillNav: React.FC<PillNavProps> = ({
   return (
     <div className="absolute top-0 left-0 w-full z-50 p-4">
       <div
-        className="relative mx-auto w-full md:w-max flex items-center justify-between rounded-full bg-background/10 backdrop-blur-sm p-1.5"
-        style={{ ...cssVars, background: 'var(--base)'}}
+        className="relative mx-auto w-full md:w-max flex items-center justify-between rounded-full bg-background/10 backdrop-blur-sm p-1.5 border border-white/10"
+        style={{ ...cssVars}}
       >
         <nav
           className={`w-full md:w-max flex items-center justify-between md:justify-start box-border ${className}`}
@@ -372,13 +374,17 @@ const PillNav: React.FC<PillNavProps> = ({
               })}
             </ul>
           </div>
+          
+          <div className="md:ml-2">
+            {children}
+          </div>
 
           <button
             ref={hamburgerRef}
             onClick={toggleMobileMenu}
             aria-label="Toggle menu"
             aria-expanded={isMobileMenuOpen}
-            className="md:hidden rounded-full border-0 flex flex-col items-center justify-center gap-1 cursor-pointer p-0 relative"
+            className="md:hidden rounded-full border-0 flex flex-col items-center justify-center gap-1 cursor-pointer p-0 relative ml-2"
             style={{
               width: 'var(--nav-h)',
               height: 'var(--nav-h)',
@@ -451,6 +457,9 @@ const PillNav: React.FC<PillNavProps> = ({
               </li>
             );
           })}
+           <li className="p-2">
+            {children}
+           </li>
         </ul>
       </div>
     </div>
