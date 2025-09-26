@@ -5,7 +5,8 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { UserNav } from "@/components/UserNav";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { VisuallyHidden } from "@/components/ui/visually-hidden";
 import { MainContent } from "@/components/MainContent";
 import MobileNav from "@/components/MobileNav";
 import { Input } from "@/components/ui/input";
@@ -82,43 +83,48 @@ export default function MainLayout({
       </div>
       
       <main className="flex flex-1 flex-col md:ml-[60px] min-h-screen max-w-full overflow-x-hidden">
-          <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b bg-background/80 px-4 md:px-6 backdrop-blur-lg md:hidden">
+          <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b bg-background/95 px-4 md:px-6 backdrop-blur-lg md:hidden">
               <Sheet>
               <SheetTrigger asChild>
                   <Button
                   variant="outline"
                   size="icon"
-                  className="shrink-0"
+                  className="shrink-0 h-10 w-10"
                   >
                   <Menu className="h-5 w-5" />
                   <span className="sr-only">Toggle navigation menu</span>
                   </Button>
               </SheetTrigger>
-              <SheetContent side="left">
-                  <nav className="grid gap-6 text-lg font-medium">
-                    <Link href="/dashboard" className="flex items-center gap-2 text-lg font-semibold text-primary">
-                        <Compass className="h-6 w-6" />
+              <SheetContent side="left" className="w-80 sm:w-96">
+                  <SheetHeader>
+                    <VisuallyHidden>
+                      <SheetTitle>Navigation Menu</SheetTitle>
+                    </VisuallyHidden>
+                  </SheetHeader>
+                  <nav className="grid gap-6 text-lg font-medium pt-6">
+                    <Link href="/dashboard" className="flex items-center gap-3 text-xl font-semibold text-primary mb-4">
+                        <Compass className="h-7 w-7" />
                         <span>Campus Compass</span>
                     </Link>
                     {navItems.map((item) => (
                         <Link
                         key={item.href}
                         href={item.href}
-                        className="text-muted-foreground hover:text-foreground"
+                        className="flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors py-2 px-3 rounded-lg hover:bg-accent"
                         >
+                        <item.icon className="h-5 w-5" />
                         {item.label}
                         </Link>
                     ))}
-                    <Link href="/profile" className="text-muted-foreground hover:text-foreground">
-                        Profile
+                    <Link href="/settings" className="flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors py-2 px-3 rounded-lg hover:bg-accent">
+                        <Settings className="h-5 w-5" />
+                        Settings
                     </Link>
                   </nav>
               </SheetContent>
               </Sheet>
-              <div className="text-lg font-semibold text-primary">Campus Compass</div>
-              <div className="ml-auto">
-                <UserNav />
-              </div>
+              <div className="text-lg font-semibold text-primary truncate flex-1">Campus Compass</div>
+              <UserNav />
           </header>
           <div className="flex-1 overflow-y-auto">
             <MainContent>

@@ -82,4 +82,57 @@
   .hover-headline:hover::after {
     @apply w-full;
   }
+  
+  /* Mobile optimizations */
+  @media (max-width: 768px) {
+    /* Prevent zoom on input focus on iOS */
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="search"],
+    textarea,
+    select {
+      font-size: 16px !important;
+    }
+    
+    /* Better touch targets */
+    button, a, input, select, textarea {
+      min-height: 44px;
+    }
+    
+    /* Smooth scrolling for mobile */
+    html {
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Safe area for devices with notches */
+    body {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+  }
+  
+  /* Animation utilities */
+  @keyframes ping-slow {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    75%, 100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+  
+  .animate-ping-slow {
+    animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+  
+  .animation-delay-500 {
+    animation-delay: 0.5s;
+  }
+  
+  /* Touch manipulation */
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
 }

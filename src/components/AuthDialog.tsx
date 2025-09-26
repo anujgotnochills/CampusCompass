@@ -2,6 +2,7 @@
 "use client";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { VisuallyHidden } from "@/components/ui/visually-hidden";
 import { LoginForm } from "./LoginForm";
 import { SignupForm } from "./SignupForm";
 import { useState, useEffect } from "react";
@@ -53,7 +54,7 @@ export function AuthDialog({ children, initialView = 'login', open, onOpenChange
             <DialogContent className="border-white/10">
                 <DialogHeader>
                     <DialogTitle className="text-2xl">
-                        {view === 'login' ? 'Login' : 'Sign Up'}
+                        {view === 'login' ? 'Login to Campus Compass' : 'Sign Up for Campus Compass'}
                     </DialogTitle>
                     <DialogDescription>
                         {view === 'login' 

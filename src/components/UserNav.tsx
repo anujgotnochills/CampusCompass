@@ -39,15 +39,15 @@ export function UserNav() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-9 w-9 rounded-full">
-          <Avatar className="h-9 w-9">
-            <AvatarFallback>
+        <Button variant="ghost" className="relative h-10 w-10 md:h-9 md:w-9 rounded-full touch-manipulation">
+          <Avatar className="h-10 w-10 md:h-9 md:w-9">
+            <AvatarFallback className="text-sm">
               {getInitials(profile?.name)}
             </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end" forceMount>
+      <DropdownMenuContent className="w-64 md:w-56" align="end" forceMount sideOffset={8}>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">{profile?.name || "User"}</p>
@@ -59,28 +59,28 @@ export function UserNav() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <Link href="/profile">
-            <DropdownMenuItem>
-              <User className="mr-2 h-4 w-4" />
-              <span>Profile</span>
+            <DropdownMenuItem className="py-3 md:py-2">
+              <User className="mr-3 h-5 w-5 md:mr-2 md:h-4 md:w-4" />
+              <span className="text-base md:text-sm">Profile</span>
             </DropdownMenuItem>
           </Link>          
           <PreferencesDialog profile={profile}>
-             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                <Settings className="mr-2 h-4 w-4" />
-                <span>Settings</span>
+             <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="py-3 md:py-2">
+                <Settings className="mr-3 h-5 w-5 md:mr-2 md:h-4 md:w-4" />
+                <span className="text-base md:text-sm">Settings</span>
             </DropdownMenuItem>
           </PreferencesDialog>
           <Link href="/help">
-            <DropdownMenuItem>
-                <HelpCircle className="mr-2 h-4 w-4" />
-                <span>Help Center</span>
+            <DropdownMenuItem className="py-3 md:py-2">
+                <HelpCircle className="mr-3 h-5 w-5 md:mr-2 md:h-4 md:w-4" />
+                <span className="text-base md:text-sm">Help Center</span>
             </DropdownMenuItem>
           </Link>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleLogout}>
-          <LogOut className="mr-2 h-4 w-4" />
-          <span>Log out</span>
+        <DropdownMenuItem onClick={handleLogout} className="py-3 md:py-2 text-destructive focus:text-destructive">
+          <LogOut className="mr-3 h-5 w-5 md:mr-2 md:h-4 md:w-4" />
+          <span className="text-base md:text-sm">Log out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

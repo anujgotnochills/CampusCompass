@@ -1,6 +1,9 @@
 
 "use client";
 
+// Force dynamic rendering for personalized content
+export const dynamic = 'force-dynamic';
+
 import { ChevronRight, HelpCircle, LogOut, Settings, User as UserIcon, Search, Bell, FileText, PlusCircle } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -9,15 +12,15 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { UserNav } from '@/components/UserNav';
 import { useRouter } from 'next/navigation';
-import dynamic from 'next/dynamic';
+import dynamicImport from 'next/dynamic';
 import { Skeleton } from '@/components/ui/skeleton';
 import Link from 'next/link';
 
-const EditProfileDialog = dynamic(() => import('@/components/EditProfileDialog').then(mod => mod.EditProfileDialog), {
+const EditProfileDialog = dynamicImport(() => import('@/components/EditProfileDialog').then(mod => mod.EditProfileDialog), {
   loading: () => <ProfileRowSkeleton />,
   ssr: false
 });
-const PreferencesDialog = dynamic(() => import('@/components/PreferencesDialog').then(mod => mod.PreferencesDialog), {
+const PreferencesDialog = dynamicImport(() => import('@/components/PreferencesDialog').then(mod => mod.PreferencesDialog), {
   loading: () => <ProfileRowSkeleton />,
   ssr: false
 });
@@ -67,8 +70,8 @@ export default function ProfilePage() {
     <div className="flex flex-col gap-8">
       {/* Header */}
       <div className="sticky top-0 z-40 flex h-16 items-center justify-between gap-2 md:gap-4 border-b bg-background/80 px-4 md:px-6 backdrop-blur-lg">
-        <div className="flex items-center gap-2 md:gap-4">
-          <h1 className="text-xl md:text-2xl font-bold">Profile</h1>
+        <div className="flex items-center gap-2 md:gap-4 min-w-0 flex-1">
+          <h1 className="text-lg md:text-2xl font-bold truncate">Profile</h1>
         </div>
         
         {/* Desktop Layout */}
@@ -110,22 +113,12 @@ export default function ProfilePage() {
           <UserNav />
         </div>
 
-        {/* Mobile Layout */}
-        <div className="flex md:hidden items-center gap-1">
-          <Button variant="ghost" size="icon" className="h-8 w-8">
+        {/* Mobile Layout - Compact */}
+        <div className="flex md:hidden items-center gap-1 shrink-0">
+          <Button variant="ghost" size="icon" className="h-10 w-10 flex items-center justify-center">
             <Search className="h-4 w-4" />
             <span className="sr-only">Search</span>
           </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <Bell className="h-4 w-4" />
-            <span className="sr-only">Notifications</span>
-          </Button>
-          <Link href="/settings">
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <Settings className="h-4 w-4" />
-              <span className="sr-only">Settings</span>
-            </Button>
-          </Link>
           <UserNav />
         </div>
       </div>
@@ -163,18 +156,18 @@ export default function ProfilePage() {
       </div>
 
       {/* Main Content */}
-      <div className="px-6 space-y-8 max-w-3xl mx-auto w-full">
-        <div className="flex items-center gap-4 md:gap-6">
-          <Avatar className="h-20 w-20 md:h-24 md:w-24">
+      <div className="space-y-6 md:space-y-8 max-w-3xl mx-auto w-full">
+        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 md:gap-6 text-center sm:text-left">
+          <Avatar className="h-24 w-24 md:h-28 md:w-28">
             <AvatarFallback className="text-2xl md:text-3xl">
-              {initials ? initials : <UserIcon className="h-8 w-8 md:h-10 md:w-10" />}
+              {initials ? initials : <UserIcon className="h-10 w-10 md:h-12 md:w-12" />}
             </AvatarFallback>
           </Avatar>
-          <div>
-            <h2 className="text-2xl md:text-3xl font-bold">{profile?.name || 'User'}</h2>
-            <p className="text-sm md:text-base text-muted-foreground truncate max-w-[200px] sm:max-w-full">{profile?.id}</p>
+          <div className="flex-1">
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold">{profile?.name || 'User'}</h2>
+            <p className="text-sm md:text-base text-muted-foreground break-all sm:break-normal">{profile?.id}</p>
             <EditProfileDialog profile={profile}>
-              <Button variant="outline" size="sm" className="mt-2">Edit Profile</Button>
+              <Button variant="outline" size="sm" className="mt-3 w-full sm:w-auto">Edit Profile</Button>
             </EditProfileDialog>
           </div>
         </div>

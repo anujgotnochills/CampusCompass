@@ -1,6 +1,9 @@
 
 "use client";
 
+// Force dynamic rendering for personalized content
+export const dynamic = 'force-dynamic';
+
 import { useState, useMemo } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -37,8 +40,8 @@ export default function ItemsPage() {
     <div className="flex flex-col gap-8">
       {/* Header */}
       <div className="sticky top-0 z-40 flex h-16 items-center justify-between gap-2 md:gap-4 border-b bg-background/80 px-4 md:px-6 backdrop-blur-lg">
-        <div className="flex items-center gap-2 md:gap-4">
-          <h1 className="text-xl md:text-2xl font-bold">All Items</h1>
+        <div className="flex items-center gap-2 md:gap-4 min-w-0 flex-1">
+          <h1 className="text-lg md:text-2xl font-bold truncate">All Items</h1>
         </div>
         
         {/* Desktop Layout */}
@@ -80,22 +83,12 @@ export default function ItemsPage() {
           <UserNav />
         </div>
 
-        {/* Mobile Layout */}
-        <div className="flex md:hidden items-center gap-1">
-          <Button variant="ghost" size="icon" className="h-8 w-8">
+        {/* Mobile Layout - Compact */}
+        <div className="flex md:hidden items-center gap-1 shrink-0">
+          <Button variant="ghost" size="icon" className="h-10 w-10 flex items-center justify-center">
             <Search className="h-4 w-4" />
             <span className="sr-only">Search</span>
           </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <Bell className="h-4 w-4" />
-            <span className="sr-only">Notifications</span>
-          </Button>
-          <Link href="/settings">
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <Settings className="h-4 w-4" />
-              <span className="sr-only">Settings</span>
-            </Button>
-          </Link>
           <UserNav />
         </div>
       </div>
@@ -185,12 +178,12 @@ export default function ItemsPage() {
                   title="No Items Found"
                   description="No items match your current filters. Try a different combination or report an item."
               >
-                  <div className="flex gap-4">
-                      <Link href="/report?type=lost">
-                          <Button variant="outline">Report Lost Item</Button>
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
+                      <Link href="/report?type=lost" className="w-full sm:w-auto">
+                          <Button variant="outline" className="w-full sm:w-auto">Report Lost Item</Button>
                       </Link>
-                      <Link href="/report?type=found">
-                          <Button>
+                      <Link href="/report?type=found" className="w-full sm:w-auto">
+                          <Button className="w-full sm:w-auto">
                               <PlusCircle className="mr-2 h-4 w-4" />
                               Report Found Item
                           </Button>

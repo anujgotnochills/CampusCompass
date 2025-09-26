@@ -1,6 +1,9 @@
 
 "use client";
 
+// Force dynamic rendering for personalized content
+export const dynamic = 'force-dynamic';
+
 import { useState, useMemo, useCallback } from 'react';
 import { useAppContext } from '@/contexts/AppContext';
 import { findMatchingItems } from '@/ai/flows/find-matching-items';
@@ -200,8 +203,8 @@ export default function MatchesPage() {
     <div className="flex flex-col gap-8">
       {/* Header */}
       <div className="sticky top-0 z-40 flex h-16 items-center justify-between gap-2 md:gap-4 border-b bg-background/80 px-4 md:px-6 backdrop-blur-lg">
-        <div className="flex items-center gap-2 md:gap-4">
-          <h1 className="text-xl md:text-2xl font-bold">Matches</h1>
+        <div className="flex items-center gap-2 md:gap-4 min-w-0 flex-1">
+          <h1 className="text-lg md:text-2xl font-bold truncate">Matches</h1>
         </div>
         
         {/* Desktop Layout */}
@@ -243,22 +246,12 @@ export default function MatchesPage() {
           <UserNav />
         </div>
 
-        {/* Mobile Layout */}
-        <div className="flex md:hidden items-center gap-1">
-          <Button variant="ghost" size="icon" className="h-8 w-8">
+        {/* Mobile Layout - Compact */}
+        <div className="flex md:hidden items-center gap-1 shrink-0">
+          <Button variant="ghost" size="icon" className="h-10 w-10 flex items-center justify-center">
             <Search className="h-4 w-4" />
             <span className="sr-only">Search</span>
           </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <Bell className="h-4 w-4" />
-            <span className="sr-only">Notifications</span>
-          </Button>
-          <Link href="/settings">
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <Settings className="h-4 w-4" />
-              <span className="sr-only">Settings</span>
-            </Button>
-          </Link>
           <UserNav />
         </div>
       </div>

@@ -1,12 +1,15 @@
 "use client";
 
+// Force dynamic rendering for personalized content
+export const dynamic = 'force-dynamic';
+
 import { Award, FileText, Search, Calendar, MoreVertical, ChevronUp, ChevronDown, Bell, Shield, TrendingUp, AlertTriangle, CheckCircle, Clock, Users, MapPin, Settings } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useAppContext } from "@/contexts/AppContext";
 import { ItemRow } from "@/components/ItemRow";
 import { EmptyState } from "@/components/EmptyState";
 import { Button } from "@/components/ui/button";
-import dynamic from "next/dynamic";
+import dynamicImport from "next/dynamic";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CATEGORIES } from "@/lib/constants";
 import { Badge } from "@/components/ui/badge";
@@ -35,7 +38,7 @@ import {
 } from "recharts";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
-const ItemsChart = dynamic(() => import('@/components/ItemsChart').then(mod => mod.ItemsChart), {
+const ItemsChart = dynamicImport(() => import('@/components/ItemsChart').then(mod => mod.ItemsChart), {
   loading: () => <Skeleton className="h-[250px] w-full" />,
   ssr: false,
 });
@@ -94,8 +97,8 @@ export default function DashboardPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="sticky top-0 z-40 flex h-16 items-center justify-between gap-2 md:gap-4 border-b bg-background/80 px-4 md:px-6 backdrop-blur-lg">
-        <div className="flex items-center gap-2 md:gap-4">
-          <h1 className="text-xl md:text-2xl font-bold">Dashboard</h1>
+        <div className="flex items-center gap-2 md:gap-4 min-w-0 flex-1">
+          <h1 className="text-lg md:text-2xl font-bold truncate">Dashboard</h1>
         </div>
         
         {/* Desktop Layout */}
@@ -137,22 +140,12 @@ export default function DashboardPage() {
           <UserNav />
         </div>
 
-        {/* Mobile Layout */}
-        <div className="flex md:hidden items-center gap-1">
-          <Button variant="ghost" size="icon" className="h-8 w-8">
+        {/* Mobile Layout - Compact */}
+        <div className="flex md:hidden items-center gap-1 shrink-0">
+          <Button variant="ghost" size="icon" className="h-10 w-10 flex items-center justify-center">
             <Search className="h-4 w-4" />
             <span className="sr-only">Search</span>
           </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <Bell className="h-4 w-4" />
-            <span className="sr-only">Notifications</span>
-          </Button>
-          <Link href="/settings">
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <Settings className="h-4 w-4" />
-              <span className="sr-only">Settings</span>
-            </Button>
-          </Link>
           <UserNav />
         </div>
       </div>
@@ -175,13 +168,13 @@ export default function DashboardPage() {
       <div className="md:hidden px-4 py-3 border-b bg-background/80 backdrop-blur-lg">
         <div className="flex gap-2">
           <Link href="/report?type=lost" className="flex-1">
-            <Button variant="outline" size="sm" className="w-full">
+            <Button variant="outline" className="w-full h-10">
               <FileText className="h-4 w-4 mr-2" />
               Report Lost
             </Button>
           </Link>
           <Link href="/report?type=found" className="flex-1">
-            <Button size="sm" className="w-full">
+            <Button className="w-full h-10">
               <PlusCircle className="h-4 w-4 mr-2" />
               Report Found
             </Button>
@@ -190,29 +183,29 @@ export default function DashboardPage() {
       </div>
 
       {/* Main Content */}
-      <div className="px-6 space-y-6">
+      <div className="space-y-4 md:space-y-6">
         <Card>
-          <CardHeader>
-            <CardTitle>Trend</CardTitle>
+          <CardHeader className="pb-4">
+            <CardTitle className="text-lg md:text-xl">Trend</CardTitle>
           </CardHeader>
-          <CardContent className="h-[300px]">
+          <CardContent className="h-[200px] md:h-[300px]">
             <ItemsChart type="line" data={trendData} />
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
           <Card className="lg:col-span-2">
-              <CardHeader>
-                  <CardTitle>Item Status Breakdown</CardTitle>
+              <CardHeader className="pb-4">
+                  <CardTitle className="text-lg md:text-xl">Item Status Breakdown</CardTitle>
               </CardHeader>
-              <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="flex flex-col items-center justify-center space-y-2">
-                       <h3 className="text-muted-foreground font-medium">Open vs. Recovered</h3>
-                       <div className="h-[150px] w-full">
+              <CardContent className="grid grid-cols-1 gap-6">
+                  <div className="flex flex-col items-center justify-center space-y-3">
+                       <h3 className="text-muted-foreground font-medium text-sm md:text-base">Open vs. Recovered</h3>
+                       <div className="h-[120px] md:h-[150px] w-full">
                           <ChartContainer config={{}} className="w-full h-full">
                               <PieChart>
                                   <ChartTooltip content={<ChartTooltipContent hideLabel />} />
-                                  <Pie data={statusData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} innerRadius={60}>
+                                  <Pie data={statusData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={60} innerRadius={40}>
                                       {statusData.map((entry, index) => (
                                           <Cell key={`cell-${index}`} fill={entry.fill} />
                                       ))}
@@ -220,7 +213,7 @@ export default function DashboardPage() {
                               </PieChart>
                           </ChartContainer>
                        </div>
-                       <div className="flex items-center gap-4 text-sm">
+                       <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-xs md:text-sm">
                           <div className="flex items-center gap-2">
                               <div className="w-2 h-2 rounded-full bg-primary" />
                               <span>Open Cases: {openCases}</span>
@@ -231,39 +224,39 @@ export default function DashboardPage() {
                           </div>
                       </div>
                   </div>
-                   <div className="flex flex-col items-center justify-center space-y-2">
-                       <h3 className="text-muted-foreground font-medium">Items by Category</h3>
-                       <div className="h-[150px] w-full">
+                   <div className="flex flex-col items-center justify-center space-y-3 border-t pt-6">
+                       <h3 className="text-muted-foreground font-medium text-sm md:text-base">Items by Category</h3>
+                       <div className="h-[120px] md:h-[150px] w-full">
                           <ItemsChart type="bar" data={categoryData} />
                        </div>
                   </div>
               </CardContent>
           </Card>
           <Card>
-              <CardHeader>
-                  <CardTitle>Overview</CardTitle>
+              <CardHeader className="pb-4">
+                  <CardTitle className="text-lg md:text-xl">Overview</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                   <div className="flex items-center justify-between p-4 rounded-lg bg-muted/50">
+              <CardContent className="space-y-3">
+                   <div className="flex items-center justify-between p-3 md:p-4 rounded-lg bg-muted/50">
                       <div>
-                          <p className="text-sm text-muted-foreground">Total Items</p>
-                          <div className="text-2xl font-bold">{areItemsLoading ? <Skeleton className="h-8 w-12" /> : items.length}</div>
+                          <p className="text-xs md:text-sm text-muted-foreground">Total Items</p>
+                          <div className="text-xl md:text-2xl font-bold">{areItemsLoading ? <Skeleton className="h-6 md:h-8 w-10 md:w-12" /> : items.length}</div>
                       </div>
-                      <FileText className="h-6 w-6 text-muted-foreground" />
+                      <FileText className="h-5 w-5 md:h-6 md:w-6 text-muted-foreground" />
                   </div>
-                  <div className="flex items-center justify-between p-4 rounded-lg bg-muted/50">
+                  <div className="flex items-center justify-between p-3 md:p-4 rounded-lg bg-muted/50">
                       <div>
-                          <p className="text-sm text-muted-foreground">Open Cases</p>
-                          <div className="text-2xl font-bold">{areItemsLoading ? <Skeleton className="h-8 w-12" /> : openCases}</div>
+                          <p className="text-xs md:text-sm text-muted-foreground">Open Cases</p>
+                          <div className="text-xl md:text-2xl font-bold">{areItemsLoading ? <Skeleton className="h-6 md:h-8 w-10 md:w-12" /> : openCases}</div>
                       </div>
-                      <Search className="h-6 w-6 text-muted-foreground" />
+                      <Search className="h-5 w-5 md:h-6 md:w-6 text-muted-foreground" />
                   </div>
-                   <div className="flex items-center justify-between p-4 rounded-lg bg-muted/50">
+                   <div className="flex items-center justify-between p-3 md:p-4 rounded-lg bg-muted/50">
                       <div>
-                          <p className="text-sm text-muted-foreground">Reward Points</p>
-                          <p className="text-2xl font-bold text-primary">{profile?.reward_points || 0}</p>
+                          <p className="text-xs md:text-sm text-muted-foreground">Reward Points</p>
+                          <p className="text-xl md:text-2xl font-bold text-primary">{profile?.reward_points || 0}</p>
                       </div>
-                      <Award className="h-6 w-6 text-primary" />
+                      <Award className="h-5 w-5 md:h-6 md:w-6 text-primary" />
                   </div>
               </CardContent>
           </Card>
