@@ -197,6 +197,7 @@ const TextPressure: React.FC<TextPressureProps> = ({
             }}
             data-char={char}
             className="inline-block whitespace-pre"
+            style={{ willChange: 'font-variation-settings' }}
           >
             {char === ' ' ? '\u00A0' : char}
           </span>
@@ -207,5 +208,6 @@ const TextPressure: React.FC<TextPressureProps> = ({
 };
 
 export default TextPressure;
+
 
 
