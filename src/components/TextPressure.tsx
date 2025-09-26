@@ -117,6 +117,7 @@ const TextPressure: React.FC<TextPressureProps> = ({
       if (titleRef.current) {
         const titleRect = titleRef.current.getBoundingClientRect();
         const maxDist = titleRect.width / 2;
+
         spansRef.current.forEach(span => {
           if (!span) return;
           const rect = span.getBoundingClientRect();
@@ -124,12 +125,18 @@ const TextPressure: React.FC<TextPressureProps> = ({
             x: rect.left + rect.width / 2,
             y: rect.top + rect.height / 2
           };
+          
           const d = dist(mouseRef.current, charCenter);
+          const dx = charCenter.x - mouseRef.current.x;
+          const newDist = Math.abs(dx);
+
+
           const getAttr = (distance: number, minVal: number, maxVal: number) => {
-            const val = maxVal - Math.abs((maxVal * distance) / maxDist);
-            return Math.max(minVal, val + minVal);
+             const val = maxVal - (distance / maxDist) * maxVal;
+             return Math.max(minVal, val);
           };
-          const wdth = width ? Math.floor(getAttr(d, 5, 400)) : 100;
+
+          const wdth = width ? Math.floor(getAttr(newDist, 100, 400)) : 100;
           const wght = weight ? Math.floor(getAttr(d, 100, 900)) : 400;
           const italVal = italic ? getAttr(d, 0, 1).toFixed(2) : '0';
           const alphaVal = alpha ? getAttr(d, 0, 1).toFixed(2) : '1';
@@ -200,3 +207,4 @@ const TextPressure: React.FC<TextPressureProps> = ({
 };
 
 export default TextPressure;
+
