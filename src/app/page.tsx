@@ -86,39 +86,41 @@ export default function LandingPage() {
             </div>
         </section>
 
-        <section id="features" className="w-full py-24 md:py-32 lg:py-40">
-            <div className="container px-4 md:px-6">
-                <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
-                    <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm font-semibold text-primary">Key Features</div>
-                    <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl font-outfit text-white">Why You'll Love Campus Compass</h2>
-                    <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                        We've packed our app with features to make finding lost items a breeze.
-                    </p>
-                </div>
-                 <div className="mx-auto grid max-w-7xl items-start gap-8 sm:grid-cols-2 lg:grid-cols-4">
-                    <FeatureCard
-                      icon={Search}
-                      title="AI-Powered Matching"
-                      description="Our smart system analyzes descriptions and images to find matches with high accuracy, saving you time and effort."
-                    />
-                    <FeatureCard
-                      icon={List}
-                      title="Effortless Reporting"
-                      description="Quickly report lost or found items with a simple form. Our AI can even help you write a better description."
-                    />
-                    <FeatureCard
-                      icon={User}
-                      title="Community Focused"
-                      description="Join a community of students helping each other. Earn rewards for reuniting people with their lost belongings."
-                    />
-                     <FeatureCard
-                      icon={ShieldCheck}
-                      title="Secure Locker System"
-                      description="Found items are stored securely in campus lockers, ensuring they are safe until picked up by their rightful owner."
-                    />
-                </div>
-            </div>
-        </section>
+        <ClickSpark>
+          <section id="features" className="w-full py-24 md:py-32 lg:py-40">
+              <div className="container px-4 md:px-6">
+                  <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
+                      <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm font-semibold text-primary">Key Features</div>
+                      <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl font-outfit text-white">Why You'll Love Campus Compass</h2>
+                      <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                          We've packed our app with features to make finding lost items a breeze.
+                      </p>
+                  </div>
+                  <div className="mx-auto grid max-w-7xl items-start gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                      <FeatureCard
+                        icon={Search}
+                        title="AI-Powered Matching"
+                        description="Our smart system analyzes descriptions and images to find matches with high accuracy, saving you time and effort."
+                      />
+                      <FeatureCard
+                        icon={List}
+                        title="Effortless Reporting"
+                        description="Quickly report lost or found items with a simple form. Our AI can even help you write a better description."
+                      />
+                      <FeatureCard
+                        icon={User}
+                        title="Community Focused"
+                        description="Join a community of students helping each other. Earn rewards for reuniting people with their lost belongings."
+                      />
+                      <FeatureCard
+                        icon={ShieldCheck}
+                        title="Secure Locker System"
+                        description="Found items are stored securely in campus lockers, ensuring they are safe until picked up by their rightful owner."
+                      />
+                  </div>
+              </div>
+          </section>
+        </ClickSpark>
 
         <section id="how-it-works" className="w-full py-24 md-py-32 lg:py-40 bg-black/20">
           <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
