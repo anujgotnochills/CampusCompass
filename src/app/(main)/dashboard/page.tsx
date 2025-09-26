@@ -93,11 +93,13 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="sticky top-0 z-40 flex h-16 items-center justify-between gap-4 border-b bg-background/80 px-6 backdrop-blur-lg">
-        <div className="flex items-center gap-4">
-          <h1 className="text-2xl font-bold">Dashboard</h1>
+      <div className="sticky top-0 z-40 flex h-16 items-center justify-between gap-2 md:gap-4 border-b bg-background/80 px-4 md:px-6 backdrop-blur-lg">
+        <div className="flex items-center gap-2 md:gap-4">
+          <h1 className="text-xl md:text-2xl font-bold">Dashboard</h1>
         </div>
-        <div className="flex items-center gap-4">
+        
+        {/* Desktop Layout */}
+        <div className="hidden md:flex items-center gap-4">
           <form className="flex-1 max-w-md">
             <div className="relative">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -133,6 +135,57 @@ export default function DashboardPage() {
             </Button>
           </Link>
           <UserNav />
+        </div>
+
+        {/* Mobile Layout */}
+        <div className="flex md:hidden items-center gap-1">
+          <Button variant="ghost" size="icon" className="h-8 w-8">
+            <Search className="h-4 w-4" />
+            <span className="sr-only">Search</span>
+          </Button>
+          <Button variant="ghost" size="icon" className="h-8 w-8">
+            <Bell className="h-4 w-4" />
+            <span className="sr-only">Notifications</span>
+          </Button>
+          <Link href="/settings">
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Settings className="h-4 w-4" />
+              <span className="sr-only">Settings</span>
+            </Button>
+          </Link>
+          <UserNav />
+        </div>
+      </div>
+
+      {/* Mobile Search Bar (when expanded) */}
+      <div className="md:hidden px-4 py-2 border-b bg-background/80 backdrop-blur-lg">
+        <form>
+          <div className="relative">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="search"
+              placeholder="Search items..."
+              className="pl-8 w-full bg-background"
+            />
+          </div>
+        </form>
+      </div>
+
+      {/* Mobile Action Buttons */}
+      <div className="md:hidden px-4 py-3 border-b bg-background/80 backdrop-blur-lg">
+        <div className="flex gap-2">
+          <Link href="/report?type=lost" className="flex-1">
+            <Button variant="outline" size="sm" className="w-full">
+              <FileText className="h-4 w-4 mr-2" />
+              Report Lost
+            </Button>
+          </Link>
+          <Link href="/report?type=found" className="flex-1">
+            <Button size="sm" className="w-full">
+              <PlusCircle className="h-4 w-4 mr-2" />
+              Report Found
+            </Button>
+          </Link>
         </div>
       </div>
 
@@ -240,11 +293,16 @@ export default function DashboardPage() {
                       </div>
                   ) : recentItems.length > 0 ? (
                     <div className="divide-y divide-border">
-                      <div className="grid grid-cols-5 items-center py-2 text-xs font-semibold text-muted-foreground">
+                      {/* Desktop Table Header */}
+                      <div className="hidden md:grid grid-cols-5 items-center py-2 text-xs font-semibold text-muted-foreground">
                           <div className="col-span-2">Item</div>
                           <div>Status</div>
                           <div>Date</div>
                           <div className="text-right">Actions</div>
+                      </div>
+                      {/* Mobile Header */}
+                      <div className="md:hidden py-2 text-xs font-semibold text-muted-foreground">
+                          Recent Items
                       </div>
                       {recentItems.map((item) => (
                         <ItemRow key={item.id} item={item} />
