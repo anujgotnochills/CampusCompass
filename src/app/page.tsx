@@ -68,7 +68,7 @@ export default function LandingPage() {
               >
                 What's New? <span className="text-white">AI-Powered Matching!</span>
               </Link>
-              <div className="h-[200px] w-full max-w-[900px] flex flex-col items-center justify-center -mt-4">
+              <div className="h-[200px] w-full max-w-[900px] flex flex-col items-center justify-center -mt-8">
                 <TextPressure
                   text="Accelerate Your Search"
                   className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
@@ -93,9 +93,9 @@ export default function LandingPage() {
                 matches items.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                 <button onClick={() => handlePillClick('signup')} className="h-11 rounded-md px-8 inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90">Get Started</button>
+                 <button onClick={() => handlePillClick('signup')} className="h-11 rounded-full px-8 inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90">Get Started</button>
                 <Link href="#features" prefetch={false}>
-                  <button className="h-11 rounded-md px-8 inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-transparent border-muted-foreground/50 hover:border-primary hover:text-primary">
+                  <button className="h-11 rounded-full px-8 inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-transparent border-muted-foreground/50 hover:border-primary hover:text-primary">
                     Learn More
                   </button>
                 </Link>
