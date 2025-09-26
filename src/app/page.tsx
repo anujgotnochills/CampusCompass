@@ -54,50 +54,50 @@ export default function LandingPage() {
       </AuthDialog>
       <main className="flex-1">
         <ClickSpark>
-          <section className="relative w-full pt-48 pb-24 md:pt-56 md:pb-32 lg:pt-64 lg:pb-40 overflow-hidden">
+          <section className="relative w-full pt-32 pb-16 md:pt-48 md:pb-24 lg:pt-56 lg:pb-32 overflow-hidden">
             <div className="absolute inset-0 z-0">
-              <div className="absolute top-1/2 left-1/2 w-[80vw] h-[80vw] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/30 to-transparent rounded-full blur-3xl opacity-40"></div>
+              <div className="absolute top-1/2 left-1/2 w-[90vw] h-[90vw] md:w-[80vw] md:h-[80vw] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/30 to-transparent rounded-full blur-3xl opacity-40"></div>
               <div className="absolute top-1/2 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent animate-pulse"></div>
-              <div className="absolute top-1/2 left-1/2 w-[300px] h-[300px] -translate-x-1/2 -translate-y-1/2">
+              <div className="absolute top-1/2 left-1/2 w-[200px] h-[200px] md:w-[300px] md:h-[300px] -translate-x-1/2 -translate-y-1/2">
                 <div className="absolute w-full h-full border-2 border-primary/20 rounded-full animate-ping-slow"></div>
                 <div className="absolute w-full h-full border-2 border-primary/30 rounded-full animate-ping-slow animation-delay-500"></div>
               </div>
             </div>
-            <div className="container px-4 md:px-6 text-center flex flex-col items-center space-y-6 relative z-10">
+            <div className="container px-4 md:px-6 text-center flex flex-col items-center space-y-6 md:space-y-8 relative z-10">
               <Link
                 href="#"
-                className="inline-block rounded-full bg-primary/10 border border-primary/30 px-4 py-1 text-sm font-medium text-primary hover:bg-primary/20 transition-colors"
+                className="inline-block rounded-full bg-primary/10 border border-primary/30 px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-sm font-medium text-primary hover:bg-primary/20 transition-colors touch-manipulation"
               >
                 What's New? <span className="text-white">AI-Powered Matching!</span>
               </Link>
-              <div className="h-[200px] w-full max-w-[900px] flex flex-col items-center justify-center -mt-8">
+              <div className="h-auto w-full max-w-[900px] flex flex-col items-center justify-center space-y-2 md:space-y-4">
                 <TextPressure
                   text="Accelerate Your Search"
-                  className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
+                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-tight"
                   flex={true}
                   width={true}
                   weight={true}
                   italic={true}
-                  minFontSize={36}
+                  minFontSize={28}
                 />
                 <TextPressure
                   text="with Smarter Solutions."
-                  className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
+                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-tight"
                   flex={true}
                   width={true}
                   weight={true}
                   italic={true}
-                  minFontSize={36}
+                  minFontSize={28}
                 />
               </div>
-              <p className="max-w-[700px] text-muted-foreground md:text-xl">
+              <p className="max-w-[90%] md:max-w-[700px] text-muted-foreground text-base md:text-lg lg:text-xl leading-relaxed px-4 md:px-0">
                 Unlock a seamless way to find lost items. Campus Compass helps you streamline reporting and intelligently
                 matches items.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                 <button onClick={() => handlePillClick('signup')} className="h-11 rounded-full px-8 inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90">Get Started</button>
-                <Link href="#features" prefetch={false}>
-                  <button className="h-11 rounded-full px-8 inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-transparent border-muted-foreground/50 hover:border-primary hover:text-primary">
+              <div className="flex flex-col sm:flex-row gap-3 md:gap-4 w-full max-w-sm sm:max-w-none">
+                 <button onClick={() => handlePillClick('signup')} className="h-12 md:h-11 rounded-full px-6 md:px-8 inline-flex items-center justify-center whitespace-nowrap text-base md:text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 active:scale-95 touch-manipulation min-h-[48px]">Get Started</button>
+                <Link href="#features" prefetch={false} className="w-full sm:w-auto">
+                  <button className="h-12 md:h-11 rounded-full px-6 md:px-8 inline-flex items-center justify-center whitespace-nowrap text-base md:text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-transparent border-muted-foreground/50 hover:border-primary hover:text-primary active:scale-95 touch-manipulation min-h-[48px] w-full sm:w-auto">
                     Learn More
                   </button>
                 </Link>
@@ -107,66 +107,100 @@ export default function LandingPage() {
         </ClickSpark>
 
         <ClickSpark>
-          <section id="features" className="w-full py-24 md:py-32 lg:py-40">
+          <section id="features" className="w-full py-16 md:py-24 lg:py-32">
             <div className="container px-4 md:px-6">
-              <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
-                <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm font-semibold text-primary">
+              <div className="flex flex-col items-center justify-center space-y-4 md:space-y-6 text-center mb-12 md:mb-16">
+                <div className="inline-block rounded-lg bg-muted px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-sm font-semibold text-primary">
                   Key Features
                 </div>
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl font-outfit text-white">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tighter font-outfit text-white px-4 md:px-0">
                   Why You'll Love Campus Compass
                 </h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                <p className="max-w-[90%] md:max-w-[900px] text-muted-foreground text-base md:text-lg lg:text-xl leading-relaxed">
                   We've packed our app with features to make finding lost items a breeze.
                 </p>
               </div>
-              <ScrollStack useWindowScroll={true} itemDistance={10} itemScale={0.05} rotationAmount={-2} blurAmount={1}>
-                <ScrollStackItem itemClassName="bg-card text-card-foreground">
-                  <FeatureCard
-                    icon={Search}
-                    title="AI-Powered Matching"
-                    description="Our smart system analyzes descriptions and images to find matches with high accuracy, saving you time and effort."
-                  />
-                </ScrollStackItem>
-                <ScrollStackItem itemClassName="bg-card text-card-foreground">
-                  <FeatureCard
-                    icon={List}
-                    title="Effortless Reporting"
-                    description="Quickly report lost or found items with a simple form. Our AI can even help you write a better description."
-                  />
-                </ScrollStackItem>
-                <ScrollStackItem itemClassName="bg-card text-card-foreground">
-                  <FeatureCard
-                    icon={User}
-                    title="Community Focused"
-                    description="Join a community of students helping each other. Earn rewards for reuniting people with their lost belongings."
-                  />
-                </ScrollStackItem>
-                 <ScrollStackItem itemClassName="bg-card text-card-foreground">
-                  <FeatureCard
-                    icon={ShieldCheck}
-                    title="Secure Locker System"
-                    description="Found items are stored securely in campus lockers, ensuring they are safe until picked up by their rightful owner."
-                  />
-                </ScrollStackItem>
-              </ScrollStack>
+              <div className="block md:hidden">
+                <div className="space-y-6">
+                  <div className="bg-card text-card-foreground rounded-lg">
+                    <FeatureCard
+                      icon={Search}
+                      title="AI-Powered Matching"
+                      description="Our smart system analyzes descriptions and images to find matches with high accuracy, saving you time and effort."
+                    />
+                  </div>
+                  <div className="bg-card text-card-foreground rounded-lg">
+                    <FeatureCard
+                      icon={List}
+                      title="Effortless Reporting"
+                      description="Quickly report lost or found items with a simple form. Our AI can even help you write a better description."
+                    />
+                  </div>
+                  <div className="bg-card text-card-foreground rounded-lg">
+                    <FeatureCard
+                      icon={User}
+                      title="Community Focused"
+                      description="Join a community of students helping each other. Earn rewards for reuniting people with their lost belongings."
+                    />
+                  </div>
+                  <div className="bg-card text-card-foreground rounded-lg">
+                    <FeatureCard
+                      icon={ShieldCheck}
+                      title="Secure Locker System"
+                      description="Found items are stored securely in campus lockers, ensuring they are safe until picked up by their rightful owner."
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="hidden md:block">
+                <ScrollStack useWindowScroll={true} itemDistance={10} itemScale={0.05} rotationAmount={-2} blurAmount={1}>
+                  <ScrollStackItem itemClassName="bg-card text-card-foreground">
+                    <FeatureCard
+                      icon={Search}
+                      title="AI-Powered Matching"
+                      description="Our smart system analyzes descriptions and images to find matches with high accuracy, saving you time and effort."
+                    />
+                  </ScrollStackItem>
+                  <ScrollStackItem itemClassName="bg-card text-card-foreground">
+                    <FeatureCard
+                      icon={List}
+                      title="Effortless Reporting"
+                      description="Quickly report lost or found items with a simple form. Our AI can even help you write a better description."
+                    />
+                  </ScrollStackItem>
+                  <ScrollStackItem itemClassName="bg-card text-card-foreground">
+                    <FeatureCard
+                      icon={User}
+                      title="Community Focused"
+                      description="Join a community of students helping each other. Earn rewards for reuniting people with their lost belongings."
+                    />
+                  </ScrollStackItem>
+                   <ScrollStackItem itemClassName="bg-card text-card-foreground">
+                    <FeatureCard
+                      icon={ShieldCheck}
+                      title="Secure Locker System"
+                      description="Found items are stored securely in campus lockers, ensuring they are safe until picked up by their rightful owner."
+                    />
+                  </ScrollStackItem>
+                </ScrollStack>
+              </div>
             </div>
           </section>
         </ClickSpark>
 
         <ClickSpark>
-          <section id="how-it-works" className="w-full py-24 md-py-32 lg:py-40 bg-black/20">
-            <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
-              <div className="space-y-3">
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight text-white font-outfit">
+          <section id="how-it-works" className="w-full py-16 md:py-24 lg:py-32 bg-black/20">
+            <div className="container grid items-center justify-center gap-4 md:gap-6 px-4 text-center md:px-6">
+              <div className="space-y-3 md:space-y-4">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tighter text-white font-outfit px-4 md:px-0">
                   How It Works
                 </h2>
-                <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                <p className="mx-auto max-w-[90%] md:max-w-[600px] text-muted-foreground text-base md:text-lg lg:text-xl leading-relaxed">
                   Finding what you've lost is easier than ever. Follow these simple steps.
                 </p>
               </div>
-              <div className="mx-auto w-full max-w-4xl pt-12">
-                <div className="grid gap-8 sm:grid-cols-3">
+              <div className="mx-auto w-full max-w-4xl pt-8 md:pt-12">
+                <div className="grid gap-8 md:gap-12 grid-cols-1 sm:grid-cols-3">
                   <HowItWorksStep
                     number="1"
                     title="Report Your Item"
@@ -188,14 +222,14 @@ export default function LandingPage() {
           </section>
         </ClickSpark>
       </main>
-      <footer className="border-t border-border/20 mt-20">
-        <div className="container flex flex-col gap-4 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6">
-          <p className="text-xs text-muted-foreground">&copy; 2024 Campus Compass. All rights reserved.</p>
-          <nav className="sm:ml-auto flex gap-4 sm:gap-6">
-            <Link href="#" className="text-xs hover:underline underline-offset-4" prefetch={false}>
+      <footer className="border-t border-border/20 mt-12 md:mt-20">
+        <div className="container flex flex-col gap-4 sm:flex-row py-6 md:py-8 w-full shrink-0 items-center px-4 md:px-6 text-center sm:text-left">
+          <p className="text-xs md:text-sm text-muted-foreground">&copy; 2024 Campus Compass. All rights reserved.</p>
+          <nav className="sm:ml-auto flex gap-6 sm:gap-8">
+            <Link href="#" className="text-xs md:text-sm hover:underline underline-offset-4 text-muted-foreground hover:text-foreground transition-colors touch-manipulation" prefetch={false}>
               Terms of Service
             </Link>
-            <Link href="#" className="text-xs hover:underline underline-offset-4" prefetch={false}>
+            <Link href="#" className="text-xs md:text-sm hover:underline underline-offset-4 text-muted-foreground hover:text-foreground transition-colors touch-manipulation" prefetch={false}>
               Privacy
             </Link>
           </nav>
@@ -206,24 +240,24 @@ export default function LandingPage() {
 }
 
 const FeatureCard = ({ icon: Icon, title, description }: { icon: React.ElementType; title: string; description: string }) => (
-  <div className="p-6 rounded-lg transition-all duration-300">
-    <div className="flex items-center gap-4 mb-4">
-      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
-        <Icon className="h-6 w-6 text-primary" />
+  <div className="p-4 md:p-6 rounded-lg transition-all duration-300 hover:bg-card/50">
+    <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 mb-4">
+      <div className="flex h-12 w-12 md:h-14 md:w-14 items-center justify-center rounded-lg bg-primary/10 border border-primary/20 shrink-0">
+        <Icon className="h-6 w-6 md:h-7 md:w-7 text-primary" />
       </div>
-      <h3 className="text-base font-bold text-white">{title}</h3>
+      <h3 className="text-lg md:text-xl font-bold text-white leading-tight">{title}</h3>
     </div>
-    <p className="text-xs text-muted-foreground">{description}</p>
+    <p className="text-sm md:text-base text-muted-foreground leading-relaxed">{description}</p>
   </div>
 );
 
 const HowItWorksStep = ({ number, title, description }: { number: string; title: string; description: string }) => (
-  <div className="flex flex-col items-center text-center gap-4 relative">
-    <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 border-2 border-primary/30 text-primary text-2xl font-bold">
+  <div className="flex flex-col items-center text-center gap-4 md:gap-6 relative px-4 md:px-0">
+    <div className="flex items-center justify-center h-16 w-16 md:h-20 md:w-20 rounded-full bg-primary/10 border-2 border-primary/30 text-primary text-2xl md:text-3xl font-bold">
       {number}
     </div>
-    <h3 className="text-lg font-bold text-white">{title}</h3>
-    <p className="text-sm text-muted-foreground">{description}</p>
+    <h3 className="text-lg md:text-xl font-bold text-white leading-tight">{title}</h3>
+    <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-xs md:max-w-none">{description}</p>
   </div>
 );
 
