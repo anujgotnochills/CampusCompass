@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { format } from 'date-fns';
-import { Calendar as CalendarIcon, Loader2, Sparkles, Upload, X, Camera, CameraIcon } from 'lucide-react';
+import { Calendar as CalendarIcon, Loader2, Sparkles, Upload, X, Camera } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -41,22 +41,23 @@ import { describeImage } from '@/ai/flows/describe-image';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 
 const formSchema = z.object({
-  type: z.enum(['lost', 'found']),
+  type: z.enum(['lost', 'found', 'valuable']),
   title: z.string().min(3, 'Title must be at least 3 characters.'),
   description: z.string().min(10, 'Description must be at least 10 characters.'),
   category: z.string().nonempty('Please select a category.'),
-  location: z.string().min(3, 'Location must be at least 3 characters.'),
-  date: z.date({ required_error: 'A date is required.' }),
+  location: z.string().min(3, 'Location must be at least 3 characters.').optional(),
+  date: z.date({ required_error: 'A date is required.' }).optional(),
   image_data_uri: z.string().optional(),
 });
 
 type ReportFormValues = z.infer<typeof formSchema>;
 
 interface ReportItemFormProps {
-  type: 'lost' | 'found';
+  type: 'lost' | 'found' | 'valuable';
+  onFinished?: () => void;
 }
 
-export function ReportItemForm({ type }: ReportItemFormProps) {
+export function ReportItemForm({ type, onFinished }: ReportItemFormProps) {
   const router = useRouter();
   const { toast } = useToast();
   const { addItem } = useAppContext();
@@ -69,7 +70,6 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const streamRef = useRef<MediaStream | null>(null);
 
   const form = useForm<ReportFormValues>({
     resolver: zodResolver(formSchema),
@@ -78,26 +78,44 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
       title: '',
       description: '',
       category: '',
-      location: '',
+      location: type !== 'valuable' ? '' : undefined,
+      date: type !== 'valuable' ? undefined : new Date(),
     },
   });
 
   const imageDataUri = form.watch('image_data_uri');
 
-  const stopCamera = () => {
-    if (streamRef.current) {
-        streamRef.current.getTracks().forEach(track => track.stop());
-        streamRef.current = null;
-    }
-    setIsCameraOpen(false);
-  };
-  
   useEffect(() => {
-    return () => {
-      stopCamera();
-    };
-  }, []);
-  
+    if (isCameraOpen) {
+      const getCameraPermission = async () => {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          setHasCameraPermission(true);
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+          }
+        } catch (error) {
+          console.error('Error accessing camera:', error);
+          setHasCameraPermission(false);
+          setIsCameraOpen(false); // Close the camera view if permission is denied
+          toast({
+            variant: 'destructive',
+            title: 'Camera Access Denied',
+            description: 'Please enable camera permissions in your browser settings.',
+          });
+        }
+      };
+      getCameraPermission();
+    } else {
+      if (videoRef.current && videoRef.current.srcObject) {
+        const stream = videoRef.current.srcObject as MediaStream;
+        stream.getTracks().forEach(track => track.stop());
+        videoRef.current.srcObject = null;
+      }
+    }
+  }, [isCameraOpen, toast]);
+
+
   const handleGenerateTitle = async () => {
     const description = form.getValues('description');
     if (!description || description.length < 10) {
@@ -153,30 +171,6 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
       reader.readAsDataURL(file);
     }
   };
-
-  const handleOpenCamera = async () => {
-    if (isCameraOpen) {
-        stopCamera();
-        return;
-    }
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        setHasCameraPermission(true);
-        setIsCameraOpen(true);
-        streamRef.current = stream;
-        if (videoRef.current) {
-            videoRef.current.srcObject = stream;
-        }
-    } catch (error) {
-        console.error('Error accessing camera:', error);
-        setHasCameraPermission(false);
-        toast({
-            variant: 'destructive',
-            title: 'Camera Access Denied',
-            description: 'Please enable camera permissions in your browser settings.',
-        });
-    }
-  };
   
   const handleTakePicture = async () => {
     if (videoRef.current && canvasRef.current) {
@@ -190,7 +184,7 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
         const dataUri = canvas.toDataURL('image/jpeg');
         await processImageAndGenerateDescription(dataUri);
       }
-      stopCamera();
+      setIsCameraOpen(false);
     }
   };
 
@@ -198,17 +192,28 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
   async function onSubmit(values: ReportFormValues) {
     setIsSubmitting(true);
     
-    // Non-blocking navigation
-    router.push('/dashboard');
+    // Non-blocking navigation for certain types
+    if (type !== 'valuable') {
+      router.push('/dashboard');
+    }
     
     try {
-      const newItem = await addItem({
-        ...values,
-        category: values.category as Category,
-      });
+      // Ensure optional fields are handled correctly
+      const submissionData = {
+          ...values,
+          date: values.date || new Date(), // Default to now if not provided
+          location: values.location || 'N/A',
+      };
+      
+      const newItem = await addItem(submissionData);
 
       if (newItem) {
-         if (newItem.type === 'found') {
+         if (type === 'valuable') {
+            toast({
+                title: 'Valuable Added!',
+                description: 'Your item has been added to your inventory.',
+            });
+         } else if (newItem.type === 'found') {
             toast({
                 title: 'Item Reported!',
                 description: `Please drop the item off at Locker #${newItem.locker_number}. Thank you!`,
@@ -220,6 +225,9 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
                 description: 'Your item has been successfully listed.',
             });
           }
+        if (onFinished) {
+            onFinished();
+        }
       } else {
         throw new Error("Item creation failed.");
       }
@@ -230,11 +238,8 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
         title: 'Uh oh! Something went wrong.',
         description: 'There was a problem submitting your report.',
       });
-      // Since we navigated away, we can't easily revert. The user is on the dashboard.
     } finally {
-      // This state is local to a component that is now unmounted.
-      // But if we didn't navigate away, we would do:
-      // setIsSubmitting(false);
+       setIsSubmitting(false);
     }
   }
 
@@ -282,7 +287,7 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
                                             <Camera className="mr-2 h-4 w-4"/>
                                             Take Picture
                                         </Button>
-                                         <Button type="button" variant="destructive" onClick={stopCamera}>
+                                         <Button type="button" variant="destructive" onClick={() => setIsCameraOpen(false)}>
                                             Close Camera
                                         </Button>
                                     </div>
@@ -291,7 +296,7 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
 
                              {hasCameraPermission === false && (
                                 <Alert variant="destructive">
-                                    <CameraIcon className="h-4 w-4" />
+                                    <Camera className="h-4 w-4" />
                                     <AlertTitle>Camera Access Denied</AlertTitle>
                                     <AlertDescription>
                                         Please allow camera access in your browser settings to use this feature.
@@ -299,15 +304,15 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
                                 </Alert>
                             )}
 
-                            <div className="flex gap-2">
+                            {!isCameraOpen && <div className="flex gap-2">
                                 <Button 
                                     type="button" 
                                     variant="outline"
                                     className="w-full"
-                                    onClick={handleOpenCamera}
+                                    onClick={() => setIsCameraOpen(true)}
                                 >
                                     <Camera className="mr-2 h-4 w-4" />
-                                    {isCameraOpen ? 'Close Camera' : 'Open Camera'}
+                                    Open Camera
                                 </Button>
                                 <Button 
                                     type="button" 
@@ -318,7 +323,7 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
                                     <Upload className="mr-2 h-4 w-4" />
                                     Upload an Image
                                 </Button>
-                            </div>
+                            </div>}
                         </div>
                     )}
                     </div>
@@ -408,22 +413,22 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
             )}
             />
 
-            <FormField
-            control={form.control}
-            name="location"
-            render={({ field }) => (
-                <FormItem>
-                <FormLabel>Last Known Location</FormLabel>
-                <FormControl>
-                    <Input placeholder="e.g., Library, 2nd Floor" {...field} />
-                </FormControl>
-                <FormMessage />
-                </FormItem>
-            )}
-            />
+            {type !== 'valuable' && <FormField
+              control={form.control}
+              name="location"
+              render={({ field }) => (
+                  <FormItem>
+                  <FormLabel>Last Known Location</FormLabel>
+                  <FormControl>
+                      <Input placeholder="e.g., Library, 2nd Floor" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                  </FormItem>
+              )}
+            />}
         </div>
 
-        <FormField
+        {type !== 'valuable' && <FormField
           control={form.control}
           name="date"
           render={({ field }) => (
@@ -463,14 +468,13 @@ export function ReportItemForm({ type }: ReportItemFormProps) {
               <FormMessage />
             </FormItem>
           )}
-        />
+        />}
 
         <Button type="submit" className="w-full" disabled={isSubmitting || isGeneratingDescription}>
           {(isSubmitting || isGeneratingDescription) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Submit Report
+          {type === 'valuable' ? 'Add Valuable' : 'Submit Report'}
         </Button>
       </form>
     </Form>
   );
 }
-
