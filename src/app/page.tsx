@@ -15,8 +15,8 @@ export default function LandingPage() {
       <MouseTracer />
       <LandingHeader />
       <main className="flex-1">
-        <section className="relative w-full py-24 md:py-32 lg:py-40 overflow-hidden">
-          <ClickSpark>
+        <ClickSpark>
+          <section className="relative w-full py-24 md:py-32 lg:py-40 overflow-hidden">
             <div className="absolute inset-0 z-0">
               <div className="absolute top-1/2 left-1/2 w-[80vw] h-[80vw] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/30 to-transparent rounded-full blur-3xl opacity-40"></div>
               <div className="absolute top-1/2 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent animate-pulse"></div>
@@ -59,8 +59,8 @@ export default function LandingPage() {
                   </Link>
                 </div>
             </div>
-          </ClickSpark>
-        </section>
+          </section>
+        </ClickSpark>
         
         <section className="relative z-10 -mt-16 px-4 md:px-6">
             <div className="relative mx-auto max-w-7xl rounded-xl border border-white/10 bg-black/10 backdrop-blur-sm shadow-2xl shadow-primary/10">
