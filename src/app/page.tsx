@@ -211,9 +211,9 @@ const FeatureCard = ({ icon: Icon, title, description }: { icon: React.ElementTy
       <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
         <Icon className="h-6 w-6 text-primary" />
       </div>
-      <h3 className="text-lg font-bold text-white">{title}</h3>
+      <h3 className="text-base font-bold text-white">{title}</h3>
     </div>
-    <p className="text-sm text-muted-foreground">{description}</p>
+    <p className="text-xs text-muted-foreground">{description}</p>
   </div>
 );
 
