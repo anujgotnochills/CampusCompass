@@ -27,7 +27,7 @@ export default function LandingPage() {
               <Link href="#" className="inline-block rounded-full bg-primary/10 border border-primary/30 px-4 py-1 text-sm font-medium text-primary hover:bg-primary/20 transition-colors">
                 What's New? <span className="text-white">AI-Powered Matching!</span>
               </Link>
-              <div className="h-[200px] w-full max-w-[900px] flex flex-col items-center justify-center">
+              <div className="h-[200px] w-full max-w-[900px] flex flex-col items-center justify-center -mt-4">
                 <TextPressure
                   text="Accelerate Your Search"
                   className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
@@ -173,4 +173,6 @@ const HowItWorksStep = ({ number, title, description }: { number: string; title:
 );
 
     
+    
+
     
