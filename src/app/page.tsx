@@ -122,23 +122,25 @@ export default function LandingPage() {
           </section>
         </ClickSpark>
 
-        <section id="how-it-works" className="w-full py-24 md-py-32 lg:py-40 bg-black/20">
-          <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
-            <div className="space-y-3">
-              <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight text-white font-outfit">How It Works</h2>
-              <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                Finding what you've lost is easier than ever. Follow these simple steps.
-              </p>
-            </div>
-            <div className="mx-auto w-full max-w-4xl pt-12">
-              <div className="grid gap-8 sm:grid-cols-3">
-                <HowItWorksStep number="1" title="Report Your Item" description="Fill out a quick form with details about the lost or found item. Upload a photo for better matching." />
-                <HowItWorksStep number="2" title="AI Finds Matches" description="Our AI gets to work, comparing your item against the database to find potential matches in real-time." />
-                <HowItWorksStep number="3" title="Get Notified & Recover" description="Receive a notification when a likely match is found. Arrange for a secure pickup at a campus locker." />
+        <ClickSpark>
+          <section id="how-it-works" className="w-full py-24 md-py-32 lg:py-40 bg-black/20">
+            <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
+              <div className="space-y-3">
+                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight text-white font-outfit">How It Works</h2>
+                <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  Finding what you've lost is easier than ever. Follow these simple steps.
+                </p>
+              </div>
+              <div className="mx-auto w-full max-w-4xl pt-12">
+                <div className="grid gap-8 sm:grid-cols-3">
+                  <HowItWorksStep number="1" title="Report Your Item" description="Fill out a quick form with details about the lost or found item. Upload a photo for better matching." />
+                  <HowItWorksStep number="2" title="AI Finds Matches" description="Our AI gets to work, comparing your item against the database to find potential matches in real-time." />
+                  <HowItWorksStep number="3" title="Get Notified & Recover" description="Receive a notification when a likely match is found. Arrange for a secure pickup at a campus locker." />
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </ClickSpark>
       </main>
       <footer className="border-t border-border/20 mt-20">
         <div className="container flex flex-col gap-4 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6">
