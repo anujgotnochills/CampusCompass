@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { format } from 'date-fns';
-import { Calendar as CalendarIcon, Loader2, Sparkles, Upload, X, Camera } from 'lucide-react';
+import { Calendar as CalendarIcon, Loader2, Sparkles, Upload, X, Camera, RotateCcw } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -66,6 +66,7 @@ export function ReportItemForm({ type, onFinished }: ReportItemFormProps) {
   const [isGeneratingDescription, setIsGeneratingDescription] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | undefined>(undefined);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const [cameraFacingMode, setCameraFacingMode] = useState<'user' | 'environment'>('environment');
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -89,7 +90,33 @@ export function ReportItemForm({ type, onFinished }: ReportItemFormProps) {
     if (isCameraOpen) {
       const getCameraPermission = async () => {
         try {
-          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          // Stop existing stream if switching cameras
+          if (videoRef.current && videoRef.current.srcObject) {
+            const existingStream = videoRef.current.srcObject as MediaStream;
+            existingStream.getTracks().forEach(track => track.stop());
+          }
+
+          // Try to use the specified camera facing mode
+          let stream: MediaStream;
+          try {
+            stream = await navigator.mediaDevices.getUserMedia({
+              video: {
+                facingMode: { ideal: cameraFacingMode }, // Use state-controlled facing mode
+                width: { ideal: 1920 },
+                height: { ideal: 1080 }
+              }
+            });
+          } catch (specificCameraError) {
+            console.log(`${cameraFacingMode} camera not available, trying fallback:`, specificCameraError);
+            // Fallback: Use any available camera
+            stream = await navigator.mediaDevices.getUserMedia({
+              video: {
+                width: { ideal: 1920 },
+                height: { ideal: 1080 }
+              }
+            });
+          }
+          
           setHasCameraPermission(true);
           if (videoRef.current) {
             videoRef.current.srcObject = stream;
@@ -113,7 +140,7 @@ export function ReportItemForm({ type, onFinished }: ReportItemFormProps) {
         videoRef.current.srcObject = null;
       }
     }
-  }, [isCameraOpen, toast]);
+  }, [isCameraOpen, cameraFacingMode, toast]);
 
 
   const handleGenerateTitle = async () => {
@@ -186,6 +213,10 @@ export function ReportItemForm({ type, onFinished }: ReportItemFormProps) {
       }
       setIsCameraOpen(false);
     }
+  };
+
+  const handleSwitchCamera = () => {
+    setCameraFacingMode(prev => prev === 'environment' ? 'user' : 'environment');
   };
 
 
@@ -282,12 +313,24 @@ export function ReportItemForm({ type, onFinished }: ReportItemFormProps) {
                              {isCameraOpen && (
                                 <div className='relative'>
                                     <video ref={videoRef} className="w-full aspect-video rounded-md bg-muted" autoPlay muted playsInline />
-                                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-4">
-                                        <Button type="button" onClick={handleTakePicture} size="lg">
+                                    <div className="absolute top-4 right-4">
+                                        <Button 
+                                            type="button" 
+                                            variant="secondary" 
+                                            size="icon"
+                                            onClick={handleSwitchCamera}
+                                            className="bg-black/50 hover:bg-black/70 text-white border-white/20"
+                                        >
+                                            <RotateCcw className="h-4 w-4" />
+                                            <span className="sr-only">Switch Camera</span>
+                                        </Button>
+                                    </div>
+                                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-3 md:gap-4 flex-col sm:flex-row">
+                                        <Button type="button" onClick={handleTakePicture} size="lg" className="min-h-[48px] touch-manipulation">
                                             <Camera className="mr-2 h-4 w-4"/>
                                             Take Picture
                                         </Button>
-                                         <Button type="button" variant="destructive" onClick={() => setIsCameraOpen(false)}>
+                                         <Button type="button" variant="destructive" onClick={() => setIsCameraOpen(false)} className="min-h-[48px] touch-manipulation">
                                             Close Camera
                                         </Button>
                                     </div>
