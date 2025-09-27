@@ -94,7 +94,7 @@ export default function LandingPage() {
                 Unlock a seamless way to find lost items. Campus Compass helps you streamline reporting and intelligently
                 matches items.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3 md:gap-4 w-full max-w-sm sm:max-w-none">
+              <div className="flex flex-col sm:flex-row gap-3 md:gap-4 w-full max-w-sm sm:max-w-none sm:justify-center">
                  <button onClick={() => handlePillClick('signup')} className="h-12 md:h-11 rounded-full px-6 md:px-8 inline-flex items-center justify-center whitespace-nowrap text-base md:text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 active:scale-95 touch-manipulation min-h-[48px]">Get Started</button>
                 <Link href="#features" prefetch={false} className="w-full sm:w-auto">
                   <button className="h-12 md:h-11 rounded-full px-6 md:px-8 inline-flex items-center justify-center whitespace-nowrap text-base md:text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-transparent border-muted-foreground/50 hover:border-primary hover:text-primary active:scale-95 touch-manipulation min-h-[48px] w-full sm:w-auto">
@@ -260,5 +260,7 @@ const HowItWorksStep = ({ number, title, description }: { number: string; title:
     <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-xs md:max-w-none">{description}</p>
   </div>
 );
+
+    
 
     
