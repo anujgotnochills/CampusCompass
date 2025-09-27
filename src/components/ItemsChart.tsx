@@ -32,23 +32,35 @@ export function ItemsChart({ type, data }: ItemsChartProps) {
 
   if (type === 'line') {
       return (
-        <ChartContainer config={chartConfig} className="w-full h-full min-h-[250px]">
-          <ResponsiveContainer width="100%" height={250}>
-            <LineChart data={data} margin={{ top: 20, right: 20, bottom: 20, left: -10 }}>
+        <ChartContainer config={chartConfig} className="w-full h-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart 
+              data={data} 
+              margin={{ 
+                top: 20, 
+                right: 10, 
+                bottom: 20, 
+                left: 0 
+              }}
+            >
               <CartesianGrid vertical={false} strokeDasharray="3 3" />
               <XAxis
                 dataKey="date"
                 stroke="hsl(var(--muted-foreground))"
-                fontSize={12}
+                fontSize={10}
                 tickLine={false}
                 axisLine={false}
+                tick={{ fontSize: 10 }}
+                interval="preserveStartEnd"
               />
               <YAxis
                 stroke="hsl(var(--muted-foreground))"
-                fontSize={12}
+                fontSize={10}
                 tickLine={false}
                 axisLine={false}
                 allowDecimals={false}
+                tick={{ fontSize: 10 }}
+                width={20}
               />
               <Tooltip 
                  cursor={true}
@@ -64,14 +76,23 @@ export function ItemsChart({ type, data }: ItemsChartProps) {
   }
 
   return (
-    <ChartContainer config={chartConfig} className="w-full h-full min-h-[200px]">
-      <ResponsiveContainer width="100%" height={200}>
-        <BarChart data={data} margin={{ top: 20, right: 0, bottom: 0, left: 0 }} layout="vertical">
+    <ChartContainer config={chartConfig} className="w-full h-full">
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart 
+          data={data} 
+          margin={{ 
+            top: 20, 
+            right: 10, 
+            bottom: 20, 
+            left: 0 
+          }} 
+          layout="vertical"
+        >
           <CartesianGrid horizontal={false} strokeDasharray="3 3" />
           <XAxis
             type="number"
             stroke="hsl(var(--muted-foreground))"
-            fontSize={12}
+            fontSize={10}
             tickLine={false}
             axisLine={false}
             hide
@@ -80,10 +101,11 @@ export function ItemsChart({ type, data }: ItemsChartProps) {
             dataKey="name"
             type="category"
             stroke="hsl(var(--muted-foreground))"
-            fontSize={12}
+            fontSize={10}
             tickLine={false}
             axisLine={false}
-            tick={{ width: 80 }}
+            tick={{ fontSize: 10, width: 60 }}
+            width={60}
           />
           <Tooltip 
              cursor={false}

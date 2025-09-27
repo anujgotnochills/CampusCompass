@@ -185,10 +185,10 @@ export default function DashboardPage() {
       {/* Main Content */}
       <div className="space-y-4 md:space-y-6">
         <Card>
-          <CardHeader className="pb-4">
+          <CardHeader className="pb-2 md:pb-4">
             <CardTitle className="text-lg md:text-xl">Trend</CardTitle>
           </CardHeader>
-          <CardContent className="h-[200px] md:h-[300px]">
+          <CardContent className="h-[200px] md:h-[300px] p-2 md:p-6">
             <ItemsChart type="line" data={trendData} />
           </CardContent>
         </Card>
